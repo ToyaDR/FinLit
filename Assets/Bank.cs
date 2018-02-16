@@ -8,6 +8,12 @@ public class Bank : MonoBehaviour {
     public int loan;
     public int interest_rate;
 
+    void Awake() {
+        loan_allowed = true;
+        loan = 0;
+        interest_rate = 3;
+    }
+
 	// Use this for initialization
 	void Start () {
 		
