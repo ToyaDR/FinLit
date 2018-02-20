@@ -33,14 +33,22 @@ public class Store : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		// Initialize and display money
+		
+		// Money
 		score = GameObject.Find("Money").GetComponent<Text>();
 		score.text = money.ToString();
+
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		money = 10;
 		score.text = money.ToString();
+	}
+
+	// Show ingredients
+	public void ShowIngredients() {
+		Debug.Log ("Tapped Door");
 	}
 }
