@@ -49,6 +49,6 @@ public class Store : MonoBehaviour {
 
 	// Show ingredients
 	public void ShowIngredients() {
-		
+		Debug.Log ("Tapped Door");
 	}
 }

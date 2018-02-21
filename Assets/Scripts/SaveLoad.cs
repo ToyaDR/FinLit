@@ -17,12 +17,14 @@ public class SaveLoad {
 		file.Close ();
 	}
 
-	public static void Load() {
+	public static int Load() {
 		if (File.Exists (save_path)) {
 			BinaryFormatter bf = new BinaryFormatter ();
 			FileStream file = File.Open (save_path, FileMode.Open);
-			SaveLoad.savedGame = (Game) bf.Deserialize(file);
-			file.Close();
+			SaveLoad.savedGame = (Game)bf.Deserialize (file);
+			file.Close ();
+			return 0;
 		}
+		return -1;
 	}
 }
