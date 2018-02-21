@@ -21,6 +21,7 @@ public class Store : MonoBehaviour {
 	/*   Variables from other scripts   */
 
 	Text score;
+	public GameObject ingredientsPanel;
 
 	void Awake() {
 		money = 0;
@@ -37,7 +38,7 @@ public class Store : MonoBehaviour {
 		// Money
 		score = GameObject.Find("Money").GetComponent<Text>();
 		score.text = money.ToString();
-
+		ingredientsPanel.SetActive (false);
 
 	}
 	
@@ -50,5 +51,6 @@ public class Store : MonoBehaviour {
 	// Show ingredients
 	public void ShowIngredients() {
 		Debug.Log ("Tapped Door");
+		ingredientsPanel.SetActive (true);
 	}
 }
