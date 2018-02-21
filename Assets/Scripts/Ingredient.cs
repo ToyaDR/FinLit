@@ -2,20 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ingredient : MonoBehaviour {
+public class Ingredient {
 
-    string ing_name;
-    int ing_price;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public string ing_name;
+    public int ing_price;
 
     public void addName(string name) {
         ing_name = name;
