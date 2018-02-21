@@ -51,6 +51,11 @@ public class Store : MonoBehaviour {
 	// Show ingredients
 	public void ShowIngredients() {
 		Debug.Log ("Tapped Door");
-		ingredientsPanel.SetActive (true);
+
+		if (!ingredientsPanel.activeSelf) {
+			ingredientsPanel.SetActive (true);
+		} else {
+			ingredientsPanel.SetActive (false);
+		}
 	}
 }
