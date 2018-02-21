@@ -1,33 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class IngredientsPanel : MonoBehaviour {
 
-	private Ingredient[] ingredients;
+	private ArrayList ingredients;
 
 	// Use this for initialization
 	void Start () {
+		ingredients = new ArrayList ();
 
 		Ingredient flour = new Ingredient ();
 		flour.ing_name = "flour";
 		flour.ing_price = 2;
 
+		ingredients.Add(flour);
+
 		Ingredient eggs = new Ingredient ();
 		eggs.ing_name = "eggs";
 		eggs.ing_price = 1;
 
-		ingredients = [flour, eggs];
+		ingredients.Add(eggs);
 
-		for(int i = 0; i < ingredients.Length; i++){
-			GameObject ingTextGO = new GameObject(ingredients[i]);
+		foreach(Ingredient i in ingredients){
+			GameObject ingTextGO = new GameObject();
 			ingTextGO.transform.SetParent(this.transform);
 
 			Text ingText = ingTextGO.AddComponent<Text>();
-			ingText.text = ingredients[i].getName();
+			ingText.text = i.getName();
 
+			/*
 			Text ingPrice = ingTextGO.AddComponent<Text>();
-			ingPrice.text = ingredients[i].getPrice();
+			ingPrice.text = i.getPrice().ToString();
+			*/
 
 			//TODO: figure out how to load sprites
 			/*
