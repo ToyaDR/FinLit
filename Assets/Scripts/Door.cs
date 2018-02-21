@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class Door : MonoBehaviour {
 
-    Store store;
+    public Store store;
 	Vector3 touchPosWorld;
 
 
