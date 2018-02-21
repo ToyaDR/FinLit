@@ -24,4 +24,12 @@ public class Ingredient : MonoBehaviour {
     public void addPrice(int price) {
         ing_price = price;
     }
+
+    public string getName() {
+        return ing_name;
+    }
+
+    public int getPrice() {
+        return ing_price;
+    }
 }
