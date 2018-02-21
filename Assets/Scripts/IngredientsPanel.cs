@@ -5,14 +5,11 @@ using UnityEngine.UI;
 
 public class IngredientsPanel : MonoBehaviour {
 
-	public gameObject.alpha alpha;
 	private ArrayList ingredients;
 
 	// Use this for initialization
 	void Start () {
 		ingredients = new ArrayList ();
-
-		alpha = 300;
 
 		Ingredient flour = new Ingredient ();
 		flour.ing_name = "flour";
