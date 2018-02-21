@@ -26,10 +26,10 @@ public class Ingredient : MonoBehaviour {
     }
 
     public string getName() {
-        return name;
+        return ing_name;
     }
 
     public int getPrice() {
-        return price;
+        return ing_price;
     }
 }
