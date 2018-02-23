@@ -19,7 +19,6 @@ public class Store : MonoBehaviour {
 	//public string type;
 
 	Vector3 touchPosWorld;
-	bool ingPanelActive = false;
 
 	/*   Variables from other scripts   */
 
@@ -66,12 +65,8 @@ public class Store : MonoBehaviour {
 			if (hitInfo.collider != null) {
 				GameObject touchedObject = hitInfo.transform.gameObject;
 
-				Debug.Log ("close button pos = " + closeButton.transform.localPosition);
-				Debug.Log ("tap pos = " + touchedObject.transform.localPosition);
 				if (touchedObject == door) {
 					ShowIngredients ();
-				} else if (touchedObject == closeButton) {
-					HideIngredients ();
 				}
 			}
 		}
@@ -79,21 +74,13 @@ public class Store : MonoBehaviour {
 
 	// Show ingredients
 	public void ShowIngredients() {
-		if (!ingPanelActive) {
-			ingredientsPanel.GetComponent<CanvasGroup>().alpha = 1f;
-			ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
-
-			ingPanelActive = true;
-			Debug.Log ("active");
-		}
+		ingredientsPanel.GetComponent<CanvasGroup>().alpha = 1f;
+		ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 
 	// Hide ingredients
 	public void HideIngredients() {
 		ingredientsPanel.GetComponent<CanvasGroup>().alpha = 0f;
 		ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
-
-		ingPanelActive = false;
-		Debug.Log ("inactive");
 	}
 }
