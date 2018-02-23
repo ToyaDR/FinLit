@@ -7,7 +7,6 @@ public class IngredientsPanel : MonoBehaviour {
 
 	private ArrayList ingredients;
 	public Canvas canvas;
-	Vector2 anchorPoint;
 
 	// Use this for initialization
 	void Start () {
@@ -18,14 +17,16 @@ public class IngredientsPanel : MonoBehaviour {
 		ingredients = new ArrayList ();
 
 		Ingredient flour = new Ingredient ();
-		flour.ing_name = "Flour";
-		flour.ing_price = 2;
+		flour.addName("Flour");
+		flour.addPrice(2);
+		//flour.addSprite ("Flour"); 
 
 		ingredients.Add(flour);
 
 		Ingredient eggs = new Ingredient ();
-		eggs.ing_name = "Eggs";
-		eggs.ing_price = 1;
+		eggs.addName("Eggs");
+		eggs.addPrice(1);
+		//eggs.addSprite ("Eggs");
 
 		ingredients.Add(eggs);
 
@@ -33,12 +34,17 @@ public class IngredientsPanel : MonoBehaviour {
 		foreach(Ingredient i in ingredients){
 			GameObject ingTextGO = Instantiate (Resources.Load ("Ingredients", typeof(GameObject))) as GameObject;
 			ingTextGO.transform.SetParent (transform);
-			ingTextGO.GetComponent<Text> ().text = i.ing_name + " $" + i.ing_price;
+			ingTextGO.GetComponent<Text>().text = i.getName() + " $" + i.getPrice();
 
+			Vector2 anchorPoint = new Vector2 (canvasLeft, canvasTop + offset);
 
-			anchorPoint = new Vector2 (canvasLeft, canvasTop + offset);
+			ingTextGO.GetComponent<Text>().rectTransform.anchoredPosition = anchorPoint;
 
-			ingTextGO.GetComponent<Text> ().rectTransform.anchoredPosition = new Vector2 (canvasLeft, canvasTop + offset);
+			ingTextGO.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().sprite = i.getSprite();
+			/*
+			GameObject ingSpriteGO = ingTextGO.transform.GetChild (0).gameObject;
+			ingSpriteGO.transform.localPosition = new Vector3(ingTextGO.GetComponent<RectTransform>().rect.width, offset, 0);
+			*/
 			offset += ingTextGO.GetComponent<RectTransform>().rect.height;
 		}
 	}
