@@ -24,24 +24,9 @@ public class IngredientsPanel : MonoBehaviour {
 		ingredients.Add(eggs);
 
 		foreach(Ingredient i in ingredients){
-			GameObject ingTextGO = new GameObject();
-			ingTextGO.transform.SetParent(this.transform);
-
-			Text ingText = ingTextGO.AddComponent<Text>();
-			ingText.text = i.getName();
-
-			Debug.Log (ingText.transform.localPosition);
-			/*
-			Text ingPrice = ingTextGO.AddComponent<Text>();
-			ingPrice.text = i.getPrice().ToString();
-			*/
-
-			//TODO: figure out how to load sprites
-			/*
-			Sprite ingSprite = Resources.Load("",);
-			Sprite ingSprite = ingTextGO.AddComponent<Sprite>();
-			ingSprite = ingredients[i].getPrice();
-			*/
+			GameObject ingTextGO = Instantiate (Resources.Load ("Ingredients", typeof(GameObject))) as GameObject;
+			ingTextGO.transform.SetParent (transform);
+			ingTextGO.GetComponent<Text> ().text = i.ing_name + " " + i.ing_price;
 		}
 	}
 	
