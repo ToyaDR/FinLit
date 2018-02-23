@@ -26,6 +26,8 @@ public class Store : MonoBehaviour {
 	public GameObject door;
 	public GameObject closeButton;
 	public GameObject ingredientsPanel;
+	public GameObject employeeChoosePanel;
+	public GameObject start;
 
 	void Awake() {
 		money = 10000;
@@ -43,6 +45,7 @@ public class Store : MonoBehaviour {
 		score = GameObject.Find("Money").GetComponent<Text>();
 		score.text = money.ToString();
 		HideIngredients ();
+		HideEmployeeChoose();
 
 	}
 	
@@ -68,6 +71,9 @@ public class Store : MonoBehaviour {
 				if (touchedObject == door) {
 					ShowIngredients ();
 				}
+				else if (touchedObject == start) {
+					ShowEmployeeChoose();
+				}
 			}
 		}
 	}
@@ -82,5 +88,17 @@ public class Store : MonoBehaviour {
 	public void HideIngredients() {
 		ingredientsPanel.GetComponent<CanvasGroup>().alpha = 0f;
 		ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+	}
+
+	// Show employee choose panel
+	public void ShowEmployeeChoose() {
+		employeeChoosePanel.GetComponent<CanvasGroup>().alpha = 1f;
+		employeeChoosePanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+	}
+
+	// Hide ingredients
+	public void HideEmployeeChoose() {
+		employeeChoosePanel.GetComponent<CanvasGroup>().alpha = 0f;
+		employeeChoosePanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
 }
