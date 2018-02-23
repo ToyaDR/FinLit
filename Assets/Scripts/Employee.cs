@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Employee {
 
@@ -16,8 +17,8 @@ public class Employee {
         emp_morale = morale;
     }
 
-    public void setImage(Image image) {
-        emp_image = image;
+	public void setImage(string imageName) {
+		emp_image = Resources.Load(imageName) as Image;
     }
 
     public string getName() {
@@ -27,4 +28,8 @@ public class Employee {
     public int getMorale() {
         return emp_morale;
     }
+
+	public Image getImage() {
+		return emp_image;
+	}
 }
