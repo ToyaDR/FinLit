@@ -30,6 +30,7 @@ public class IngredientsPanel : MonoBehaviour {
 			Text ingText = ingTextGO.AddComponent<Text>();
 			ingText.text = i.getName();
 
+			Debug.Log (ingText.transform.localPosition);
 			/*
 			Text ingPrice = ingTextGO.AddComponent<Text>();
 			ingPrice.text = i.getPrice().ToString();

@@ -18,9 +18,14 @@ public class Store : MonoBehaviour {
 	//public string name;
 	//public string type;
 
+	Vector3 touchPosWorld;
+	bool ingPanelActive = false;
+
 	/*   Variables from other scripts   */
 
 	Text score;
+	public GameObject door;
+	public GameObject closeButton;
 	public GameObject ingredientsPanel;
 
 	void Awake() {
@@ -38,7 +43,7 @@ public class Store : MonoBehaviour {
 		// Money
 		score = GameObject.Find("Money").GetComponent<Text>();
 		score.text = money.ToString();
-		ingredientsPanel.SetActive (false);
+		HideIngredients ();
 
 	}
 	
@@ -46,16 +51,49 @@ public class Store : MonoBehaviour {
 	void Update () {
 		//money = 10;
 		score.text = money.ToString();
+
+		/* Check for touch input */
+		if (Input.touchCount == 1 
+			&& Input.GetTouch (0).phase == TouchPhase.Stationary) {
+
+			// transform touch position to world space
+			touchPosWorld = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
+			Vector2 touchPosWorld2D = new Vector2 (touchPosWorld.x, touchPosWorld.y);
+
+			//raycast
+			RaycastHit2D hitInfo = Physics2D.Raycast(touchPosWorld2D, Camera.main.transform.forward);
+
+			if (hitInfo.collider != null) {
+				GameObject touchedObject = hitInfo.transform.gameObject;
+
+				Debug.Log ("close button pos = " + closeButton.transform.localPosition);
+				Debug.Log ("tap pos = " + touchedObject.transform.localPosition);
+				if (touchedObject == door) {
+					ShowIngredients ();
+				} else if (touchedObject == closeButton) {
+					HideIngredients ();
+				}
+			}
+		}
 	}
 
 	// Show ingredients
 	public void ShowIngredients() {
-		Debug.Log ("Tapped Door");
+		if (!ingPanelActive) {
+			ingredientsPanel.GetComponent<CanvasGroup>().alpha = 1f;
+			ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
-		if (!ingredientsPanel.activeSelf) {
-			ingredientsPanel.SetActive (true);
-		} else {
-			ingredientsPanel.SetActive (false);
+			ingPanelActive = true;
+			Debug.Log ("active");
 		}
+	}
+
+	// Hide ingredients
+	public void HideIngredients() {
+		ingredientsPanel.GetComponent<CanvasGroup>().alpha = 0f;
+		ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+
+		ingPanelActive = false;
+		Debug.Log ("inactive");
 	}
 }
