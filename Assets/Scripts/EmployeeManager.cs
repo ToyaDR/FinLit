@@ -18,15 +18,15 @@ public class EmployeeManager : MonoBehaviour {
 		allEmployees.Add (employee_one);
 
 		Employee employee_two = new Employee();
-		employee_one.setName("Bob");
-		employee_one.setMorale(10);
-		employee_one.setImage ("char2");
+		employee_two.setName("Bob");
+		employee_two.setMorale(10);
+		employee_two.setImage ("char2");
 		allEmployees.Add (employee_two);
 
 		Employee employee_three = new Employee();
-		employee_one.setName("Lila");
-		employee_one.setMorale(10);
-		employee_one.setImage ("Employee_Lila");
+		employee_three.setName("Lila");
+		employee_three.setMorale(10);
+		employee_three.setImage ("Employee_Lila");
 		allEmployees.Add (employee_three);
 
 		// Initialize my employees list
