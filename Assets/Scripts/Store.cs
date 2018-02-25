@@ -78,6 +78,13 @@ public class Store : MonoBehaviour {
 		}
 	}
 
+	// Show employee choose panel
+	public void ShowEmployeeChoose() {
+		employeeChoosePanel.GetComponent<CanvasGroup>().alpha = 1f;
+		employeeChoosePanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+	}
+
+
 	// Show ingredients
 	public void ShowIngredients() {
 		ingredientsPanel.GetComponent<CanvasGroup>().alpha = 1f;
@@ -90,15 +97,16 @@ public class Store : MonoBehaviour {
 		ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
 
-	// Show employee choose panel
-	public void ShowEmployeeChoose() {
-		employeeChoosePanel.GetComponent<CanvasGroup>().alpha = 1f;
-		employeeChoosePanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
-	}
-
 	// Hide ingredients
 	public void HideEmployeeChoose() {
 		employeeChoosePanel.GetComponent<CanvasGroup>().alpha = 0f;
 		employeeChoosePanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+
+	public void DecMoney(int price) {
+		money -= price;
+	}
+
+	public void IncMoney(int price) {
+		money += price;
 	}
 }
