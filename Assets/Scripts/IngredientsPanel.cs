@@ -48,7 +48,7 @@ public class IngredientsPanel : MonoBehaviour {
 
 			int price = i.getPrice ();
 			ingTextGO.GetComponent<Button>().onClick.AddListener(delegate {
-				store.DecMoney(price);
+				Decrement(price);
 			});
 
 			offset += ingTextGO.GetComponent<RectTransform>().rect.height*1.5f;

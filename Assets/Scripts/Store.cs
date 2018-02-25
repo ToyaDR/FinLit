@@ -101,6 +101,7 @@ public class Store : MonoBehaviour {
 	public void HideEmployeeChoose() {
 		employeeChoosePanel.GetComponent<CanvasGroup>().alpha = 0f;
 		employeeChoosePanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+	}
 
 	public void DecMoney(int price) {
 		money -= price;
