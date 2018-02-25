@@ -7,12 +7,12 @@ public class IngredientsPanel : MonoBehaviour {
 
 	private ArrayList ingredients;
 	public Canvas canvas;
+	public Store store;
 
 	// Use this for initialization
 	void Start () {
 		float canvasLeft = canvas.GetComponent<RectTransform> ().anchorMin.x;
 		float canvasTop = canvas.GetComponent<RectTransform> ().anchorMax.y;
-
 
 		ingredients = new ArrayList ();
 
@@ -45,12 +45,24 @@ public class IngredientsPanel : MonoBehaviour {
 			GameObject ingSpriteGO = ingTextGO.transform.GetChild (0).gameObject;
 			ingSpriteGO.transform.localPosition = new Vector3(ingTextGO.GetComponent<RectTransform>().rect.width, offset, 0);
 			*/
-			offset += ingTextGO.GetComponent<RectTransform>().rect.height;
+
+			int price = i.getPrice ();
+			ingTextGO.GetComponent<Button>().onClick.AddListener(delegate {
+				store.DecMoney(price);
+			});
+
+			offset += ingTextGO.GetComponent<RectTransform>().rect.height*1.5f;
+
 		}
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	void Decrement(int price){
+		store.DecMoney (price);
+		/* TODO: add to stock */
 	}
 }

@@ -83,4 +83,12 @@ public class Store : MonoBehaviour {
 		ingredientsPanel.GetComponent<CanvasGroup>().alpha = 0f;
 		ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
+
+	public void DecMoney(int price) {
+		money -= price;
+	}
+
+	public void IncMoney(int price) {
+		money += price;
+	}
 }
