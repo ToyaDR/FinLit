@@ -13,10 +13,7 @@ public class Store : MonoBehaviour {
 	public int checkings_account;
 	public int productivity;
 	public int reputation;
-	//public List Items;
-	//public List Equipment;
-	//public string name;
-	//public string type;
+	private Dictionary<string, int> Stock;
 
 	Vector3 touchPosWorld;
 
@@ -36,6 +33,8 @@ public class Store : MonoBehaviour {
 		checkings_account = 0;
 		productivity = 50;
 		reputation = 0;
+
+		Stock = new Dictionary<string, int>();
 	}
 
 	// Use this for initialization
@@ -46,6 +45,12 @@ public class Store : MonoBehaviour {
 		score.text = money.ToString();
 		HideIngredients ();
 		HideEmployeeChoose();
+
+		ArrayList ingredients = ingredientsPanel.GetComponent<IngredientsPanel>().getIngredientsList ();
+
+		foreach(Ingredient i in ingredients){
+			Stock.Add(i.getName(), 0);
+		}
 
 	}
 	
@@ -84,6 +89,11 @@ public class Store : MonoBehaviour {
 		employeeChoosePanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 
+	// Hide ingredients
+	public void HideEmployeeChoose() {
+		employeeChoosePanel.GetComponent<CanvasGroup>().alpha = 0f;
+		employeeChoosePanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+	}
 
 	// Show ingredients
 	public void ShowIngredients() {
@@ -97,17 +107,19 @@ public class Store : MonoBehaviour {
 		ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
 
-	// Hide ingredients
-	public void HideEmployeeChoose() {
-		employeeChoosePanel.GetComponent<CanvasGroup>().alpha = 0f;
-		employeeChoosePanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
-	}
-
 	public void DecMoney(int price) {
 		money -= price;
 	}
 
 	public void IncMoney(int price) {
 		money += price;
+	}
+
+	public void AddStock(string ing, int amount){
+		Stock[ing] += amount;
+	}
+
+	public void RemoveStock(string ing, int amount){
+		Stock[ing] -= amount;
 	}
 }
