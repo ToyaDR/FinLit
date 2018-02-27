@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Ingredient {
 
-    public string ing_name;
-    public int ing_price;
+    private string ing_name;
+    private int ing_price;
+	private Sprite ing_sprite;
 
     public void addName(string name) {
         ing_name = name;
@@ -15,6 +16,10 @@ public class Ingredient {
         ing_price = price;
     }
 
+	public void addSprite(string sprite) {
+		ing_sprite = Resources.Load (sprite, typeof(Sprite)) as Sprite;
+	}
+
     public string getName() {
         return ing_name;
     }
@@ -22,4 +27,8 @@ public class Ingredient {
     public int getPrice() {
         return ing_price;
     }
+
+	public Sprite getSprite() {
+		return ing_sprite;
+	}
 }
