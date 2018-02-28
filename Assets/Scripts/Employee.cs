@@ -7,7 +7,7 @@ public class Employee {
 
     private string emp_name;
     private int emp_morale;
-    private Image emp_image;
+    private Sprite emp_image;
 
 	public void setName(string name) {
         emp_name = name;
@@ -18,7 +18,7 @@ public class Employee {
     }
 
 	public void setImage(string imageName) {
-		emp_image = Resources.Load(imageName) as Image;
+		emp_image = Resources.Load<Sprite>(imageName);
     }
 
     public string getName() {
@@ -29,7 +29,7 @@ public class Employee {
         return emp_morale;
     }
 
-	public Image getImage() {
+	public Sprite getImage() {
 		return emp_image;
 	}
 }

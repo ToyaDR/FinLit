@@ -25,6 +25,7 @@ public class Store : MonoBehaviour {
 	public GameObject ingredientsPanel;
 	public GameObject employeeChoosePanel;
 	public GameObject start;
+	public GameObject taskAssignPanel;
 
 	void Awake() {
 		money = 10000;
@@ -45,6 +46,7 @@ public class Store : MonoBehaviour {
 		score.text = money.ToString();
 		HideIngredients ();
 		HideEmployeeChoose();
+		HideTaskAssign ();
 
 		ArrayList ingredients = ingredientsPanel.GetComponent<IngredientsPanel>().getIngredientsList ();
 
@@ -81,6 +83,12 @@ public class Store : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	// Hide task assign panel
+	public void HideTaskAssign() {
+		taskAssignPanel.GetComponent<CanvasGroup>().alpha = 0f;
+		taskAssignPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
 
 	// Show employee choose panel
