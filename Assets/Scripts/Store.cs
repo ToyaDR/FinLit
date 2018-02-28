@@ -8,11 +8,14 @@ public class Store : MonoBehaviour {
 	/*   Variables for Store   */
 
 	public int money; // current money
-	public bool insurance;
+	private bool insurance;
 	public int savings_account;
 	public int checkings_account;
-	public int productivity;
-	public int reputation;
+	private string product;
+	private int product_price;
+
+	private int productivity;
+	private int reputation;
 	private Dictionary<string, int> Stock;
 
 	Vector3 touchPosWorld;
@@ -32,14 +35,15 @@ public class Store : MonoBehaviour {
 		savings_account = 0;
 		checkings_account = 0;
 		productivity = 50;
-		reputation = 0;
+		reputation = 4;
 
+		product = "cupcake";
+		product_price = 3;
 		Stock = new Dictionary<string, int>();
 	}
 
 	// Use this for initialization
 	void Start () {
-		
 		// Money
 		score = GameObject.Find("Money").GetComponent<Text>();
 		score.text = money.ToString();
@@ -52,6 +56,7 @@ public class Store : MonoBehaviour {
 			Stock.Add(i.getName(), 0);
 		}
 
+		Stock.Add (product, 2);
 	}
 	
 	// Update is called once per frame
@@ -121,5 +126,25 @@ public class Store : MonoBehaviour {
 
 	public void RemoveStock(string ing, int amount){
 		Stock[ing] -= amount;
+	}
+
+	public int GetStockAmount(string ing){
+		return Stock [ing]; 
+	}
+
+	public int GetProductAmount() {
+		return Stock [product];
+	}
+
+	public int GetReputation(){
+		return reputation;
+	}
+
+	public int Sell(){
+		if (GetProductAmount () > 0) {
+			RemoveStock (product, 1);
+			return money += product_price;
+		}
+		return 0;
 	}
 }
