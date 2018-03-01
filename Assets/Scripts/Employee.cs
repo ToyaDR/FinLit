@@ -5,9 +5,16 @@ using UnityEngine.UI;
 
 public class Employee {
 
+	// Set in the beginning of the game
     private string emp_name;
     private int emp_morale;
     private Sprite emp_image;
+
+	// Not yet dealt with
+	public int productivity;
+	public string[] issues;
+	public int salary;
+	public Task[] tasksNotCompleted; // Tasks that are assigned but not completed. Immediately delete tasks that are completed.
 
 	public void SetName(string name) {
         emp_name = name;
