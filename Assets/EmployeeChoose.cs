@@ -12,6 +12,7 @@ public class EmployeeChoose : MonoBehaviour {
 	public GameObject emp2;
 	public GameObject emp3;
 	public GameObject taskAssignPanel;
+	public GameObject store;
 
 	private Toggle toggle_1;
 	private Toggle toggle_2;
@@ -80,5 +81,6 @@ public class EmployeeChoose : MonoBehaviour {
 		// Render next screen
 		taskAssignPanel.GetComponent<CanvasGroup>().alpha = 1f;
 		taskAssignPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+		store.GetComponent<Store>().HideEmployeeChoose ();
 	}
 }

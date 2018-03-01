@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 53225094}
   - component: {fileID: 53225095}
   m_Layer: 5
-  m_Name: Task1
+  m_Name: Toggle_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -447,6 +447,7 @@ MonoBehaviour:
   emp2: {fileID: 767787280}
   emp3: {fileID: 238141088}
   taskAssignPanel: {fileID: 981681562}
+  store: {fileID: 2085171903}
 --- !u!1 &151802461
 GameObject:
   m_ObjectHideFlags: 0
@@ -700,7 +701,7 @@ GameObject:
   - component: {fileID: 219400997}
   - component: {fileID: 219400998}
   m_Layer: 5
-  m_Name: Toggle
+  m_Name: Toggle_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2071,7 +2072,7 @@ GameObject:
   - component: {fileID: 757441332}
   - component: {fileID: 757441333}
   m_Layer: 5
-  m_Name: Toggle (1)
+  m_Name: Toggle_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2433,7 +2434,7 @@ GameObject:
   - component: {fileID: 828991570}
   - component: {fileID: 828991571}
   m_Layer: 5
-  m_Name: Toggle (2)
+  m_Name: Toggle_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2669,6 +2670,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3486befff25064df284708573b09894b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  emp1: {fileID: 666044791}
+  emp2: {fileID: 1616627995}
+  doneButton: {fileID: 2008257053}
+  store: {fileID: 2085171903}
 --- !u!1 &992380028
 GameObject:
   m_ObjectHideFlags: 0
@@ -4249,7 +4254,7 @@ GameObject:
   - component: {fileID: 1579050335}
   - component: {fileID: 1579050336}
   m_Layer: 5
-  m_Name: Task2
+  m_Name: Toggle_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5045,7 +5050,7 @@ GameObject:
   - component: {fileID: 1842496350}
   - component: {fileID: 1842496351}
   m_Layer: 5
-  m_Name: Task3
+  m_Name: Toggle_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
