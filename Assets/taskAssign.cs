@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class taskAssign : MonoBehaviour {
+public class TaskAssign : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
