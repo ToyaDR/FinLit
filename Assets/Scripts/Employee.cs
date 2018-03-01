@@ -9,27 +9,27 @@ public class Employee {
     private int emp_morale;
     private Sprite emp_image;
 
-	public void setName(string name) {
+	public void SetName(string name) {
         emp_name = name;
     }
 
-    public void setMorale(int morale) {
+    public void SetMorale(int morale) {
         emp_morale = morale;
     }
 
-	public void setImage(string imageName) {
+	public void SetImage(string imageName) {
 		emp_image = Resources.Load<Sprite>(imageName);
     }
 
-    public string getName() {
+    public string GetName() {
         return emp_name;
     }
 
-    public int getMorale() {
+    public int GetMorale() {
         return emp_morale;
     }
 
-	public Sprite getImage() {
+	public Sprite GetImage() {
 		return emp_image;
 	}
 }

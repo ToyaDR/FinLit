@@ -12,20 +12,20 @@ public class EmployeeManager : MonoBehaviour {
 
         // At the start of the game, create all possible instances of employees
         Employee employee_one = new Employee();
-        employee_one.setName("Abby");
-        employee_one.setMorale(10);
-		//employee_one.setImage ("char2");
+        employee_one.SetName("Abby");
+        employee_one.SetMorale(10);
+		//employee_one.SetImage ("char2");
 		allEmployees.Add (employee_one);
 
 		Employee employee_two = new Employee();
-		employee_two.setName("Bob");
-		employee_two.setMorale(10);
-		//employee_two.setImage ("char1");
+		employee_two.SetName("Bob");
+		employee_two.SetMorale(10);
+		//employee_two.SetImage ("char1");
 		allEmployees.Add (employee_two);
 
 		Employee employee_three = new Employee();
-		employee_three.setName("Lila");
-		employee_three.setMorale(10);
+		employee_three.SetName("Lila");
+		employee_three.SetMorale(10);
 		//employee_three.setImage ("Employee_Lila");
 		allEmployees.Add (employee_three);
 
@@ -43,11 +43,11 @@ public class EmployeeManager : MonoBehaviour {
 		
 	}
 
-    public void addToMyEmployee(Employee employee) {
+    public void AddToMyEmployee(Employee employee) {
         myEmployees.Add(employee);
     }
 
-	public void initializeEmployeeList() {
+	public void InitializeEmployeeList() {
 		myEmployees = new ArrayList ();
 	}
 }
