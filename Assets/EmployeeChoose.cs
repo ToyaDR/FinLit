@@ -13,6 +13,10 @@ public class EmployeeChoose : MonoBehaviour {
 	public GameObject emp3;
 	public GameObject taskAssignPanel;
 
+	private Toggle toggle_1;
+	private Toggle toggle_2;
+	private Toggle toggle_3;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -32,11 +36,19 @@ public class EmployeeChoose : MonoBehaviour {
 		// Add next button listener
 		nextButton.onClick.AddListener(OnClickNext);
 
-		// Add toggle change listener
-		//Toggle toggle_1 = emp1.GetComponent<Toggle> ();
-		//toggle_1.onValueChanged.AddListener(delegate {
-		//	ToggleChanged(toggle_1);
-		//});
+		// Add toggle change listeners - whenever toggle is changed, call ToggleChanged()
+		toggle_1 = emp1.transform.Find("Toggle").GetComponent<Toggle> ();
+		toggle_1.onValueChanged.AddListener(delegate {
+			ToggleChanged(toggle_1);
+		});
+		toggle_2 = emp2.transform.Find("Toggle").GetComponent<Toggle> ();
+		toggle_2.onValueChanged.AddListener(delegate {
+			ToggleChanged(toggle_2);
+		});
+		toggle_3 = emp3.transform.Find("Toggle").GetComponent<Toggle> ();
+		toggle_3.onValueChanged.AddListener(delegate {
+			ToggleChanged(toggle_3);
+		});
 	}
 	
 	// Update is called once per frame
@@ -44,22 +56,24 @@ public class EmployeeChoose : MonoBehaviour {
 		
 	}
 
-	//void ToggleChanged(Toggle toggle) {
-		// Render square around the employee when user clicks on them
-		// if (toggle.isOn()) toggle.gameObject.GetComponent<
-	//}
+	void ToggleChanged(Toggle toggle) {
+		// Count the number of chosen employees - if it's 3, turn the toggle back off
+		if (toggle_1.isOn && toggle_2.isOn && toggle_3.isOn) {
+			toggle.isOn = false;
+		}
+	}
 
 	void OnClickNext() {
 		// Wait for Next button to be clicked: Store which employees user chose, render task assignment screen
 
 		// Find out which employees user chose
-		if (emp1.GetComponent<Toggle> ().isOn) {
+		if (toggle_1.isOn) {
 			employeeManager.GetComponent<EmployeeManager>().AddToMyEmployee ((Employee)(allEmployeesList [0]));
 		}
-		if (emp2.GetComponent<Toggle> ().isOn) {
+		if (toggle_2.isOn) {
 			employeeManager.GetComponent<EmployeeManager>().AddToMyEmployee ((Employee)(allEmployeesList [1]));
 		}
-		if (emp3.GetComponent<Toggle> ().isOn) {
+		if (toggle_3.isOn) {
 			employeeManager.GetComponent<EmployeeManager>().AddToMyEmployee ((Employee)(allEmployeesList [2]));
 		}
 
