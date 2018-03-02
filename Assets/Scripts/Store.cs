@@ -11,7 +11,6 @@ public class Store : MonoBehaviour {
 	private bool insurance;
 	public int savings_account;
 	public int checkings_account;
-	private int product_stock;
 
 	private string product;
 	private int product_price;
@@ -42,7 +41,6 @@ public class Store : MonoBehaviour {
 		reputation = 4;
 
 		product = "cupcake";
-		product_stock = 4;
 		product_price = 3;
 		Stock = new Dictionary<string, int>();
 	}
@@ -51,7 +49,6 @@ public class Store : MonoBehaviour {
 	void Start () {
 		// Money
 		score.GetComponent<Text>().text = money.ToString();
-		product_in_stock.GetComponent<Text> ().text = product_stock.ToString();
 
 		HideIngredients ();
 		HideEmployeeChoose();
@@ -63,13 +60,14 @@ public class Store : MonoBehaviour {
 			Stock.Add(i.getName(), 0);
 		}
 
-		Stock.Add (product, product_stock);
+		Stock.Add (product, 4);
+		product_in_stock.GetComponent<Text> ().text = Stock[product].ToString();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//money = 10;
 		score.GetComponent<Text>().text = money.ToString();
+		product_in_stock.GetComponent<Text> ().text = Stock[product].ToString ();
 
 		/* Check for touch input */
 		if (Input.touchCount == 1 
@@ -153,11 +151,10 @@ public class Store : MonoBehaviour {
 		return reputation;
 	}
 
-	public int Sell(){
+	public void Sell(){
 		if (GetProductAmount () > 0) {
 			RemoveStock (product, 1);
-			return money += product_price;
+			IncMoney (product_price);
 		}
-		return 0;
 	}
 }

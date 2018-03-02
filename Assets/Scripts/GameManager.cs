@@ -45,10 +45,13 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private IEnumerator Sale(){
-		while (start_shift) {
-			float freq = shift_length / (float)(store.GetReputation ());
-			yield return new WaitForSeconds (freq);
-			store.Sell ();
+		while (true) {
+			if (start_shift) {
+				float freq = shift_length / (float)(store.GetReputation ());
+				yield return new WaitForSeconds (freq);
+				store.Sell ();
+			}
+			yield return null;
 		}
 	}
 
