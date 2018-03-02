@@ -11,8 +11,8 @@ public class IngredientsPanel : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		float canvasLeft = -150;
-		float canvasTop = -77;
+		float canvasRight = -300;
+		float canvasTop = -120;
 
 		ingredients = new ArrayList ();
 
@@ -43,17 +43,17 @@ public class IngredientsPanel : MonoBehaviour {
 			ingTextGO.transform.SetParent (transform);
 			ingTextGO.GetComponent<Text>().text = i.getName() + " $" + i.getPrice();
 
-			Vector2 anchorPoint = new Vector2 (canvasLeft, canvasTop - offset);
+			Vector2 anchorPoint = new Vector2 (canvasRight, canvasTop - offset);
 
 			ingTextGO.GetComponent<Text>().rectTransform.anchoredPosition = anchorPoint;
 
 			ingTextGO.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = i.getSprite();
 
-			//GameObject ingImageGO = ingTextGO.transform.GetChild (0).gameObject;
-			//ingImageGO.transform.localPosition = new Vector3(ingTextGO.GetComponent<RectTransform>().rect.width, offset, 0);
+			ingTextGO.transform.GetChild (1).gameObject.GetComponent<Text> ().text = "x0";
 
 			ingTextGO.GetComponent<Button>().onClick.AddListener(delegate {
 				Decrement(i.getName(), i.getPrice());
+				ingTextGO.transform.GetChild (1).gameObject.GetComponent<Text> ().text = "x" + store.GetStockAmount(i.getName()).ToString();
 			});
 
 			offset += ingTextGO.GetComponent<RectTransform>().rect.height*1.2f;
