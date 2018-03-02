@@ -5,7 +5,7 @@ using UnityEngine;
 public class EmployeeManager : MonoBehaviour {
 
     public ArrayList allEmployees;
-    private ArrayList myEmployees;
+	public ArrayList myEmployees;
 
     void Awake() {
         allEmployees = new ArrayList();
@@ -14,19 +14,19 @@ public class EmployeeManager : MonoBehaviour {
         Employee employee_one = new Employee();
         employee_one.SetName("Abby");
         employee_one.SetMorale(10);
-		//employee_one.SetImage ("char2");
+		employee_one.SetImage ("char2");
 		allEmployees.Add (employee_one);
 
 		Employee employee_two = new Employee();
 		employee_two.SetName("Bob");
 		employee_two.SetMorale(10);
-		//employee_two.SetImage ("char1");
+		employee_two.SetImage ("char1");
 		allEmployees.Add (employee_two);
 
 		Employee employee_three = new Employee();
 		employee_three.SetName("Lila");
 		employee_three.SetMorale(10);
-		//employee_three.setImage ("Employee_Lila");
+		employee_three.SetImage ("Employee_Lila");
 		allEmployees.Add (employee_three);
 
 		// Initialize my employees list

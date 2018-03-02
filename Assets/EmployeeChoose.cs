@@ -30,6 +30,8 @@ public class EmployeeChoose : MonoBehaviour {
 			GameObject currEmployee = GameObject.Find ("Employee" + employeeNum.ToString ());
 			Text description = currEmployee.transform.Find ("Description").GetComponent<Text> ();
 			description.text = "Name: " + e.GetName () + "  Morale: " + e.GetMorale().ToString();
+			Image img = currEmployee.GetComponent<Image> ();
+			img.sprite = e.GetImage ();
 
 			employeeNum += 1;
 		}
