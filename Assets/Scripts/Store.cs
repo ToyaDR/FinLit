@@ -11,6 +11,8 @@ public class Store : MonoBehaviour {
 	private bool insurance;
 	public int savings_account;
 	public int checkings_account;
+	private int product_stock;
+
 	private string product;
 	private int product_price;
 
@@ -22,13 +24,14 @@ public class Store : MonoBehaviour {
 
 	/*   Variables from other scripts   */
 
-	Text score;
 	public GameObject door;
 	public GameObject closeButton;
 	public GameObject ingredientsPanel;
 	public GameObject employeeChoosePanel;
 	public GameObject start;
 	public GameObject taskAssignPanel;
+	public GameObject score;
+	public GameObject product_in_stock;
 
 	void Awake() {
 		money = 10000;
@@ -39,6 +42,7 @@ public class Store : MonoBehaviour {
 		reputation = 4;
 
 		product = "cupcake";
+		product_stock = 4;
 		product_price = 3;
 		Stock = new Dictionary<string, int>();
 	}
@@ -46,8 +50,9 @@ public class Store : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		// Money
-		score = GameObject.Find("Money").GetComponent<Text>();
-		score.text = money.ToString();
+		score.GetComponent<Text>().text = money.ToString();
+		product_in_stock.GetComponent<Text> ().text = product_stock.ToString();
+
 		HideIngredients ();
 		HideEmployeeChoose();
 		HideTaskAssign ();
@@ -58,13 +63,13 @@ public class Store : MonoBehaviour {
 			Stock.Add(i.getName(), 0);
 		}
 
-		Stock.Add (product, 2);
+		Stock.Add (product, product_stock);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		//money = 10;
-		score.text = money.ToString();
+		score.GetComponent<Text>().text = money.ToString();
 
 		/* Check for touch input */
 		if (Input.touchCount == 1 
