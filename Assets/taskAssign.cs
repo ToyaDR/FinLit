@@ -10,7 +10,7 @@ public class TaskAssign : MonoBehaviour {
 	public ArrayList existingTasks;
 	public Button doneButton;
 	public GameObject store;
-	public GameObject employeeManger;
+	public GameObject employeeManager;
 
 	private Toggle emp1_toggle_1;
 	private Toggle emp1_toggle_2;
@@ -20,6 +20,9 @@ public class TaskAssign : MonoBehaviour {
 	private Toggle emp2_toggle_3;
 	private Text temp_text;
 	private ArrayList my_employees;
+	private Task task1;
+	private Task task2;
+	private Task task3;
 
 	// Create different tasks
 	void Awake() {
@@ -27,17 +30,17 @@ public class TaskAssign : MonoBehaviour {
 		existingTasks = new ArrayList();
 
 		// Create and store tasks
-		Task task1 = new Task ();
+		task1 = new Task ();
 		task1.task_name = "Make a cupcake";
 		task1.time = 30;
 		existingTasks.Add (task1);
 
-		Task task2 = new Task ();
+		task2 = new Task ();
 		task2.task_name = "Sell a cupcake";
 		task2.time = 30;
 		existingTasks.Add (task2);
 
-		Task task3 = new Task ();
+		task3 = new Task ();
 		task3.task_name = "Deliver a cupcake";
 		task3.time = 30;
 		existingTasks.Add (task3);
@@ -46,10 +49,8 @@ public class TaskAssign : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		// Retrieve myEmployees ArrayList from EmployeeManager.cs - render profile images
-		my_employees = employeeManger.GetComponent<EmployeeManager>().myEmployees;
-		Image img1 = emp1.GetComponent<Image> ();
-		//img1 = my_employees[0].
+		// Retrieve all the objects that are needed
+		my_employees = employeeManager.GetComponent<EmployeeManager>().myEmployees;
 
 		// Add toggle change listeners - whenever toggle is changed, call ToggleChanged()
 
@@ -91,8 +92,13 @@ public class TaskAssign : MonoBehaviour {
 	}
 
 	void OnClickDone() {
-		// Wait for Done Button to be clicked - Store tasks to employees, close screens
-		//if (emp1_toggle_1.isOn) emp1.tasksNotCompleted
+		// Wait for Done Button to be clicked - Add tasks to employees, close screens
+		if (emp1_toggle_1.isOn) ((Employee)(my_employees[0])).tasksNotCompleted.Add(task1);
+		if (emp1_toggle_2.isOn) ((Employee)(my_employees[0])).tasksNotCompleted.Add(task2);
+		if (emp1_toggle_3.isOn) ((Employee)(my_employees[0])).tasksNotCompleted.Add(task3);
+		if (emp2_toggle_1.isOn) ((Employee)(my_employees[1])).tasksNotCompleted.Add(task1);
+		if (emp2_toggle_2.isOn) ((Employee)(my_employees[1])).tasksNotCompleted.Add(task2);
+		if (emp2_toggle_3.isOn) ((Employee)(my_employees[1])).tasksNotCompleted.Add(task3);
 
 		store.GetComponent<Store> ().HideTaskAssign ();
 	}

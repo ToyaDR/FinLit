@@ -14,7 +14,7 @@ public class Employee {
 	public int productivity;
 	public string[] issues;
 	public int salary;
-	public Task[] tasksNotCompleted; // Tasks that are assigned but not completed. Immediately delete tasks that are completed.
+	public ArrayList tasksNotCompleted; // Tasks that are assigned but not completed. Immediately delete tasks that are completed.
 
 	public void SetName(string name) {
         emp_name = name;

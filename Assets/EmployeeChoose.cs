@@ -13,10 +13,13 @@ public class EmployeeChoose : MonoBehaviour {
 	public GameObject emp3;
 	public GameObject taskAssignPanel;
 	public GameObject store;
+	public GameObject chosen_emp1_object;
+	public GameObject chosen_emp2_object;
 
 	private Toggle toggle_1;
 	private Toggle toggle_2;
 	private Toggle toggle_3;
+	private ArrayList my_employees;
 
 	// Use this for initialization
 	void Start () {
@@ -67,7 +70,8 @@ public class EmployeeChoose : MonoBehaviour {
 	}
 
 	void OnClickNext() {
-		// Wait for Next button to be clicked: Store which employees user chose, render task assignment screen
+		// Wait for Next button to be clicked: Store which employees user chose into employee manager, 
+		// render task assignment screen
 
 		// Find out which employees user chose
 		if (toggle_1.isOn) {
@@ -80,9 +84,17 @@ public class EmployeeChoose : MonoBehaviour {
 			employeeManager.GetComponent<EmployeeManager>().AddToMyEmployee ((Employee)(allEmployeesList [2]));
 		}
 
-		// Render next screen
+		// Render next screen - Task Assignment
 		taskAssignPanel.GetComponent<CanvasGroup>().alpha = 1f;
 		taskAssignPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
-		store.GetComponent<Store>().HideEmployeeChoose ();
+		store.GetComponent<Store>().HideEmployeeChoose (); // close current panel (employee choose panel)
+
+		// Retrieve myEmployees ArrayList from EmployeeManager.cs - assign profile sprite of chosen employees
+		// to TaskAssignPanel
+		my_employees = employeeManager.GetComponent<EmployeeManager>().myEmployees;
+		Image img1 = chosen_emp1_object.GetComponent<Image> ();
+		img1.sprite = ((Employee)(my_employees [0])).GetImage ();
+		Image img2 = chosen_emp2_object.GetComponent<Image> ();
+		img2.sprite = ((Employee)(my_employees [1])).GetImage ();
 	}
 }

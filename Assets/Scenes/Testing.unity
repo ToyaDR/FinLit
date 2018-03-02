@@ -448,6 +448,8 @@ MonoBehaviour:
   emp3: {fileID: 238141088}
   taskAssignPanel: {fileID: 981681562}
   store: {fileID: 2085171903}
+  chosen_emp1_object: {fileID: 666044791}
+  chosen_emp2_object: {fileID: 1616627995}
 --- !u!1 &151802461
 GameObject:
   m_ObjectHideFlags: 0
@@ -2674,6 +2676,7 @@ MonoBehaviour:
   emp2: {fileID: 1616627995}
   doneButton: {fileID: 2008257053}
   store: {fileID: 2085171903}
+  employeeManager: {fileID: 1252481224}
 --- !u!1 &992380028
 GameObject:
   m_ObjectHideFlags: 0
