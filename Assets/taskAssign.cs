@@ -11,6 +11,7 @@ public class TaskAssign : MonoBehaviour {
 	public Button doneButton;
 	public GameObject store;
 	public GameObject employeeManager;
+	public GameObject game_manager;
 
 	private Toggle emp1_toggle_1;
 	private Toggle emp1_toggle_2;
@@ -100,6 +101,7 @@ public class TaskAssign : MonoBehaviour {
 		if (emp2_toggle_2.isOn) ((Employee)(my_employees[1])).tasksNotCompleted.Add(task2);
 		if (emp2_toggle_3.isOn) ((Employee)(my_employees[1])).tasksNotCompleted.Add(task3);
 
+		game_manager.GetComponent<GameManager> ().StartShift (GameManager.State.DAY_SHIFT);
 		store.GetComponent<Store> ().HideTaskAssign ();
 	}
 
