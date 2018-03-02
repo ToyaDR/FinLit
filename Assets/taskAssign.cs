@@ -12,6 +12,8 @@ public class TaskAssign : MonoBehaviour {
 	public GameObject store;
 	public GameObject employeeManager;
 	public GameObject game_manager;
+	public int start_task_time;
+	public bool taskAssignClosed;
 
 	private Toggle emp1_toggle_1;
 	private Toggle emp1_toggle_2;
@@ -45,6 +47,8 @@ public class TaskAssign : MonoBehaviour {
 		task3.task_name = "Deliver a cupcake";
 		task3.time = 30;
 		existingTasks.Add (task3);
+
+		taskAssignClosed = false;
 	}
 
 	// Use this for initialization
@@ -103,6 +107,14 @@ public class TaskAssign : MonoBehaviour {
 
 		game_manager.GetComponent<GameManager> ().StartShift (GameManager.State.DAY_SHIFT);
 		store.GetComponent<Store> ().HideTaskAssign ();
+
+		// Render the chosen employees
+		SpriteRenderer img1 = store.transform.Find("Employee1_store").GetComponent<SpriteRenderer>();
+		img1.sprite = ((Employee)(my_employees[0])).GetImage ();
+		SpriteRenderer img2 = store.transform.Find("Employee2_store").GetComponent<SpriteRenderer>();
+		img2.sprite = ((Employee)(my_employees[1])).GetImage ();
+
+		taskAssignClosed = true;
 	}
 
 	void ToggleChanged_1(Toggle toggle) {
