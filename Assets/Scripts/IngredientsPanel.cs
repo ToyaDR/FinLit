@@ -11,24 +11,31 @@ public class IngredientsPanel : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		float canvasLeft = canvas.GetComponent<RectTransform> ().anchorMin.x;
-		float canvasTop = canvas.GetComponent<RectTransform> ().anchorMax.y;
+		float canvasLeft = -150;
+		float canvasTop = -77;
 
 		ingredients = new ArrayList ();
 
 		Ingredient flour = new Ingredient ();
 		flour.addName("Flour");
 		flour.addPrice(2);
-		//flour.addSprite ("Flour"); 
+		flour.addSprite ("Flour"); 
 
 		ingredients.Add(flour);
 
 		Ingredient eggs = new Ingredient ();
 		eggs.addName("Eggs");
 		eggs.addPrice(1);
-		//eggs.addSprite ("Eggs");
+		eggs.addSprite ("Eggs");
 
 		ingredients.Add(eggs);
+
+		Ingredient sugar = new Ingredient ();
+		sugar.addName("Sugar");
+		sugar.addPrice(1);
+		sugar.addSprite ("Sugar");
+
+		ingredients.Add(sugar);
 
 		float offset = 0;
 		foreach(Ingredient i in ingredients){
@@ -36,22 +43,20 @@ public class IngredientsPanel : MonoBehaviour {
 			ingTextGO.transform.SetParent (transform);
 			ingTextGO.GetComponent<Text>().text = i.getName() + " $" + i.getPrice();
 
-			Vector2 anchorPoint = new Vector2 (canvasLeft, canvasTop + offset);
+			Vector2 anchorPoint = new Vector2 (canvasLeft, canvasTop - offset);
 
 			ingTextGO.GetComponent<Text>().rectTransform.anchoredPosition = anchorPoint;
 
-			ingTextGO.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().sprite = i.getSprite();
-			/*
-			GameObject ingSpriteGO = ingTextGO.transform.GetChild (0).gameObject;
-			ingSpriteGO.transform.localPosition = new Vector3(ingTextGO.GetComponent<RectTransform>().rect.width, offset, 0);
-			*/
+			ingTextGO.transform.GetChild(0).gameObject.GetComponent<Image>().sprite = i.getSprite();
 
-			int price = i.getPrice ();
+			//GameObject ingImageGO = ingTextGO.transform.GetChild (0).gameObject;
+			//ingImageGO.transform.localPosition = new Vector3(ingTextGO.GetComponent<RectTransform>().rect.width, offset, 0);
+
 			ingTextGO.GetComponent<Button>().onClick.AddListener(delegate {
 				Decrement(i.getName(), i.getPrice());
 			});
 
-			offset += ingTextGO.GetComponent<RectTransform>().rect.height*1.5f;
+			offset += ingTextGO.GetComponent<RectTransform>().rect.height*1.2f;
 
 		}
 	}
