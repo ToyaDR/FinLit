@@ -86,10 +86,10 @@ public class TaskAssign : MonoBehaviour {
 		// Add next button listener
 		doneButton.onClick.AddListener(OnClickDone);
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 
 	void OnClickDone() {
