@@ -12,6 +12,11 @@ public class GameManager : MonoBehaviour {
 	bool shift_started;
 	bool lunch;
 	public Store store;
+	public GameObject EmployeeManager;
+	public GameObject BreakRoom;
+
+	Employee emp1;
+	Employee emp2;
 
 	public enum State{
 		DAY_SHIFT,
@@ -22,28 +27,32 @@ public class GameManager : MonoBehaviour {
 	State curr_state;
 	// Use this for initialization
 	void Start () {
-		time_elapsed = 0f;
+		Time.timeScale = 1.0f;
 
 		curr_state = State.DAY_SHIFT;
-		shift_length = 60f*2f; //2 minutes
-		lunch_length = 60f*1f; //1 minute
+		shift_length = 5f;//60f*2f; //2 minutes
+		lunch_length = 2f;//60f*1f; //1 minute
+		time_elapsed = shift_length; // count down to end of shift
 
 		StartCoroutine ("Sale");
+		/*emp1 = (Employee) EmployeeManager.GetComponent<EmployeeManager> ().myEmployees [0];
+		emp2 = (Employee) EmployeeManager.GetComponent<EmployeeManager> ().myEmployees [1];
+		*/
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//Check if player wants to pause
 
 		//Check if shift has ended
-		time_elapsed += Time.time - start_time;
+		if (shift_started) {
+			//TODO: Check if player wants to pause
 
-		bool end_lunch = (curr_state == State.LUNCH) && (time_elapsed >= lunch_length);
-		bool end_shift = (curr_state == State.DAY_SHIFT || curr_state == State.NIGHT_SHIFT)
-							&& (time_elapsed >= shift_length);
+			time_elapsed -= Time.deltaTime;
+			Debug.Log ("TIME ELAPSED" + time_elapsed);
 
-		if ((end_lunch || end_shift) && shift_started) {
-			StopShift ();
+			if (time_elapsed <= 0) {;
+				StopShift ();
+			}
 		}
 
 	}
@@ -60,49 +69,41 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void DayShift() {
-		// Start employees moving
 	}
 
 	public void Lunch() {
-		// NightEmployee and DayEmployee move to lunch room
+		// Render emp2 in lunch room
+
+		// Move emp1 to lunch room
 	}
 
 	public void NightShift() {
 	}
 
 	public void StartShift(State state){
+		Debug.Log("START SHIFT");
 		start_time = Time.time;
-		time_elapsed = 0f;
 		shift_started = true;
 		curr_state = state;
 
 		//Shift logic
 		if (state == State.DAY_SHIFT) {
+			time_elapsed = shift_length;
 			DayShift ();
 			return;
 		}
 
 		if (state == State.LUNCH) {
+			time_elapsed = lunch_length;
 			Lunch ();
 			return;
 		}
 
 		if (state == State.NIGHT_SHIFT) {
+			time_elapsed = shift_length;
 			NightShift ();
 			return;
 		}
-	}
-
-	public void PauseShift(){
-		shift_started = false;
-		// time already elapsed + elapsed time since last pause
-		time_elapsed += Time.time - start_time; 
-	}
-
-	public void PlayShift(){
-		shift_started = true;
-		// start time again
-		start_time = Time.time; 
 	}
 
 	public void StopShift(){
@@ -113,15 +114,22 @@ public class GameManager : MonoBehaviour {
 
 			Debug.Log("Lunch");
 			StartShift (State.LUNCH);
-		} else if (curr_state == State.LUNCH) {
+			return;
+		}
+
+		if (curr_state == State.LUNCH) {
 			//start night shift
 
 			Debug.Log("Night shift");
 			StartShift(State.NIGHT_SHIFT);
-		} else {
+			return;
+		} 
+
+		if (curr_state == State.NIGHT_SHIFT) {
 			//prompt to choose employees again
 
 			Debug.Log("Please assign 2 employees");
+			return;
 		}
 	}
 }
