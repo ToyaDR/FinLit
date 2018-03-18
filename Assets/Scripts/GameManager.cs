@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour {
 	float lunch_length;
 
 	float start_time;
-	bool start_shift;
+	float time_elapsed;
+	bool shift_started;
 	bool lunch;
 	public Store store;
 
@@ -21,32 +22,35 @@ public class GameManager : MonoBehaviour {
 	State curr_state;
 	// Use this for initialization
 	void Start () {
-		start_shift = false;
+		time_elapsed = 0f;
 
 		curr_state = State.DAY_SHIFT;
 		shift_length = 60f*2f; //2 minutes
-		lunch_length = 60f*1f;
-		Screen.orientation = ScreenOrientation.LandscapeLeft;
+		lunch_length = 60f*1f; //1 minute
+
 		StartCoroutine ("Sale");
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		bool end_lunch = (curr_state == State.LUNCH) && ((Time.time - start_time) >= lunch_length);
-		bool end_shift = (curr_state == State.DAY_SHIFT || curr_state == State.NIGHT_SHIFT)
-		                  && ((Time.time - start_time) >= shift_length);
+		//Check if player wants to pause
 
-		if ((end_lunch || end_shift) && start_shift) {
+		//Check if shift has ended
+		time_elapsed += Time.time - start_time;
+
+		bool end_lunch = (curr_state == State.LUNCH) && (time_elapsed >= lunch_length);
+		bool end_shift = (curr_state == State.DAY_SHIFT || curr_state == State.NIGHT_SHIFT)
+							&& (time_elapsed >= shift_length);
+
+		if ((end_lunch || end_shift) && shift_started) {
 			StopShift ();
 		}
-
-
 
 	}
 
 	private IEnumerator Sale(){
 		while (true) {
-			if (start_shift) {
+			if (shift_started) {
 				float freq = shift_length / (float)(store.GetReputation ());
 				yield return new WaitForSeconds (freq);
 				store.Sell ();
@@ -55,25 +59,68 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public void DayShift() {
+		// Start employees moving
+	}
+
+	public void Lunch() {
+		// NightEmployee and DayEmployee move to lunch room
+	}
+
+	public void NightShift() {
+	}
+
 	public void StartShift(State state){
 		start_time = Time.time;
-		start_shift = true;
+		time_elapsed = 0f;
+		shift_started = true;
 		curr_state = state;
+
+		//Shift logic
+		if (state == State.DAY_SHIFT) {
+			DayShift ();
+			return;
+		}
+
+		if (state == State.LUNCH) {
+			Lunch ();
+			return;
+		}
+
+		if (state == State.NIGHT_SHIFT) {
+			NightShift ();
+			return;
+		}
+	}
+
+	public void PauseShift(){
+		shift_started = false;
+		// time already elapsed + elapsed time since last pause
+		time_elapsed += Time.time - start_time; 
+	}
+
+	public void PlayShift(){
+		shift_started = true;
+		// start time again
+		start_time = Time.time; 
 	}
 
 	public void StopShift(){
-		start_shift = false;
+		shift_started = false;
 
 		if (curr_state == State.DAY_SHIFT) {
 			//start lunch
+
 			Debug.Log("Lunch");
 			StartShift (State.LUNCH);
 		} else if (curr_state == State.LUNCH) {
 			//start night shift
+
 			Debug.Log("Night shift");
 			StartShift(State.NIGHT_SHIFT);
 		} else {
 			//prompt to choose employees again
+
 			Debug.Log("Please assign 2 employees");
 		}
 	}
