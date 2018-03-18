@@ -30,8 +30,8 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 1.0f;
 
 		curr_state = State.DAY_SHIFT;
-		shift_length = 5f;//60f*2f; //2 minutes
-		lunch_length = 2f;//60f*1f; //1 minute
+		shift_length = 60f*2f; //2 minutes
+		lunch_length = 60f*1f; //1 minute
 		time_elapsed = shift_length; // count down to end of shift
 
 		StartCoroutine ("Sale");
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour {
 			//TODO: Check if player wants to pause
 
 			time_elapsed -= Time.deltaTime;
-			Debug.Log ("TIME ELAPSED" + time_elapsed);
+			//Debug.Log ("TIME ELAPSED" + time_elapsed);
 
 			if (time_elapsed <= 0) {;
 				StopShift ();
