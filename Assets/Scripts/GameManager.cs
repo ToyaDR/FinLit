@@ -12,11 +12,7 @@ public class GameManager : MonoBehaviour {
 	bool shift_started;
 	bool lunch;
 	public Store store;
-	public GameObject EmployeeManager;
 	public GameObject BreakRoom;
-
-	Employee emp1;
-	Employee emp2;
 
 	public enum State{
 		DAY_SHIFT,
@@ -35,9 +31,7 @@ public class GameManager : MonoBehaviour {
 		time_elapsed = shift_length; // count down to end of shift
 
 		StartCoroutine ("Sale");
-		/*emp1 = (Employee) EmployeeManager.GetComponent<EmployeeManager> ().myEmployees [0];
-		emp2 = (Employee) EmployeeManager.GetComponent<EmployeeManager> ().myEmployees [1];
-		*/
+
 	}
 	
 	// Update is called once per frame
@@ -48,9 +42,8 @@ public class GameManager : MonoBehaviour {
 			//TODO: Check if player wants to pause
 
 			time_elapsed -= Time.deltaTime;
-			//Debug.Log ("TIME ELAPSED" + time_elapsed);
 
-			if (time_elapsed <= 0) {;
+			if (time_elapsed <= 0) {
 				StopShift ();
 			}
 		}
@@ -81,7 +74,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void StartShift(State state){
-		Debug.Log("START SHIFT");
 		start_time = Time.time;
 		shift_started = true;
 		curr_state = state;

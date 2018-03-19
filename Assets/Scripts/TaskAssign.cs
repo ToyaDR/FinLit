@@ -109,10 +109,12 @@ public class TaskAssign : MonoBehaviour {
 		store.GetComponent<Store> ().HideTaskAssign ();
 
 		// Render the chosen employees
-		SpriteRenderer img1 = GetComponentInParent<Canvas>().transform.Find("Employee1_store").GetComponent<SpriteRenderer>();
+		SpriteRenderer img1 = store.transform.Find("Employee1_store").GetComponent<SpriteRenderer>();
 		img1.sprite = ((Employee)(my_employees[0])).GetImage ();
-		SpriteRenderer img2 = GetComponentInParent<Canvas>().transform.Find("Employee2_store").GetComponent<SpriteRenderer>();
+		store.GetComponent<Store>().ShowEmp1 ();
+		SpriteRenderer img2 = store.transform.Find("Employee2_store").GetComponent<SpriteRenderer>();
 		img2.sprite = ((Employee)(my_employees[1])).GetImage ();
+		store.GetComponent<Store>().ShowEmp2 ();
 
 		taskAssignClosed = true;
 	}
