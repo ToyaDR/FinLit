@@ -27,6 +27,9 @@ public class TaskAssign : MonoBehaviour {
 	private Task task2;
 	private Task task3;
 
+	public Fungus.Flowchart emp1_flowchart;
+	public Fungus.Flowchart emp2_flowchart;
+
 	// Create different tasks
 	void Awake() {
 		// Initialize the entire task list
@@ -109,12 +112,21 @@ public class TaskAssign : MonoBehaviour {
 		store.GetComponent<Store> ().HideTaskAssign ();
 
 		// Render the chosen employees
-		SpriteRenderer img1 = store.transform.Find("Employee1_store").GetComponent<SpriteRenderer>();
+
+		/* Render employee 1 and set initial flowchart information */
+		SpriteRenderer img1 = GetComponentInParent<Canvas>().transform.Find("Employee1_store").GetComponent<SpriteRenderer>();
 		img1.sprite = ((Employee)(my_employees[0])).GetImage ();
-		store.GetComponent<Store>().ShowEmp1 ();
-		SpriteRenderer img2 = store.transform.Find("Employee2_store").GetComponent<SpriteRenderer>();
+
+		DTreeNode currq_emp1 = ((Employee) my_employees[0]).curr_question;
+		List<Fungus.Command> qCommands_emp1 = emp1_flowchart.FindBlock("Question").CommandList;
+		SetFlowchart(currq_emp1, qCommands_emp1);
+
+		SpriteRenderer img2 = GetComponentInParent<Canvas>().transform.Find("Employee2_store").GetComponent<SpriteRenderer>();
 		img2.sprite = ((Employee)(my_employees[1])).GetImage ();
-		store.GetComponent<Store>().ShowEmp2 ();
+
+		DTreeNode currq_emp2 = ((Employee) my_employees[0]).curr_question;
+		List<Fungus.Command> qCommands_emp2 = emp1_flowchart.FindBlock("Question").CommandList;
+		SetFlowchart(currq_emp2, qCommands_emp2);
 
 		taskAssignClosed = true;
 	}
@@ -131,5 +143,16 @@ public class TaskAssign : MonoBehaviour {
 		if (emp2_toggle_1.isOn && emp2_toggle_2.isOn && emp2_toggle_3.isOn) {
 			toggle.isOn = false;
 		}
+	}
+
+	public void SetFlowchart(DTreeNode currq, List<Fungus.Command> qCommands){
+		Fungus.Say question = (Fungus.Say) qCommands[0];
+		question.SetStandardText (currq.GetQuestion());
+
+		Fungus.Menu goodopt = (Fungus.Menu)qCommands [2];
+		goodopt.SetStandardText (currq.GetGoodOption());
+
+		Fungus.Menu badopt = (Fungus.Menu)qCommands [3];
+		goodopt.SetStandardText (currq.GetBadOption ());
 	}
 }

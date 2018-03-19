@@ -31,8 +31,6 @@ public class Store : MonoBehaviour {
 	public GameObject taskAssignPanel;
 	public GameObject score;
 	public GameObject product_in_stock;
-	public GameObject emp1;
-	public GameObject emp2;
 
 	void Awake() {
 		money = 10000;
@@ -55,7 +53,6 @@ public class Store : MonoBehaviour {
 		HideIngredients ();
 		HideEmployeeChoose();
 		HideTaskAssign ();
-		HideEmp1 ();
 
 		ArrayList ingredients = ingredientsPanel.GetComponent<IngredientsPanel>().getIngredientsList ();
 
@@ -65,6 +62,8 @@ public class Store : MonoBehaviour {
 
 		Stock.Add (product, 4);
 		product_in_stock.GetComponent<Text> ().text = Stock[product].ToString();
+	
+
 	}
 	
 	// Update is called once per frame
@@ -90,12 +89,6 @@ public class Store : MonoBehaviour {
 					ShowIngredients ();
 				} else if (touchedObject == start) {
 					ShowEmployeeChoose ();
-				} else if (touchedObject == emp1) {
-					// do fungus stuff
-					Debug.Log("emp1");
-				} else if (touchedObject == emp2) {
-					// do fungus stuff
-					Debug.Log("emp2");
 				}
 			}
 		}
@@ -164,18 +157,5 @@ public class Store : MonoBehaviour {
 			RemoveStock (product, 1);
 			IncMoney (product_price);
 		}
-	}
-
-	public void HideEmp1(){
-		emp1.GetComponent<BoxCollider2D> ().enabled = false;
-	}
-	public void ShowEmp1(){
-		emp1.GetComponent<BoxCollider2D> ().enabled = true;
-	}
-	public void HideEmp2(){
-		emp2.GetComponent<BoxCollider2D> ().enabled = false;
-	}
-	public void ShowEmp2(){
-		emp2.GetComponent<BoxCollider2D> ().enabled = true;
 	}
 }

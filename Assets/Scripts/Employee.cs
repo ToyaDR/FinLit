@@ -16,6 +16,10 @@ public class Employee {
 	public int salary;
 	public ArrayList tasksNotCompleted; // Tasks that are assigned but not completed. Immediately delete tasks that are completed.
 
+	//Dialogue Tree
+	public DTreeNode start_question;
+	public DTreeNode curr_question;
+
 	public void SetName(string name) {
         emp_name = name;
     }

@@ -16,20 +16,40 @@ public class EmployeeManager : MonoBehaviour {
         employee_one.SetMorale(10);
 		employee_one.SetImage ("Icon_Lila");
 		employee_one.tasksNotCompleted = new ArrayList ();
+		/* Populate Dialogue Tree for Lila */
+		employee_one.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
+		employee_one.start_question.AddChild ("Idk what to put here", "Yes.", "No."); //Did confront roommate
+		employee_one.start_question.AddChild ("Same here", "Yes.", "No."); //Did not confront roommate
+		employee_one.curr_question = employee_one.start_question;
+
 		allEmployees.Add (employee_one);
+
 
 		Employee employee_two = new Employee();
 		employee_two.SetName("Mateo");
 		employee_two.SetMorale(10);
 		employee_two.SetImage ("Icon_Mateo");
 		employee_two.tasksNotCompleted = new ArrayList ();
+		/* Populate Dialogue Tree for Mateo */
+		employee_two.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
+		employee_two.start_question.AddChild ("Idk what to put here", "Yes.", "No."); //Did confront roommate
+		employee_two.start_question.AddChild ("Same here", "Yes.", "No."); //Did not confront roommate
+		employee_two.curr_question = employee_two.start_question;
+
 		allEmployees.Add (employee_two);
+
 
 		Employee employee_three = new Employee();
 		employee_three.SetName("Bob");
 		employee_three.SetMorale(10);
 		employee_three.SetImage ("char1");
 		employee_three.tasksNotCompleted = new ArrayList ();
+		/* Populate Dialogue Tree for employee_three */
+		employee_three.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
+		employee_three.start_question.AddChild ("Idk what to put here", "Yes.", "No."); //Did confront roommate
+		employee_three.start_question.AddChild ("Same here", "Yes.", "No."); //Did not confront roommate
+		employee_three.curr_question = employee_three.start_question;
+
 		allEmployees.Add (employee_three);
 
 		// Initialize my employees list
