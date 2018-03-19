@@ -9,6 +9,7 @@ public class Employee {
     private string emp_name;
     private int emp_morale;
     private Sprite emp_image;
+	private Sprite emp_dialogue_image;
 
 	// Not yet dealt with
 	public int productivity;
@@ -32,6 +33,10 @@ public class Employee {
 		emp_image = Resources.Load<Sprite>(imageName);
     }
 
+	public void SetDialogueImage(string imageName) {
+		emp_dialogue_image = Resources.Load<Sprite>(imageName);
+	}
+
     public string GetName() {
         return emp_name;
     }
@@ -42,5 +47,19 @@ public class Employee {
 
 	public Sprite GetImage() {
 		return emp_image;
+	}
+
+	public Sprite GetDialogueImage() {
+		return emp_dialogue_image;
+	}
+
+	public void SetCurrQuestion(string option){
+		if (option == "bad") {
+			curr_question = curr_question.GetBadOptionNode ();
+		} else if (option == "good") {
+			curr_question = curr_question.GetGoodOptionNode ();
+		} else {
+			curr_question = null;
+		}
 	}
 }

@@ -38,6 +38,14 @@ public class DTreeNode {
 		return bad_option;
 	}
 
+	public DTreeNode GetBadOptionNode(){
+		return GetChild (0);
+	}
+
+	public DTreeNode GetGoodOptionNode(){
+		return GetChild (1);
+	}
+
 	public bool IsLeaf(){
 		return (branches.Count == 0);
 	}

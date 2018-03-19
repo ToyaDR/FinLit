@@ -19,15 +19,12 @@ public class Store : MonoBehaviour {
 	private int reputation;
 	private Dictionary<string, int> Stock;
 
-	Vector3 touchPosWorld;
-
 	/*   Variables from other scripts   */
 
-	public GameObject door;
 	public GameObject closeButton;
 	public GameObject ingredientsPanel;
 	public GameObject employeeChoosePanel;
-	public GameObject start;
+
 	public GameObject taskAssignPanel;
 	public GameObject score;
 	public GameObject product_in_stock;
@@ -70,28 +67,6 @@ public class Store : MonoBehaviour {
 	void Update () {
 		score.GetComponent<Text>().text = money.ToString();
 		product_in_stock.GetComponent<Text> ().text = Stock[product].ToString ();
-
-		/* Check for touch input */
-		if (Input.touchCount == 1 
-			&& Input.GetTouch (0).phase == TouchPhase.Stationary) {
-
-			// transform touch position to world space
-			touchPosWorld = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
-			Vector2 touchPosWorld2D = new Vector2 (touchPosWorld.x, touchPosWorld.y);
-
-			//raycast
-			RaycastHit2D hitInfo = Physics2D.Raycast(touchPosWorld2D, Camera.main.transform.forward);
-
-			if (hitInfo.collider != null) {
-				GameObject touchedObject = hitInfo.transform.gameObject;
-
-				if (touchedObject == door) {
-					ShowIngredients ();
-				} else if (touchedObject == start) {
-					ShowEmployeeChoose ();
-				}
-			}
-		}
 	}
 
 	// Hide task assign panel

@@ -7,7 +7,7 @@ public class EmployeeManager : MonoBehaviour {
     public ArrayList allEmployees;
 	public ArrayList myEmployees;
 
-    void Awake() {
+	void Awake() {
         allEmployees = new ArrayList();
 
         // At the start of the game, create all possible instances of employees
@@ -15,11 +15,12 @@ public class EmployeeManager : MonoBehaviour {
         employee_one.SetName("Lila");
         employee_one.SetMorale(10);
 		employee_one.SetImage ("Icon_Lila");
+		employee_one.SetDialogueImage ("Employee_Lila");
 		employee_one.tasksNotCompleted = new ArrayList ();
 		/* Populate Dialogue Tree for Lila */
 		employee_one.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
-		employee_one.start_question.AddChild ("Idk what to put here", "Yes.", "No."); //Did confront roommate
-		employee_one.start_question.AddChild ("Same here", "Yes.", "No."); //Did not confront roommate
+		employee_one.start_question.AddChild ("GOOD", "Yes.", "No."); //Did confront roommate
+		employee_one.start_question.AddChild ("BAD", "Yes.", "No."); //Did not confront roommate
 		employee_one.curr_question = employee_one.start_question;
 
 		allEmployees.Add (employee_one);
@@ -29,6 +30,7 @@ public class EmployeeManager : MonoBehaviour {
 		employee_two.SetName("Mateo");
 		employee_two.SetMorale(10);
 		employee_two.SetImage ("Icon_Mateo");
+		employee_two.SetDialogueImage ("char2");
 		employee_two.tasksNotCompleted = new ArrayList ();
 		/* Populate Dialogue Tree for Mateo */
 		employee_two.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
@@ -43,6 +45,7 @@ public class EmployeeManager : MonoBehaviour {
 		employee_three.SetName("Bob");
 		employee_three.SetMorale(10);
 		employee_three.SetImage ("char1");
+		employee_three.SetDialogueImage ("char1");
 		employee_three.tasksNotCompleted = new ArrayList ();
 		/* Populate Dialogue Tree for employee_three */
 		employee_three.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
@@ -72,5 +75,18 @@ public class EmployeeManager : MonoBehaviour {
 
 	public void InitializeEmployeeList() {
 		myEmployees = new ArrayList ();
+	}
+
+	public void SetFlowchart(DTreeNode currq, List<Fungus.Command> qCommands){
+		if (currq == null)
+			return;
+		Fungus.Say question = (Fungus.Say) qCommands[0];
+		question.SetStandardText (currq.GetQuestion());
+
+		Fungus.Menu goodopt = (Fungus.Menu)qCommands [2];
+		goodopt.SetStandardText (currq.GetGoodOption());
+
+		Fungus.Menu badopt = (Fungus.Menu)qCommands [3];
+		goodopt.SetStandardText (currq.GetBadOption ());
 	}
 }

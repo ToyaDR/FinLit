@@ -27,8 +27,8 @@ public class TaskAssign : MonoBehaviour {
 	private Task task2;
 	private Task task3;
 
-	public Fungus.Flowchart emp1_flowchart;
-	public Fungus.Flowchart emp2_flowchart;
+	public GameObject emp1_store;
+	public GameObject emp2_store;
 
 	// Create different tasks
 	void Awake() {
@@ -108,25 +108,36 @@ public class TaskAssign : MonoBehaviour {
 		if (emp2_toggle_2.isOn) ((Employee)(my_employees[1])).tasksNotCompleted.Add(task2);
 		if (emp2_toggle_3.isOn) ((Employee)(my_employees[1])).tasksNotCompleted.Add(task3);
 
-		game_manager.GetComponent<GameManager> ().StartShift (GameManager.State.DAY_SHIFT);
+		GameManager gm = game_manager.GetComponent<GameManager> ();
+		gm.StartShift (GameManager.State.DAY_SHIFT);
 		store.GetComponent<Store> ().HideTaskAssign ();
 
 		// Render the chosen employees
 
 		/* Render employee 1 and set initial flowchart information */
-		SpriteRenderer img1 = GetComponentInParent<Canvas>().transform.Find("Employee1_store").GetComponent<SpriteRenderer>();
+		SpriteRenderer img1 = emp1_store.GetComponent<SpriteRenderer>();
 		img1.sprite = ((Employee)(my_employees[0])).GetImage ();
+		/* TODO: uncomment this once dialogue bugs are fixed
+		SpriteRenderer img1_dialogue = emp1_store.transform.Find ("DialogueSprite").GetComponent<SpriteRenderer>();
+		img1_dialogue.sprite = ((Employee)(my_employees[0])).GetDialogueImage ();
+		*/
 
 		DTreeNode currq_emp1 = ((Employee) my_employees[0]).curr_question;
-		List<Fungus.Command> qCommands_emp1 = emp1_flowchart.FindBlock("Question").CommandList;
-		SetFlowchart(currq_emp1, qCommands_emp1);
+		List<Fungus.Command> qCommands_emp1 = gm.emp1_flowchart.FindBlock("Question").CommandList;
+		employeeManager.GetComponent<EmployeeManager>().SetFlowchart(currq_emp1, qCommands_emp1);
 
-		SpriteRenderer img2 = GetComponentInParent<Canvas>().transform.Find("Employee2_store").GetComponent<SpriteRenderer>();
+
+		SpriteRenderer img2 = emp2_store.GetComponent<SpriteRenderer>();
 		img2.sprite = ((Employee)(my_employees[1])).GetImage ();
+		/*
+		SpriteRenderer img2_dialogue = emp2_store.transform.Find ("DialogueSprite").GetComponent<SpriteRenderer>();
+		img2_dialogue.sprite = ((Employee)(my_employees[1])).GetDialogueImage ();
+		*/
 
-		DTreeNode currq_emp2 = ((Employee) my_employees[0]).curr_question;
-		List<Fungus.Command> qCommands_emp2 = emp1_flowchart.FindBlock("Question").CommandList;
-		SetFlowchart(currq_emp2, qCommands_emp2);
+		DTreeNode currq_emp2 = ((Employee) my_employees[1]).curr_question;
+		List<Fungus.Command> qCommands_emp2 = gm.emp2_flowchart.FindBlock("Question").CommandList;
+		employeeManager.GetComponent<EmployeeManager>().SetFlowchart(currq_emp2, qCommands_emp2);
+
 
 		taskAssignClosed = true;
 	}
@@ -143,16 +154,5 @@ public class TaskAssign : MonoBehaviour {
 		if (emp2_toggle_1.isOn && emp2_toggle_2.isOn && emp2_toggle_3.isOn) {
 			toggle.isOn = false;
 		}
-	}
-
-	public void SetFlowchart(DTreeNode currq, List<Fungus.Command> qCommands){
-		Fungus.Say question = (Fungus.Say) qCommands[0];
-		question.SetStandardText (currq.GetQuestion());
-
-		Fungus.Menu goodopt = (Fungus.Menu)qCommands [2];
-		goodopt.SetStandardText (currq.GetGoodOption());
-
-		Fungus.Menu badopt = (Fungus.Menu)qCommands [3];
-		goodopt.SetStandardText (currq.GetBadOption ());
 	}
 }

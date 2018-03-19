@@ -11,8 +11,20 @@ public class GameManager : MonoBehaviour {
 	float time_elapsed;
 	bool shift_started;
 	bool lunch;
+
 	public Store store;
+	public GameObject door;
 	public GameObject BreakRoom;
+	public GameObject EmployeeManager;
+	public GameObject TaskAssign;
+	public Fungus.Flowchart emp1_flowchart;
+	public Fungus.Flowchart emp2_flowchart;
+	public GameObject start;
+
+	private EmployeeManager employee_manager;
+	private TaskAssign task_assign;
+
+	Vector3 touchPosWorld;
 
 	public enum State{
 		DAY_SHIFT,
@@ -30,16 +42,66 @@ public class GameManager : MonoBehaviour {
 		lunch_length = 60f*1f; //1 minute
 		time_elapsed = shift_length; // count down to end of shift
 
+		employee_manager = EmployeeManager.GetComponent<EmployeeManager> ();
+		task_assign = TaskAssign.GetComponent<TaskAssign> ();
+
 		StartCoroutine ("Sale");
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		/* Check for touch input */
+		if (Input.touchCount == 1 
+			&& Input.GetTouch (0).phase == TouchPhase.Stationary) {
+
+			// transform touch position to world space
+			touchPosWorld = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
+			Vector2 touchPosWorld2D = new Vector2 (touchPosWorld.x, touchPosWorld.y);
+
+			//raycast
+			RaycastHit2D hitInfo = Physics2D.Raycast(touchPosWorld2D, Camera.main.transform.forward);
+
+			if (hitInfo.collider != null) {
+				GameObject touchedObject = hitInfo.transform.gameObject;
+
+				if (touchedObject == door) {
+					store.ShowIngredients ();
+				} else if (touchedObject == start) {
+					store.ShowEmployeeChoose ();
+				} else if (touchedObject == TaskAssign.GetComponent<TaskAssign> ().emp1_store) {
+
+					// TODO: Check if null
+					// Render bigger sprite
+
+					task_assign.emp1_store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = false;
+
+					Employee emp1 = (Employee)employee_manager.myEmployees [0];
+					Fungus.StringVariable option = (Fungus.StringVariable) emp1_flowchart.GetVariable("option");
+
+					if (option.Evaluate (Fungus.CompareOperator.Equals, "bad")) {
+						emp1.SetCurrQuestion ("bad");
+					} else if (option.Evaluate (Fungus.CompareOperator.Equals, "good")) {
+						emp1.SetCurrQuestion ("good");
+					} else{
+						emp1.SetCurrQuestion("");
+						// TODO: get financial advisor
+					} 
+
+					DTreeNode currq_emp1 = ((Employee) employee_manager.myEmployees[0]).curr_question;
+					List<Fungus.Command> qCommands_emp1 = emp1_flowchart.FindBlock("Question").CommandList;	
+					employee_manager.SetFlowchart (currq_emp1, qCommands_emp1);
+					task_assign.emp1_store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = true;
+
+				} else if (touchedObject == TaskAssign.GetComponent<TaskAssign> ().emp2_store) {
+				}
+			}
+		}
 
 		//Check if shift has ended
 		if (shift_started) {
 			//TODO: Check if player wants to pause
+
 
 			time_elapsed -= Time.deltaTime;
 
@@ -65,9 +127,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void Lunch() {
-		// Render emp2 in lunch room
-
-		// Move emp1 to lunch room
 	}
 
 	public void NightShift() {
