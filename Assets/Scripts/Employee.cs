@@ -54,12 +54,24 @@ public class Employee {
 	}
 
 	public void SetCurrQuestion(string option){
+		if (curr_question.IsLeaf ()) {
+			return;
+		}
+
 		if (option == "bad") {
 			curr_question = curr_question.GetBadOptionNode ();
 		} else if (option == "good") {
 			curr_question = curr_question.GetGoodOptionNode ();
-		} else {
-			curr_question = null;
 		}
+	}
+
+	public void PrintDTree(DTreeNode curr){
+		Debug.Log ("QUESTION:" + curr.GetQuestion());
+		if (curr.IsLeaf ()) {
+			Debug.Log ("DONE");
+			return;
+		}
+		PrintDTree (curr.GetGoodOptionNode ());
+		PrintDTree (curr.GetBadOptionNode ());
 	}
 }

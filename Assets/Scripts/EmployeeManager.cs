@@ -19,9 +19,16 @@ public class EmployeeManager : MonoBehaviour {
 		employee_one.tasksNotCompleted = new ArrayList ();
 		/* Populate Dialogue Tree for Lila */
 		employee_one.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
-		employee_one.start_question.AddChild ("GOOD", "Yes.", "No."); //Did confront roommate
-		employee_one.start_question.AddChild ("BAD", "Yes.", "No."); //Did not confront roommate
 		employee_one.curr_question = employee_one.start_question;
+
+		employee_one.start_question.AddGoodOption ("GOOD", "Y", "N"); //Did confront roommate
+		employee_one.start_question.AddBadOption ("BAD", "Y", "N"); //Did not confront roommate
+
+		employee_one.start_question.GetBadOptionNode ().AddGoodOption ("BADGOOD", "Y", "N");
+		employee_one.start_question.GetBadOptionNode ().AddBadOption ("BADBAD", "Y", "N");
+
+		employee_one.start_question.GetGoodOptionNode ().AddGoodOption ("GOODGOOD");
+		employee_one.start_question.GetGoodOptionNode ().AddBadOption ("GOODBAD");
 
 		allEmployees.Add (employee_one);
 
@@ -34,8 +41,6 @@ public class EmployeeManager : MonoBehaviour {
 		employee_two.tasksNotCompleted = new ArrayList ();
 		/* Populate Dialogue Tree for Mateo */
 		employee_two.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
-		employee_two.start_question.AddChild ("Idk what to put here", "Yes.", "No."); //Did confront roommate
-		employee_two.start_question.AddChild ("Same here", "Yes.", "No."); //Did not confront roommate
 		employee_two.curr_question = employee_two.start_question;
 
 		allEmployees.Add (employee_two);
@@ -49,8 +54,6 @@ public class EmployeeManager : MonoBehaviour {
 		employee_three.tasksNotCompleted = new ArrayList ();
 		/* Populate Dialogue Tree for employee_three */
 		employee_three.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
-		employee_three.start_question.AddChild ("Idk what to put here", "Yes.", "No."); //Did confront roommate
-		employee_three.start_question.AddChild ("Same here", "Yes.", "No."); //Did not confront roommate
 		employee_three.curr_question = employee_three.start_question;
 
 		allEmployees.Add (employee_three);
@@ -78,8 +81,7 @@ public class EmployeeManager : MonoBehaviour {
 	}
 
 	public void SetFlowchart(DTreeNode currq, List<Fungus.Command> qCommands){
-		if (currq == null)
-			return;
+
 		Fungus.Say question = (Fungus.Say) qCommands[0];
 		question.SetStandardText (currq.GetQuestion());
 

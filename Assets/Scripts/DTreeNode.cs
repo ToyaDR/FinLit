@@ -6,24 +6,21 @@ public class DTreeNode {
 	private string question;
 	private string good_option;
 	private string bad_option;
-	private LinkedList<DTreeNode> branches;
+	private Dictionary<string, DTreeNode> branches;
 
 	public DTreeNode (string question, string good_option, string bad_option){
 		this.question = question;
 		this.good_option = good_option;
 		this.bad_option = bad_option;
-		this.branches = new LinkedList<DTreeNode>();
+		this.branches = new Dictionary<string, DTreeNode>();
 	}
 
-	public void AddChild(string question, string good_option, string bad_option){
-		branches.AddFirst (new DTreeNode (question, good_option, bad_option));
+	public void AddGoodOption(string question, string good_option = null, string bad_option = null){
+		branches.Add("good", new DTreeNode (question, good_option, bad_option));
 	}
 
-	public DTreeNode GetChild(int i){
-		foreach (DTreeNode d in branches)
-			if (--i == 0)
-				return d;
-		return null;
+	public void AddBadOption(string question, string good_option = null, string bad_option = null){
+		branches.Add("bad", new DTreeNode (question, good_option, bad_option));
 	}
 
 	public string GetQuestion(){
@@ -39,11 +36,11 @@ public class DTreeNode {
 	}
 
 	public DTreeNode GetBadOptionNode(){
-		return GetChild (0);
+		return branches["bad"];
 	}
 
 	public DTreeNode GetGoodOptionNode(){
-		return GetChild (1);
+		return branches["good"];
 	}
 
 	public bool IsLeaf(){

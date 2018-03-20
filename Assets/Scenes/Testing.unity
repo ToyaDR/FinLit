@@ -222,7 +222,7 @@ RectTransform:
   m_LocalScale: {x: 0.07, y: 0.07, z: 1}
   m_Children: []
   m_Father: {fileID: 1051287503}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1153,22 +1153,22 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4306579716747250, guid: e615667d26b962c4b865c95da41013b7, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114363940069032392, guid: e615667d26b962c4b865c95da41013b7,
         type: 2}
       propertyPath: selectedBlocks.Array.data[0]
       value: 
-      objectReference: {fileID: 650896513}
+      objectReference: {fileID: 650896515}
     - target: {fileID: 114363940069032392, guid: e615667d26b962c4b865c95da41013b7,
         type: 2}
       propertyPath: selectedCommands.Array.data[0]
       value: 
-      objectReference: {fileID: 650896512}
+      objectReference: {fileID: 650896508}
     - target: {fileID: 114085949907598864, guid: e615667d26b962c4b865c95da41013b7,
         type: 2}
       propertyPath: nodeRect.x
-      value: 101
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 114363940069032392, guid: e615667d26b962c4b865c95da41013b7,
         type: 2}
@@ -1218,7 +1218,7 @@ Prefab:
     - target: {fileID: 114539537930363232, guid: e615667d26b962c4b865c95da41013b7,
         type: 2}
       propertyPath: nodeRect.x
-      value: 329
+      value: 328
       objectReference: {fileID: 0}
     - target: {fileID: 114539537930363232, guid: e615667d26b962c4b865c95da41013b7,
         type: 2}
@@ -1238,7 +1238,7 @@ Prefab:
     - target: {fileID: 114247145609685076, guid: e615667d26b962c4b865c95da41013b7,
         type: 2}
       propertyPath: nodeRect.y
-      value: 88.5
+      value: 87.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e615667d26b962c4b865c95da41013b7, type: 2}
@@ -2056,15 +2056,9 @@ MonoBehaviour:
   stringData:
     stringRef: {fileID: 0}
     stringVal: bad
---- !u!114 &650896512 stripped
+--- !u!114 &650896515 stripped
 MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114786127960037446, guid: e615667d26b962c4b865c95da41013b7,
-    type: 2}
-  m_PrefabInternal: {fileID: 341474861}
-  m_Script: {fileID: 11500000, guid: 841589fc622bc494aa5405f416fa1301, type: 3}
---- !u!114 &650896513 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114539537930363232, guid: e615667d26b962c4b865c95da41013b7,
+  m_PrefabParentObject: {fileID: 114356366567550670, guid: e615667d26b962c4b865c95da41013b7,
     type: 2}
   m_PrefabInternal: {fileID: 341474861}
   m_Script: {fileID: 11500000, guid: 3d3d73aef2cfc4f51abf34ac00241f60, type: 3}
@@ -3195,6 +3189,79 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 919262185}
+--- !u!1 &978463740
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 978463741}
+  - component: {fileID: 978463742}
+  m_Layer: 0
+  m_Name: DialogueSprite
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &978463741
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 978463740}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 31.89978, y: -20.77179, z: 0}
+  m_LocalScale: {x: 2.511774, y: 2.511774, z: 1.255887}
+  m_Children: []
+  m_Father: {fileID: 1051287503}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &978463742
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 978463740}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 0
+  m_MaskInteraction: 0
 --- !u!1 &981681562
 GameObject:
   m_ObjectHideFlags: 0
@@ -3299,6 +3366,8 @@ MonoBehaviour:
   game_manager: {fileID: 1063656071}
   start_task_time: 0
   taskAssignClosed: 0
+  emp1_store: {fileID: 1067486430}
+  emp2_store: {fileID: 1051287502}
 --- !u!1 &992380028
 GameObject:
   m_ObjectHideFlags: 0
@@ -3534,6 +3603,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children:
+  - {fileID: 978463741}
   - {fileID: 41266076}
   - {fileID: 1878434975}
   m_Father: {fileID: 1809190694}
@@ -4564,8 +4634,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6af5271706a314e86bbd6af779c88941, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emp1_flowchart: {fileID: 0}
-  emp2_flowchart: {fileID: 0}
 --- !u!4 &1252481226
 Transform:
   m_ObjectHideFlags: 0
@@ -6564,7 +6632,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4306579716747250, guid: e615667d26b962c4b865c95da41013b7, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114363940069032392, guid: e615667d26b962c4b865c95da41013b7,
         type: 2}

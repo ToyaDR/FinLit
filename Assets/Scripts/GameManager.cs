@@ -69,45 +69,29 @@ public class GameManager : MonoBehaviour {
 					store.ShowIngredients ();
 				} else if (touchedObject == start) {
 					store.ShowEmployeeChoose ();
-				} else if (touchedObject == TaskAssign.GetComponent<TaskAssign> ().emp1_store) {
-
-					// TODO: Check if null
-					// Render bigger sprite
-
-					task_assign.emp1_store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = false;
-
-					Employee emp1 = (Employee)employee_manager.myEmployees [0];
-					Fungus.StringVariable option = (Fungus.StringVariable) emp1_flowchart.GetVariable("option");
-
-					if (option.Evaluate (Fungus.CompareOperator.Equals, "bad")) {
-						emp1.SetCurrQuestion ("bad");
-					} else if (option.Evaluate (Fungus.CompareOperator.Equals, "good")) {
-						emp1.SetCurrQuestion ("good");
-					} else{
-						emp1.SetCurrQuestion("");
-						// TODO: get financial advisor
-					} 
-
-					DTreeNode currq_emp1 = ((Employee) employee_manager.myEmployees[0]).curr_question;
-					List<Fungus.Command> qCommands_emp1 = emp1_flowchart.FindBlock("Question").CommandList;	
-					employee_manager.SetFlowchart (currq_emp1, qCommands_emp1);
-					task_assign.emp1_store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = true;
-
-				} else if (touchedObject == TaskAssign.GetComponent<TaskAssign> ().emp2_store) {
 				}
 			}
 		}
 
 		//Check if shift has ended
 		if (shift_started) {
-			//TODO: Check if player wants to pause
-
-
 			time_elapsed -= Time.deltaTime;
 
 			if (time_elapsed <= 0) {
 				StopShift ();
 			}
+			//TODO: Check if player wants to pause
+
+			HideDoor ();
+			HideEmployee (task_assign.emp1_store);
+			UpdateFlowchart(emp1_flowchart,(Employee)employee_manager.myEmployees [0]);
+			ShowEmployee (task_assign.emp1_store);
+
+			HideEmployee (task_assign.emp2_store);
+			UpdateFlowchart(emp2_flowchart,(Employee)employee_manager.myEmployees [1]);
+			ShowEmployee (task_assign.emp2_store);
+
+			ShowDoor ();
 		}
 
 	}
@@ -163,7 +147,6 @@ public class GameManager : MonoBehaviour {
 		if (curr_state == State.DAY_SHIFT) {
 			//start lunch
 
-			Debug.Log("Lunch");
 			StartShift (State.LUNCH);
 			return;
 		}
@@ -171,7 +154,6 @@ public class GameManager : MonoBehaviour {
 		if (curr_state == State.LUNCH) {
 			//start night shift
 
-			Debug.Log("Night shift");
 			StartShift(State.NIGHT_SHIFT);
 			return;
 		} 
@@ -182,5 +164,36 @@ public class GameManager : MonoBehaviour {
 			Debug.Log("Please assign 2 employees");
 			return;
 		}
+	}
+
+	public void UpdateFlowchart(Fungus.Flowchart flowchart, Employee emp){
+		Fungus.StringVariable option = (Fungus.StringVariable) flowchart.GetVariable ("option");
+
+		if(option.Evaluate(Fungus.CompareOperator.NotEquals, "default")){
+			if (option.Evaluate (Fungus.CompareOperator.Equals, "bad")) {
+				emp.SetCurrQuestion ("bad");
+				if (emp.curr_question.GetQuestion () == "BAD") {
+					Debug.Log ("SHIT");
+				}
+
+			} else if (option.Evaluate (Fungus.CompareOperator.Equals, "good")) {
+				emp.SetCurrQuestion ("good");
+			}
+			employee_manager.SetFlowchart (emp.curr_question, flowchart.FindBlock("Question").CommandList);
+		}
+	}
+
+	public void ShowEmployee(GameObject emp){
+		emp.GetComponent<Fungus.Clickable2D> ().ClickEnabled = true;
+	}
+	public void HideEmployee(GameObject emp){
+		emp.GetComponent<Fungus.Clickable2D> ().ClickEnabled = false;
+	}
+
+	public void ShowDoor(){
+		door.GetComponent<BoxCollider2D> ().enabled = true;
+	}
+	public void HideDoor(){
+		door.GetComponent<BoxCollider2D> ().enabled = false;
 	}
 }
