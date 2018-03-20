@@ -67,8 +67,6 @@ public class GameManager : MonoBehaviour {
 
 				if (touchedObject == door) {
 					store.ShowIngredients ();
-				} else if (touchedObject == start) {
-					store.ShowEmployeeChoose ();
 				}
 			}
 		}
