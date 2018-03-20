@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-
+	int days_since_start;
 	float shift_length;
 	float lunch_length;
 
@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour {
 	State curr_state;
 	// Use this for initialization
 	void Start () {
+		days_since_start = 0;
 		Time.timeScale = 1.0f;
 
 		curr_state = State.DAY_SHIFT;
@@ -159,7 +160,11 @@ public class GameManager : MonoBehaviour {
 
 		if (curr_state == State.NIGHT_SHIFT) {
 			//prompt to choose employees again
+			days_since_start++;
 
+			if (days_since_start % 7 == 0) {
+				// weekly tasks
+			}
 			Debug.Log("Please assign 2 employees");
 			return;
 		}
