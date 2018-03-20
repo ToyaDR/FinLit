@@ -46,7 +46,6 @@ public class GameManager : MonoBehaviour {
 		task_assign = TaskAssign.GetComponent<TaskAssign> ();
 
 		StartCoroutine ("Sale");
-
 	}
 	
 	// Update is called once per frame
@@ -170,16 +169,14 @@ public class GameManager : MonoBehaviour {
 		Fungus.StringVariable option = (Fungus.StringVariable) flowchart.GetVariable ("option");
 
 		if(option.Evaluate(Fungus.CompareOperator.NotEquals, "default")){
+
 			if (option.Evaluate (Fungus.CompareOperator.Equals, "bad")) {
 				emp.SetCurrQuestion ("bad");
-				if (emp.curr_question.GetQuestion () == "BAD") {
-					Debug.Log ("SHIT");
-				}
-
 			} else if (option.Evaluate (Fungus.CompareOperator.Equals, "good")) {
 				emp.SetCurrQuestion ("good");
 			}
 			employee_manager.SetFlowchart (emp.curr_question, flowchart.FindBlock("Question").CommandList);
+			flowchart.Reset(true, true);
 		}
 	}
 

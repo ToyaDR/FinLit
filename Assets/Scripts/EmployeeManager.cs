@@ -24,8 +24,8 @@ public class EmployeeManager : MonoBehaviour {
 		employee_one.start_question.AddGoodOption ("GOOD", "Y", "N"); //Did confront roommate
 		employee_one.start_question.AddBadOption ("BAD", "Y", "N"); //Did not confront roommate
 
-		employee_one.start_question.GetBadOptionNode ().AddGoodOption ("BADGOOD", "Y", "N");
-		employee_one.start_question.GetBadOptionNode ().AddBadOption ("BADBAD", "Y", "N");
+		employee_one.start_question.GetBadOptionNode ().AddGoodOption ("BADGOOD");
+		employee_one.start_question.GetBadOptionNode ().AddBadOption ("BADBAD");
 
 		employee_one.start_question.GetGoodOptionNode ().AddGoodOption ("GOODGOOD");
 		employee_one.start_question.GetGoodOptionNode ().AddBadOption ("GOODBAD");
