@@ -15,11 +15,11 @@ public class DTreeNode {
 		this.branches = new Dictionary<string, DTreeNode>();
 	}
 
-	public void AddGoodOption(string question, string good_option = "", string bad_option = ""){
+	public void AddGoodOption(string question, string good_option, string bad_option){
 		branches.Add("good", new DTreeNode (question, good_option, bad_option));
 	}
 
-	public void AddBadOption(string question, string good_option = "", string bad_option = ""){
+	public void AddBadOption(string question, string good_option, string bad_option){
 		branches.Add("bad", new DTreeNode (question, good_option, bad_option));
 	}
 

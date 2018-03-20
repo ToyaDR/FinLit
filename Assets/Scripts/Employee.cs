@@ -53,9 +53,9 @@ public class Employee {
 		return emp_dialogue_image;
 	}
 
-	public void SetCurrQuestion(string option){
+	public bool SetCurrQuestion(string option){
 		if (curr_question.IsLeaf ()) {
-			return;
+			return false;
 		}
 
 		if (option == "bad") {
@@ -63,6 +63,7 @@ public class Employee {
 		} else if (option == "good") {
 			curr_question = curr_question.GetGoodOptionNode ();
 		}
+		return true;
 	}
 
 	public void PrintDTree(DTreeNode curr){

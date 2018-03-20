@@ -167,16 +167,20 @@ public class GameManager : MonoBehaviour {
 
 	public void UpdateFlowchart(Fungus.Flowchart flowchart, Employee emp){
 		Fungus.StringVariable option = (Fungus.StringVariable) flowchart.GetVariable ("option");
+		Fungus.BooleanVariable not_done = (Fungus.BooleanVariable) flowchart.GetVariable ("not_done");
 
 		if(option.Evaluate(Fungus.CompareOperator.NotEquals, "default")){
-
+			bool success = true;
 			if (option.Evaluate (Fungus.CompareOperator.Equals, "bad")) {
-				emp.SetCurrQuestion ("bad");
+				success = emp.SetCurrQuestion ("bad");
 			} else if (option.Evaluate (Fungus.CompareOperator.Equals, "good")) {
-				emp.SetCurrQuestion ("good");
+				success = emp.SetCurrQuestion ("good");
 			}
-			employee_manager.SetFlowchart (emp.curr_question, flowchart.FindBlock("Question").CommandList);
-			flowchart.Reset(true, true);
+			if (success) {
+				employee_manager.SetFlowchart (emp.curr_question, flowchart.FindBlock ("Question").CommandList);
+			}
+			option.Value = "default";
+			not_done.Value = success;
 		}
 	}
 
