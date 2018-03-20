@@ -18,11 +18,11 @@ public class EmployeeManager : MonoBehaviour {
 		employee_one.SetDialogueImage ("Employee_Lila");
 		employee_one.tasksNotCompleted = new ArrayList ();
 		/* Populate Dialogue Tree for Lila */
-		employee_one.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
+		employee_one.start_question = new DTreeNode ("Should I confront my roommate?", "Yes!!!", "No...");
 		employee_one.curr_question = employee_one.start_question;
 
-		employee_one.start_question.AddGoodOption ("GOOD", "Y", "N"); //Did confront roommate
-		employee_one.start_question.AddBadOption ("BAD", "Y", "N"); //Did not confront roommate
+		employee_one.start_question.AddGoodOption ("GOOD", "GOOD-Y", "GOOD-N"); //Did confront roommate
+		employee_one.start_question.AddBadOption ("BAD", "BAD-Y", "BAD-N"); //Did not confront roommate
 
 		employee_one.start_question.GetBadOptionNode ().AddGoodOption ("BADGOOD");
 		employee_one.start_question.GetBadOptionNode ().AddBadOption ("BADBAD");
@@ -89,6 +89,6 @@ public class EmployeeManager : MonoBehaviour {
 		goodopt.SetStandardText (currq.GetGoodOption());
 
 		Fungus.Menu badopt = (Fungus.Menu)qCommands [3];
-		goodopt.SetStandardText (currq.GetBadOption ());
+		badopt.SetStandardText (currq.GetBadOption ());
 	}
 }
