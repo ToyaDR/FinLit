@@ -20,9 +20,13 @@ public class GameManager : MonoBehaviour {
 	public Fungus.Flowchart emp1_flowchart;
 	public Fungus.Flowchart emp2_flowchart;
 	public GameObject start;
+	public SimpleHealthBar healthBar;
 
 	private EmployeeManager employee_manager;
 	private TaskAssign task_assign;
+	private int currEnergy;
+	private int maxEnergy;
+	private bool taskAssignClosed;
 
 	Vector3 touchPosWorld;
 
@@ -42,15 +46,22 @@ public class GameManager : MonoBehaviour {
 		shift_length = 60f*2f; //2 minutes
 		lunch_length = 60f*1f; //1 minute
 		time_elapsed = shift_length; // count down to end of shift
+		shift_started = false;
 
 		employee_manager = EmployeeManager.GetComponent<EmployeeManager> ();
 		task_assign = TaskAssign.GetComponent<TaskAssign> ();
+		// true when task assign panel is closed - cue sign when employees should start working = timer should start
+		taskAssignClosed = task_assign.taskAssignClosed;
 
 		StartCoroutine ("Sale");
+
+		currEnergy = shift_length;
+		maxEnergy = shift_length;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		
 		/* Check for touch input */
 		if (Input.touchCount == 1 
 			&& Input.GetTouch (0).phase == TouchPhase.Stationary) {
@@ -71,7 +82,12 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
-		//Check if shift has ended
+		// Start the first task
+		if (taskAssignClosed) {
+			shift_started = true;
+		}
+
+		// Check if shift has ended
 		if (shift_started) {
 			time_elapsed -= Time.deltaTime;
 
@@ -92,6 +108,10 @@ public class GameManager : MonoBehaviour {
 			ShowDoor ();
 		}
 
+		// Update energy bar (above employees' heads)
+		currEnergy = time_elapsed;
+		healthBar.UpdateBar( currEnergy, maxEnergy );
+
 	}
 
 	private IEnumerator Sale(){
@@ -106,6 +126,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void DayShift() {
+		
 	}
 
 	public void Lunch() {
