@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject BreakRoom;
 	public GameObject EmployeeManager;
 	public GameObject TaskAssign;
+	public GameObject WeekPanel;
 	public Fungus.Flowchart emp1_flowchart;
 	public Fungus.Flowchart emp2_flowchart;
 	public GameObject start;
@@ -54,7 +55,7 @@ public class GameManager : MonoBehaviour {
 		taskAssignClosed = task_assign.taskAssignClosed;
 
 		StartCoroutine ("Sale");
-
+		HideWeek();
 		currEnergy = shift_length;
 		maxEnergy = shift_length;
 	}
@@ -183,6 +184,7 @@ public class GameManager : MonoBehaviour {
 
 			if (days_since_start % 7 == 0) {
 				// weekly tasks
+				ShowWeek();
 			}
 			Debug.Log("Please assign 2 employees");
 			return;
@@ -225,5 +227,14 @@ public class GameManager : MonoBehaviour {
 	}
 	public void HideDoor(){
 		door.GetComponent<BoxCollider2D> ().enabled = false;
+	}
+		
+	public void ShowWeek() {
+		WeekPanel.GetComponent<CanvasGroup>().alpha = 1f;
+		WeekPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+	}
+	public void HideWeek() {
+		WeekPanel.GetComponent<CanvasGroup>().alpha = 0f;
+		WeekPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
 }
