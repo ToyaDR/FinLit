@@ -24,9 +24,8 @@ public class GameManager : MonoBehaviour {
 
 	private EmployeeManager employee_manager;
 	private TaskAssign task_assign;
-	private int currEnergy;
-	private int maxEnergy;
-	private bool taskAssignClosed;
+	private float currEnergy;
+	private float maxEnergy;
 
 	Vector3 touchPosWorld;
 
@@ -50,8 +49,6 @@ public class GameManager : MonoBehaviour {
 
 		employee_manager = EmployeeManager.GetComponent<EmployeeManager> ();
 		task_assign = TaskAssign.GetComponent<TaskAssign> ();
-		// true when task assign panel is closed - cue sign when employees should start working = timer should start
-		taskAssignClosed = task_assign.taskAssignClosed;
 
 		StartCoroutine ("Sale");
 
@@ -82,11 +79,6 @@ public class GameManager : MonoBehaviour {
 			}
 		}
 
-		// Start the first task
-		if (taskAssignClosed) {
-			shift_started = true;
-		}
-
 		// Check if shift has ended
 		if (shift_started) {
 			time_elapsed -= Time.deltaTime;
@@ -108,10 +100,6 @@ public class GameManager : MonoBehaviour {
 			ShowDoor ();
 		}
 
-		// Update energy bar (above employees' heads)
-		currEnergy = time_elapsed;
-		healthBar.UpdateBar( currEnergy, maxEnergy );
-
 	}
 
 	private IEnumerator Sale(){
@@ -125,14 +113,21 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	public void DayShift() {
-		
+	public IEnumerator DayShift() {
+		// Update energy bar (above employees' heads)
+		currEnergy = time_elapsed;
+		healthBar.UpdateBar( currEnergy, maxEnergy );
+		yield return null;
 	}
 
 	public void Lunch() {
 	}
 
-	public void NightShift() {
+	public IEnumerator NightShift() {
+		// Update energy bar (above employees' heads)
+		currEnergy = time_elapsed;
+		healthBar.UpdateBar( currEnergy, maxEnergy );
+		yield return null;
 	}
 
 	public void StartShift(State state){
@@ -143,7 +138,7 @@ public class GameManager : MonoBehaviour {
 		//Shift logic
 		if (state == State.DAY_SHIFT) {
 			time_elapsed = shift_length;
-			DayShift ();
+			StartCoroutine("DayShift");
 			return;
 		}
 
@@ -155,7 +150,7 @@ public class GameManager : MonoBehaviour {
 
 		if (state == State.NIGHT_SHIFT) {
 			time_elapsed = shift_length;
-			NightShift ();
+			StartCoroutine("NightShift");
 			return;
 		}
 	}

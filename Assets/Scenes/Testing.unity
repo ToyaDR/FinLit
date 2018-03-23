@@ -3989,7 +3989,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22486214, guid: 34017cf12560c804bb2f669f00c7af91, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -0.18
       objectReference: {fileID: 0}
     - target: {fileID: 22486214, guid: 34017cf12560c804bb2f669f00c7af91, type: 2}
       propertyPath: m_AnchoredPosition.y
@@ -3997,11 +3997,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22486214, guid: 34017cf12560c804bb2f669f00c7af91, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 246
+      value: 94
       objectReference: {fileID: 0}
     - target: {fileID: 22486214, guid: 34017cf12560c804bb2f669f00c7af91, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 65
+      value: 19.3
       objectReference: {fileID: 0}
     - target: {fileID: 22486214, guid: 34017cf12560c804bb2f669f00c7af91, type: 2}
       propertyPath: m_AnchorMin.x
@@ -4034,6 +4034,18 @@ Prefab:
     - target: {fileID: 22486214, guid: 34017cf12560c804bb2f669f00c7af91, type: 2}
       propertyPath: m_LocalScale.y
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 132408, guid: 34017cf12560c804bb2f669f00c7af91, type: 2}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 119886, guid: 34017cf12560c804bb2f669f00c7af91, type: 2}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 198710, guid: 34017cf12560c804bb2f669f00c7af91, type: 2}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 34017cf12560c804bb2f669f00c7af91, type: 2}
@@ -4260,6 +4272,7 @@ MonoBehaviour:
   emp1_flowchart: {fileID: 341474862}
   emp2_flowchart: {fileID: 1728867259}
   start: {fileID: 1415481077}
+  healthBar: {fileID: 1513116605}
 --- !u!4 &1063656073
 Transform:
   m_ObjectHideFlags: 0
@@ -5899,6 +5912,12 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
+--- !u!114 &1513116605 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11429798, guid: 34017cf12560c804bb2f669f00c7af91,
+    type: 2}
+  m_PrefabInternal: {fileID: 1037996207}
+  m_Script: {fileID: 11500000, guid: 1310e65397a274d44a776b51d6937f61, type: 3}
 --- !u!1 &1579050334
 GameObject:
   m_ObjectHideFlags: 0
