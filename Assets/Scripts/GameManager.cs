@@ -181,6 +181,12 @@ public class GameManager : MonoBehaviour {
 				// weekly tasks
 				ShowWeek();
 			}
+
+			// update days since interaction for all employees
+			foreach (Employee e in employee_manager.allEmployees) {
+				e.days_since_interaction++;
+			}
+
 			Debug.Log("Please assign 2 employees");
 			return;
 		}
@@ -194,8 +200,9 @@ public class GameManager : MonoBehaviour {
 		if (curr_state == State.LUNCH) {
 			lunch.Value = true;
 		}
+		bool can_interact = (emp.GetMinDaysBetweenInteraction () >= emp.days_since_interaction);
 
-		if(option.Evaluate(Fungus.CompareOperator.NotEquals, "default")){
+		if(option.Evaluate(Fungus.CompareOperator.NotEquals, "default") && can_interact){
 			bool not_done = true;
 			if (option.Evaluate (Fungus.CompareOperator.Equals, "bad")) {
 				not_done = emp.SetCurrQuestion ("bad");
@@ -207,6 +214,7 @@ public class GameManager : MonoBehaviour {
 			}
 			option.Value = "default";
 			done.Value = !not_done;
+			emp.days_since_interaction = 0;
 		}
 	}
 

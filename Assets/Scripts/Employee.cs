@@ -13,9 +13,11 @@ public class Employee {
 
 	// Not yet dealt with
 	public int productivity;
+	public int days_since_interaction;
 	public string[] issues;
 	public int salary;
 	public ArrayList tasksNotCompleted; // Tasks that are assigned but not completed. Immediately delete tasks that are completed.
+	private int DaysBetweenInteraction;
 
 	//Dialogue Tree
 	public DTreeNode start_question;
@@ -35,6 +37,14 @@ public class Employee {
 
 	public void SetDialogueImage(string imageName) {
 		emp_dialogue_image = Resources.Load<Sprite>(imageName);
+	}
+
+	public void SetDaysBetweenInteraction(int days){
+		DaysBetweenInteraction = days;
+	}
+
+	public int GetMinDaysBetweenInteraction(){
+		return DaysBetweenInteraction;
 	}
 
     public string GetName() {
