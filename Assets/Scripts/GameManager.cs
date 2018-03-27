@@ -100,7 +100,6 @@ public class GameManager : MonoBehaviour {
 		// Check if shift has ended
 		if (shift_started) {
 			time_elapsed -= Time.deltaTime;
-
 			if (time_elapsed <= 0) {
 				StopShift ();
 			}
@@ -145,31 +144,32 @@ public class GameManager : MonoBehaviour {
 		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 
-	public IEnumerator DayShift() {
+	public void DayShift() {
 		
-		// Update energy bar (above employees' heads)
-		currEnergy = time_elapsed;
 		//healthBar.UpdateBar( currEnergy, maxEnergy ); - using healthBar
-		emp1_energy.maxValue = maxEnergy;
-		emp1_energy.value = currEnergy;
+
+		// Update energy bar (above employees' heads)
+		while (time_elapsed >= 0) {
+			Debug.Log (time_elapsed);
+			currEnergy = time_elapsed;
+			emp1_energy.value = currEnergy / maxEnergy;
+		}
 
 		//emp1_energy.transform.position = emp1_store.transform.position;
 		//emp2_energy.transform.position = emp2_store.transform.position;
-		yield return null;
 	}
 
 	public void Lunch() {
 	}
 
-	public IEnumerator NightShift() {
-		// Update energy bar (above employees' heads)
-		//currEnergy = time_elapsed;
-		//healthBar.UpdateBar( currEnergy, maxEnergy );
+	public void NightShift() {
 
-		// Keep updating positions of bar 
-		emp1_energy.transform.position = emp1_store.transform.position;
-		emp2_energy.transform.position = emp2_store.transform.position;
-		yield return null;
+		// Update energy bar (above employees' heads)
+		while (time_elapsed >= 0) {
+			Debug.Log (time_elapsed);
+			currEnergy = time_elapsed;
+			emp1_energy.value = currEnergy / maxEnergy;
+		}
 	}
 
 	public void StartShift(State state){
@@ -180,8 +180,8 @@ public class GameManager : MonoBehaviour {
 		//Shift logic
 		if (state == State.DAY_SHIFT) {
 			ShowSliders ();
-			time_elapsed = shift_length;
-			StartCoroutine("DayShift");
+			time_elapsed = shift_length; //initialize time_elapsed every shift
+			DayShift();
 			return;
 		}
 
@@ -194,13 +194,12 @@ public class GameManager : MonoBehaviour {
 		if (state == State.NIGHT_SHIFT) {
 			ShowSliders ();
 			time_elapsed = shift_length;
-			StartCoroutine("NightShift");
+			NightShift();
 			return;
 		}
 	}
 
 	public void StopShift(){
-		Debug.Log ("Does this run?");
 		HideSliders ();
 		shift_started = false;
 
