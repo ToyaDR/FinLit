@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 	int days_since_start;
@@ -20,7 +21,11 @@ public class GameManager : MonoBehaviour {
 	public Fungus.Flowchart emp1_flowchart;
 	public Fungus.Flowchart emp2_flowchart;
 	public GameObject start;
-	public SimpleHealthBar healthBar;
+	//public SimpleHealthBar healthBar;
+	public GameObject emp1_store;
+	public GameObject emp2_store;
+	public Slider emp1_energy;
+	public Slider emp2_energy;
 
 	private EmployeeManager employee_manager;
 	private TaskAssign task_assign;
@@ -52,8 +57,11 @@ public class GameManager : MonoBehaviour {
 
 		StartCoroutine ("Sale");
 
-		currEnergy = shift_length;
-		maxEnergy = shift_length;
+		//currEnergy = shift_length;
+		//maxEnergy = shift_length;
+
+		// Hide sliders before shift starts
+		HideSliders();
 	}
 	
 	// Update is called once per frame
@@ -113,10 +121,28 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public void HideSliders() {
+		emp1_energy.GetComponent<CanvasGroup> ().alpha = 0f;
+		emp1_energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		emp2_energy.GetComponent<CanvasGroup> ().alpha = 0f;
+		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
+	}
+
+	public void ShowSliders() {
+		emp1_energy.GetComponent<CanvasGroup> ().alpha = 1f;
+		emp1_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
+		emp2_energy.GetComponent<CanvasGroup> ().alpha = 1f;
+		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
+	}
+
 	public IEnumerator DayShift() {
+		
 		// Update energy bar (above employees' heads)
-		currEnergy = time_elapsed;
-		healthBar.UpdateBar( currEnergy, maxEnergy );
+		//currEnergy = time_elapsed;
+		//healthBar.UpdateBar( currEnergy, maxEnergy );
+
+		emp1_energy.transform.position = emp1_store.transform.position;
+		emp2_energy.transform.position = emp2_store.transform.position;
 		yield return null;
 	}
 
@@ -125,8 +151,12 @@ public class GameManager : MonoBehaviour {
 
 	public IEnumerator NightShift() {
 		// Update energy bar (above employees' heads)
-		currEnergy = time_elapsed;
-		healthBar.UpdateBar( currEnergy, maxEnergy );
+		//currEnergy = time_elapsed;
+		//healthBar.UpdateBar( currEnergy, maxEnergy );
+
+		// Keep updating positions of bar 
+		emp1_energy.transform.position = emp1_store.transform.position;
+		emp2_energy.transform.position = emp2_store.transform.position;
 		yield return null;
 	}
 
@@ -137,6 +167,7 @@ public class GameManager : MonoBehaviour {
 
 		//Shift logic
 		if (state == State.DAY_SHIFT) {
+			ShowSliders ();
 			time_elapsed = shift_length;
 			StartCoroutine("DayShift");
 			return;
@@ -149,6 +180,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 		if (state == State.NIGHT_SHIFT) {
+			ShowSliders ();
 			time_elapsed = shift_length;
 			StartCoroutine("NightShift");
 			return;
@@ -156,6 +188,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void StopShift(){
+		HideSliders ();
 		shift_started = false;
 
 		if (curr_state == State.DAY_SHIFT) {
