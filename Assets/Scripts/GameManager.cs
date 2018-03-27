@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject BreakRoom;
 	public GameObject EmployeeManager;
 	public GameObject TaskAssign;
+	public GameObject WeekPanel;
 	public Fungus.Flowchart emp1_flowchart;
 	public Fungus.Flowchart emp2_flowchart;
 	public GameObject start;
@@ -56,12 +57,18 @@ public class GameManager : MonoBehaviour {
 		task_assign = TaskAssign.GetComponent<TaskAssign> ();
 
 		StartCoroutine ("Sale");
+<<<<<<< HEAD
 
 		//currEnergy = shift_length;
 		//maxEnergy = shift_length;
 
 		// Hide sliders before shift starts
 		HideSliders();
+=======
+		HideWeek();
+		currEnergy = shift_length;
+		maxEnergy = shift_length;
+>>>>>>> ee3c5f4640c60e2371d0f65bbed70c2ef85cae6e
 	}
 	
 	// Update is called once per frame
@@ -211,7 +218,14 @@ public class GameManager : MonoBehaviour {
 
 			if (days_since_start % 7 == 0) {
 				// weekly tasks
+				ShowWeek();
 			}
+
+			// update days since interaction for all employees
+			foreach (Employee e in employee_manager.allEmployees) {
+				e.days_since_interaction++;
+			}
+
 			Debug.Log("Please assign 2 employees");
 			return;
 		}
@@ -225,8 +239,9 @@ public class GameManager : MonoBehaviour {
 		if (curr_state == State.LUNCH) {
 			lunch.Value = true;
 		}
+		bool can_interact = (emp.GetMinDaysBetweenInteraction () >= emp.days_since_interaction);
 
-		if(option.Evaluate(Fungus.CompareOperator.NotEquals, "default")){
+		if(option.Evaluate(Fungus.CompareOperator.NotEquals, "default") && can_interact){
 			bool not_done = true;
 			if (option.Evaluate (Fungus.CompareOperator.Equals, "bad")) {
 				not_done = emp.SetCurrQuestion ("bad");
@@ -238,6 +253,7 @@ public class GameManager : MonoBehaviour {
 			}
 			option.Value = "default";
 			done.Value = !not_done;
+			emp.days_since_interaction = 0;
 		}
 	}
 
@@ -253,5 +269,14 @@ public class GameManager : MonoBehaviour {
 	}
 	public void HideDoor(){
 		door.GetComponent<BoxCollider2D> ().enabled = false;
+	}
+		
+	public void ShowWeek() {
+		WeekPanel.GetComponent<CanvasGroup>().alpha = 1f;
+		WeekPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+	}
+	public void HideWeek() {
+		WeekPanel.GetComponent<CanvasGroup>().alpha = 0f;
+		WeekPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
 }

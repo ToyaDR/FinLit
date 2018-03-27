@@ -17,6 +17,8 @@ public class EmployeeManager : MonoBehaviour {
 		employee_one.SetImage ("Icon_Lila");
 		employee_one.SetDialogueImage ("Employee_Lila");
 		employee_one.tasksNotCompleted = new ArrayList ();
+		employee_one.SetDaysBetweenInteraction (3); 
+		employee_one.days_since_interaction = employee_one.GetMinDaysBetweenInteraction();
 		/* Populate Dialogue Tree for Lila */
 		employee_one.start_question = new DTreeNode ("Should I confront my roommate?", "Yes!!!", "No...");
 		employee_one.curr_question = employee_one.start_question;
@@ -33,6 +35,8 @@ public class EmployeeManager : MonoBehaviour {
 		employee_two.SetImage ("Icon_Mateo");
 		employee_two.SetDialogueImage ("char2");
 		employee_two.tasksNotCompleted = new ArrayList ();
+		employee_two.SetDaysBetweenInteraction (3); 
+		employee_two.days_since_interaction = employee_two.GetMinDaysBetweenInteraction();
 		/* Populate Dialogue Tree for Mateo */
 		employee_two.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
 		employee_two.curr_question = employee_two.start_question;
@@ -46,6 +50,8 @@ public class EmployeeManager : MonoBehaviour {
 		employee_three.SetImage ("char1");
 		employee_three.SetDialogueImage ("char1");
 		employee_three.tasksNotCompleted = new ArrayList ();
+		employee_three.SetDaysBetweenInteraction (3); 
+		employee_three.days_since_interaction = employee_three.GetMinDaysBetweenInteraction();
 		/* Populate Dialogue Tree for employee_three */
 		employee_three.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
 		employee_three.curr_question = employee_three.start_question;
