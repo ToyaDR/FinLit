@@ -30,9 +30,9 @@ public class EmployeeManager : MonoBehaviour {
 
 
 		Employee employee_two = new Employee();
-		employee_two.SetName("Mateo");
+		employee_two.SetName("Bruno");
 		employee_two.SetMorale(10);
-		employee_two.SetImage ("Icon_Mateo");
+		employee_two.SetImage ("Icon_Bruno");
 		employee_two.SetDialogueImage ("char2");
 		employee_two.tasksNotCompleted = new ArrayList ();
 		employee_two.SetDaysBetweenInteraction (3); 
@@ -45,9 +45,9 @@ public class EmployeeManager : MonoBehaviour {
 
 
 		Employee employee_three = new Employee();
-		employee_three.SetName("Bob");
+		employee_three.SetName("Sue");
 		employee_three.SetMorale(10);
-		employee_three.SetImage ("char1");
+		employee_three.SetImage ("Icon_Sue");
 		employee_three.SetDialogueImage ("char1");
 		employee_three.tasksNotCompleted = new ArrayList ();
 		employee_three.SetDaysBetweenInteraction (3); 

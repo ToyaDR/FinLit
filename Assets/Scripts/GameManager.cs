@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour {
 	public Fungus.Flowchart emp1_flowchart;
 	public Fungus.Flowchart emp2_flowchart;
 	public GameObject start;
-	//public SimpleHealthBar healthBar;
+	// public SimpleHealthBar healthBar; //using SimpleHealthBar plugin
 	public GameObject emp1_store;
 	public GameObject emp2_store;
 	public Slider emp1_energy;
@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	State curr_state;
+
 	// Use this for initialization
 	void Start () {
 		days_since_start = 0;
@@ -57,18 +58,20 @@ public class GameManager : MonoBehaviour {
 		task_assign = TaskAssign.GetComponent<TaskAssign> ();
 
 		StartCoroutine ("Sale");
-<<<<<<< HEAD
 
-		//currEnergy = shift_length;
-		//maxEnergy = shift_length;
+		// Sliders for 2 employees, and players can't change these
+		//emp1_energy.enabled = false;
+		//emp2_energy.enabled = false;
+
+		// Initialize energy for sliders
+		currEnergy = shift_length;
+		maxEnergy = shift_length;
 
 		// Hide sliders before shift starts
 		HideSliders();
-=======
+
 		HideWeek();
-		currEnergy = shift_length;
-		maxEnergy = shift_length;
->>>>>>> ee3c5f4640c60e2371d0f65bbed70c2ef85cae6e
+
 	}
 	
 	// Update is called once per frame
@@ -145,11 +148,13 @@ public class GameManager : MonoBehaviour {
 	public IEnumerator DayShift() {
 		
 		// Update energy bar (above employees' heads)
-		//currEnergy = time_elapsed;
-		//healthBar.UpdateBar( currEnergy, maxEnergy );
+		currEnergy = time_elapsed;
+		//healthBar.UpdateBar( currEnergy, maxEnergy ); - using healthBar
+		emp1_energy.maxValue = maxEnergy;
+		emp1_energy.value = currEnergy;
 
-		emp1_energy.transform.position = emp1_store.transform.position;
-		emp2_energy.transform.position = emp2_store.transform.position;
+		//emp1_energy.transform.position = emp1_store.transform.position;
+		//emp2_energy.transform.position = emp2_store.transform.position;
 		yield return null;
 	}
 
@@ -195,6 +200,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void StopShift(){
+		Debug.Log ("Does this run?");
 		HideSliders ();
 		shift_started = false;
 
