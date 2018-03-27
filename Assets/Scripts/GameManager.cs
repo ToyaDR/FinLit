@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour {
 		NIGHT_SHIFT
 	}
 
-	State curr_state;
+	public State curr_state;
 	// Use this for initialization
 	void Start () {
 		days_since_start = 0;

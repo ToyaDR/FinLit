@@ -4818,7 +4818,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -412.9, y: -191.63002}
+  m_AnchoredPosition: {x: -421.5, y: -237.2}
   m_SizeDelta: {x: 5, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &1051287504
@@ -4988,7 +4988,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4440ea730f6143247af2a8255cbd4828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  days_since_start: -1
   store: {fileID: 2085171906}
   door: {fileID: 448426304}
   BreakRoom: {fileID: 1388236522}
@@ -4997,6 +4996,8 @@ MonoBehaviour:
   WeekPanel: {fileID: 1530036625}
   emp1_flowchart: {fileID: 341474862}
   emp2_flowchart: {fileID: 1728867259}
+  start: {fileID: 0}
+  healthBar: {fileID: 0}
   curr_state: 0
 --- !u!4 &1063656073
 Transform:
@@ -5049,7 +5050,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -396.95004, y: -200.76}
+  m_AnchoredPosition: {x: -396.02, y: -248.6}
   m_SizeDelta: {x: 5, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!212 &1067486432
@@ -6810,6 +6811,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IncomeBar: {fileID: 2020127211}
   SpendingBar: {fileID: 868483119}
+  emp1: {fileID: 0}
+  emp2: {fileID: 0}
   inc: 0
 --- !u!1 &1579050334
 GameObject:
@@ -7745,7 +7748,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4306579716747250, guid: e615667d26b962c4b865c95da41013b7, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114363940069032392, guid: e615667d26b962c4b865c95da41013b7,
         type: 2}

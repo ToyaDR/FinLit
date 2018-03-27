@@ -6,6 +6,8 @@ using UnityEngine;
 public class WeeklyTaskPanel : MonoBehaviour {
 	public GameObject IncomeBar;
 	public GameObject SpendingBar;
+	public GameObject emp1;
+	public GameObject emp2;
 
 	public bool inc;
 
