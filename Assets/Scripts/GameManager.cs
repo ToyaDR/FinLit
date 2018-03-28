@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,11 +28,15 @@ public class GameManager : MonoBehaviour {
 	public GameObject emp2_store;
 	public Slider emp1_energy;
 	public Slider emp2_energy;
+	public GameObject Breads;
 
 	private EmployeeManager employee_manager;
 	private TaskAssign task_assign;
 	private float currEnergy;
 	private float maxEnergy;
+
+	private Dictionary <string, GameObject> bread_list;
+	private string curr_bread = "100";
 
 	Vector3 touchPosWorld;
 
@@ -42,6 +47,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	State curr_state;
+	private int MAX_PRODUCT = 10;
 
 	// Use this for initialization
 	void Start () {
@@ -71,7 +77,19 @@ public class GameManager : MonoBehaviour {
 		HideSliders();
 
 		HideWeek();
+	
+		bread_list = new Dictionary<string, GameObject>();
+		foreach (Transform bread in Breads.transform) {
+			string key = Regex.Match(bread.gameObject.name, @"\d+").Value;
+			bread_list.Add (key, bread.gameObject);
 
+			//hide all bread first
+			if (key != "100") {
+				Color col = bread.GetComponent<SpriteRenderer> ().color;
+				col.a = 0f;
+				bread.GetComponent<SpriteRenderer> ().color = col;
+			}
+		}
 	}
 	
 	// Update is called once per frame
@@ -125,6 +143,7 @@ public class GameManager : MonoBehaviour {
 				float freq = shift_length / (float)(store.GetReputation ());
 				yield return new WaitForSeconds (freq);
 				store.Sell ();
+				SwitchBread ();
 			}
 			yield return null;
 		}
@@ -283,5 +302,71 @@ public class GameManager : MonoBehaviour {
 	public void HideWeek() {
 		WeekPanel.GetComponent<CanvasGroup>().alpha = 0f;
 		WeekPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+	}
+
+	private void SwitchBread(){
+		//TODO: only wanna do this when it changes
+		float percent = ((float)store.GetProductAmount ()) * 100f / ((float) MAX_PRODUCT);
+		if (percent < 25f && curr_bread != "0") {
+			//Hide old bread
+			HideBread();
+
+			//Show new bread and set curr_bread
+			curr_bread = "0";
+			ShowBread ();
+			return;
+		}
+
+		if (percent < 50f && percent >= 25f && curr_bread != "25") {
+			//Hide old bread
+			HideBread();
+
+			//Show new bread and set curr_bread
+			curr_bread = "25";
+			ShowBread ();
+			return;
+		}
+
+		if (percent < 75f && percent >= 50f && curr_bread != "50") {
+			//Hide old bread
+			HideBread();
+
+			//Show new bread and set curr_bread
+			curr_bread = "50";
+			ShowBread ();
+			return;
+		}
+
+		if (percent < 100f && percent >= 75 && curr_bread != "75") {
+			//Hide old bread
+			HideBread();
+
+			//Show new bread and set curr_bread
+			curr_bread = "75";
+			ShowBread ();
+			return;
+		}
+
+		if (percent >= 100f && curr_bread != "100") {
+			//Hide old bread
+			HideBread();
+
+			//Show new bread and set curr_bread
+			curr_bread = "100";
+			ShowBread ();
+			return;
+		}
+	}
+
+	private void ShowBread(){
+		Color new_col = bread_list[curr_bread].GetComponent<SpriteRenderer>().color;
+		new_col.a = 100f;
+		bread_list [curr_bread].GetComponent<SpriteRenderer> ().color = new_col;
+	}
+
+	private void HideBread(){
+		Color old_col = bread_list[curr_bread].GetComponent<SpriteRenderer>().color;
+		old_col.a = 0f;
+		bread_list [curr_bread].GetComponent<SpriteRenderer> ().color = old_col;
 	}
 }
