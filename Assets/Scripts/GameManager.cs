@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour {
 	private float currEnergy;
 	private float maxEnergy;
 
+	// Sound effects
+	AudioSource collectSound;
+
 	Vector3 touchPosWorld;
 
 	public enum State{
@@ -71,6 +74,9 @@ public class GameManager : MonoBehaviour {
 		HideSliders();
 
 		HideWeek();
+
+		// Get audio source component
+		collectSound = store.GetComponent<AudioSource>();
 
 	}
 	
@@ -189,6 +195,7 @@ public class GameManager : MonoBehaviour {
 
 		//Shift logic
 		if (state == State.DAY_SHIFT) {
+			collectSound.Play ();
 			ShowSliders ();
 			time_elapsed = shift_length; //initialize time_elapsed every shift
 			StartCoroutine ("DayShift");
@@ -202,6 +209,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 		if (state == State.NIGHT_SHIFT) {
+			collectSound.Play ();
 			ShowSliders ();
 			time_elapsed = shift_length;
 			StartCoroutine ("NightShift");
@@ -210,6 +218,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void StopShift(){
+		collectSound.Stop ();
 		HideSliders ();
 		shift_started = false;
 
