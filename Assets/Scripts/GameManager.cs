@@ -144,15 +144,20 @@ public class GameManager : MonoBehaviour {
 		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 
-	public void DayShift() {
+	public IEnumerator DayShift() {
 		
 		//healthBar.UpdateBar( currEnergy, maxEnergy ); - using healthBar
 
 		// Update energy bar (above employees' heads)
-		while (time_elapsed >= 0) {
-			Debug.Log (time_elapsed);
-			currEnergy = time_elapsed;
-			emp1_energy.value = currEnergy / maxEnergy;
+		while (true) {
+			if (time_elapsed > 0) {
+				Debug.Log (time_elapsed);
+				currEnergy = time_elapsed;
+				emp1_energy.value = currEnergy / maxEnergy;
+				emp2_energy.value = currEnergy / maxEnergy;
+				yield return new WaitForSeconds(1);
+			}
+			else yield return null;
 		}
 
 		//emp1_energy.transform.position = emp1_store.transform.position;
@@ -162,13 +167,18 @@ public class GameManager : MonoBehaviour {
 	public void Lunch() {
 	}
 
-	public void NightShift() {
+	public IEnumerator NightShift() {
 
 		// Update energy bar (above employees' heads)
-		while (time_elapsed >= 0) {
-			Debug.Log (time_elapsed);
-			currEnergy = time_elapsed;
-			emp1_energy.value = currEnergy / maxEnergy;
+		while (true) {
+			if (time_elapsed > 0) {
+				Debug.Log (time_elapsed);
+				currEnergy = time_elapsed;
+				emp1_energy.value = currEnergy / maxEnergy;
+				emp2_energy.value = currEnergy / maxEnergy;
+				yield return new WaitForSeconds(1);
+			}
+			else yield return null;
 		}
 	}
 
@@ -181,7 +191,7 @@ public class GameManager : MonoBehaviour {
 		if (state == State.DAY_SHIFT) {
 			ShowSliders ();
 			time_elapsed = shift_length; //initialize time_elapsed every shift
-			DayShift();
+			StartCoroutine ("DayShift");
 			return;
 		}
 
@@ -194,7 +204,7 @@ public class GameManager : MonoBehaviour {
 		if (state == State.NIGHT_SHIFT) {
 			ShowSliders ();
 			time_elapsed = shift_length;
-			NightShift();
+			StartCoroutine ("NightShift");
 			return;
 		}
 	}
