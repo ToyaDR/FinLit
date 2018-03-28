@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviour {
 
 	private Dictionary <string, GameObject> bread_list;
 	private string curr_bread = "100";
+	// Sound effects
+	AudioSource collectSound;
 
 	Vector3 touchPosWorld;
 
@@ -90,6 +92,10 @@ public class GameManager : MonoBehaviour {
 				bread.GetComponent<SpriteRenderer> ().color = col;
 			}
 		}
+
+		// Get audio source component
+		collectSound = store.GetComponent<AudioSource>();
+
 	}
 	
 	// Update is called once per frame
@@ -208,6 +214,7 @@ public class GameManager : MonoBehaviour {
 
 		//Shift logic
 		if (state == State.DAY_SHIFT) {
+			collectSound.Play ();
 			ShowSliders ();
 			time_elapsed = shift_length; //initialize time_elapsed every shift
 			StartCoroutine ("DayShift");
@@ -221,6 +228,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 		if (state == State.NIGHT_SHIFT) {
+			collectSound.Play ();
 			ShowSliders ();
 			time_elapsed = shift_length;
 			StartCoroutine ("NightShift");
@@ -229,6 +237,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void StopShift(){
+		collectSound.Stop ();
 		HideSliders ();
 		shift_started = false;
 
