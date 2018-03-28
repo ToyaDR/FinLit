@@ -315,7 +315,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void SwitchBread(){
-		//TODO: only wanna do this when it changes
 		float percent = ((float)store.GetProductAmount ()) * 100f / ((float) MAX_PRODUCT);
 		if (percent < 25f && curr_bread != "0") {
 			//Hide old bread
