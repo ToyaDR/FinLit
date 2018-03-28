@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
-	int days_since_start;
+	public int days_since_start;
 	float shift_length;
 	float lunch_length;
 
@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour {
 		NIGHT_SHIFT
 	}
 
-	State curr_state;
+	public State curr_state;
 	private int MAX_PRODUCT = 10;
 
 	// Use this for initialization
@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 1.0f;
 
 		curr_state = State.DAY_SHIFT;
-		shift_length = 60f*2f; //2 minutes
+		shift_length = 10f;//60f*2f; //2 minutes
 		lunch_length = 60f*1f; //1 minute
 		time_elapsed = shift_length; // count down to end of shift
 		shift_started = false;
@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour {
 		//healthBar.UpdateBar( currEnergy, maxEnergy ); - using healthBar
 
 		// Update energy bar (above employees' heads)
-		while (true) {
+		while (shift_started) {
 			if (time_elapsed > 0) {
 				//Debug.Log (time_elapsed);
 				Debug.Log("sellfreq " + sell_freq + " sellfreqelapsed " + sell_freq_elapsed);
@@ -300,17 +300,20 @@ public class GameManager : MonoBehaviour {
 
 			days_since_start++;
 
-			if (days_since_start % 7 == 0) {
-				// weekly tasks
-				ShowWeek();
-			}
-
-			// update days since interaction for all employees
 			foreach (Employee e in employee_manager.allEmployees) {
 				e.days_since_interaction++;
 			}
 
+			if (days_since_start % 7 == 0) {
+				// weekly tasks
+				ShowWeek();
+				return;
+			}
+
+			// update days since interaction for all employees
+
 			Debug.Log("Please assign 2 employees");
+			store.ShowEmployeeChoose ();
 			return;
 		}
 	}
@@ -362,6 +365,7 @@ public class GameManager : MonoBehaviour {
 	public void HideWeek() {
 		WeekPanel.GetComponent<CanvasGroup>().alpha = 0f;
 		WeekPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		store.ShowEmployeeChoose ();
 	}
 
 	private void SwitchBread(){
