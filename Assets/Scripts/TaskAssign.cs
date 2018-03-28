@@ -37,17 +37,17 @@ public class TaskAssign : MonoBehaviour {
 
 		// Create and store tasks
 		task1 = new Task ();
-		task1.task_name = "Make a cupcake";
+		task1.task_name = "Make";
 		task1.time = 30;
 		existingTasks.Add (task1);
 
 		task2 = new Task ();
-		task2.task_name = "Sell a cupcake";
+		task2.task_name = "Sell";
 		task2.time = 30;
 		existingTasks.Add (task2);
 
 		task3 = new Task ();
-		task3.task_name = "Deliver a cupcake";
+		task3.task_name = "Deliver";
 		task3.time = 30;
 		existingTasks.Add (task3);
 

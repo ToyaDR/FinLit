@@ -11,13 +11,7 @@ public class EmployeeManager : MonoBehaviour {
         allEmployees = new ArrayList();
 
         // At the start of the game, create all possible instances of employees
-        Employee employee_one = new Employee();
-        employee_one.SetName("Lila");
-        employee_one.SetMorale(10);
-		employee_one.SetImage ("Icon_Lila");
-		employee_one.SetDialogueImage ("Employee_Lila");
-		employee_one.tasksNotCompleted = new ArrayList ();
-		employee_one.SetDaysBetweenInteraction (3); 
+        Employee employee_one = new Employee("Lila", 3, "Icon_Lila", "Employee_Lila", 3);
 		employee_one.days_since_interaction = employee_one.GetMinDaysBetweenInteraction();
 		/* Populate Dialogue Tree for Lila */
 		employee_one.start_question = new DTreeNode ("Should I confront my roommate?", "Yes!!!", "No...");
@@ -29,13 +23,7 @@ public class EmployeeManager : MonoBehaviour {
 		allEmployees.Add (employee_one);
 
 
-		Employee employee_two = new Employee();
-		employee_two.SetName("Bruno");
-		employee_two.SetMorale(10);
-		employee_two.SetImage ("Icon_Bruno");
-		employee_two.SetDialogueImage ("char2");
-		employee_two.tasksNotCompleted = new ArrayList ();
-		employee_two.SetDaysBetweenInteraction (3); 
+		Employee employee_two = new Employee("Bruno", 3, "Icon_Bruno", "char2", 3);
 		employee_two.days_since_interaction = employee_two.GetMinDaysBetweenInteraction();
 		/* Populate Dialogue Tree for Mateo */
 		employee_two.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
@@ -44,13 +32,7 @@ public class EmployeeManager : MonoBehaviour {
 		allEmployees.Add (employee_two);
 
 
-		Employee employee_three = new Employee();
-		employee_three.SetName("Sue");
-		employee_three.SetMorale(10);
-		employee_three.SetImage ("Icon_Sue");
-		employee_three.SetDialogueImage ("char1");
-		employee_three.tasksNotCompleted = new ArrayList ();
-		employee_three.SetDaysBetweenInteraction (3); 
+		Employee employee_three = new Employee("Sue", 3, "Icon_Sue", "char1", 3);
 		employee_three.days_since_interaction = employee_three.GetMinDaysBetweenInteraction();
 		/* Populate Dialogue Tree for employee_three */
 		employee_three.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");

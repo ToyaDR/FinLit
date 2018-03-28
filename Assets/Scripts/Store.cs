@@ -123,6 +123,13 @@ public class Store : MonoBehaviour {
 		return Stock [product];
 	}
 
+	public void Make(){
+		AddStock (product, 1);
+		foreach (Ingredient ing in ingredientsPanel.GetComponent<IngredientsPanel>().getIngredientsList ()) {
+			RemoveStock (ing.getName(), 1); //TODO: change this to different values
+		}
+	}
+
 	public int GetReputation(){
 		return reputation;
 	}

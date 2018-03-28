@@ -23,12 +23,23 @@ public class Employee {
 	public DTreeNode start_question;
 	public DTreeNode curr_question;
 
+	public Employee(string name, int morale, string imageName, string dialogueImage, int days){
+		emp_name = name;
+		emp_morale = morale;
+		emp_image = Resources.Load<Sprite> (imageName);
+		emp_dialogue_image = Resources.Load<Sprite>(dialogueImage);
+		DaysBetweenInteraction = days;
+		tasksNotCompleted = new ArrayList ();
+		productivity = morale;
+	}
+
 	public void SetName(string name) {
         emp_name = name;
     }
 
     public void SetMorale(int morale) {
         emp_morale = morale;
+		productivity = morale;
     }
 
 	public void SetImage(string imageName) {

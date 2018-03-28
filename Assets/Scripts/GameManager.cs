@@ -11,6 +11,13 @@ public class GameManager : MonoBehaviour {
 
 	float start_time;
 	float time_elapsed;
+	float sell_freq;
+	float emp1_make_freq;
+	float emp2_make_freq;
+	float sell_freq_elapsed;
+	float emp1_make_freq_elapsed;
+	float emp2_make_freq_elapsed;
+
 	bool shift_started;
 	bool lunch;
 
@@ -65,8 +72,6 @@ public class GameManager : MonoBehaviour {
 		employee_manager = EmployeeManager.GetComponent<EmployeeManager> ();
 		task_assign = TaskAssign.GetComponent<TaskAssign> ();
 
-		StartCoroutine ("Sale");
-
 		// Sliders for 2 employees, and players can't change these
 		//emp1_energy.enabled = false;
 		//emp2_energy.enabled = false;
@@ -92,6 +97,13 @@ public class GameManager : MonoBehaviour {
 				bread.GetComponent<SpriteRenderer> ().color = col;
 			}
 		}
+			
+		sell_freq = shift_length / (float)(store.GetReputation ());
+		sell_freq_elapsed = sell_freq;
+		emp1_make_freq = 10f; //default
+		emp2_make_freq = 10f; //default
+		emp1_make_freq_elapsed = emp1_make_freq;
+		emp2_make_freq_elapsed = emp2_make_freq;
 
 		// Get audio source component
 		collectSound = store.GetComponent<AudioSource>();
@@ -143,18 +155,6 @@ public class GameManager : MonoBehaviour {
 
 	}
 
-	private IEnumerator Sale(){
-		while (true) {
-			if (shift_started) {
-				float freq = shift_length / (float)(store.GetReputation ());
-				yield return new WaitForSeconds (freq);
-				store.Sell ();
-				SwitchBread ();
-			}
-			yield return null;
-		}
-	}
-
 	public void HideSliders() {
 		emp1_energy.GetComponent<CanvasGroup> ().alpha = 0f;
 		emp1_energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
@@ -169,18 +169,56 @@ public class GameManager : MonoBehaviour {
 		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 
-	public IEnumerator DayShift() {
+	public IEnumerator Shift() {
+		Task emp1_curr_task = (Task) ((Employee)employee_manager.myEmployees [0]).tasksNotCompleted[0];
+		Task emp2_curr_task = (Task) ((Employee)employee_manager.myEmployees [1]).tasksNotCompleted[0];
+		int num_employees_selling = 0;
+		if (emp1_curr_task.task_name == "Sell")
+			num_employees_selling++;
+		if (emp2_curr_task.task_name == "Sell")
+			num_employees_selling++;
 		
 		//healthBar.UpdateBar( currEnergy, maxEnergy ); - using healthBar
 
 		// Update energy bar (above employees' heads)
 		while (true) {
 			if (time_elapsed > 0) {
-				Debug.Log (time_elapsed);
+				//Debug.Log (time_elapsed);
+				Debug.Log("sellfreq " + sell_freq + " sellfreqelapsed " + sell_freq_elapsed);
 				currEnergy = time_elapsed;
 				emp1_energy.value = currEnergy / maxEnergy;
 				emp2_energy.value = currEnergy / maxEnergy;
-				yield return new WaitForSeconds(1);
+
+				if (num_employees_selling > 0) {
+					if (sell_freq_elapsed <= 0) {
+						Debug.Log ("Here");
+						store.Sell ();
+						if (num_employees_selling == 2) {
+							store.Sell ();
+						}
+						SwitchBread ();
+						sell_freq_elapsed = sell_freq;
+					}
+					sell_freq_elapsed--;
+				}
+
+				if (emp1_curr_task.task_name == "Sell") {
+					if (emp1_make_freq_elapsed <= 0 && emp1_curr_task.task_name == "Sell") {
+						store.Make ();
+						emp1_make_freq_elapsed = emp1_make_freq;
+					}
+					emp1_make_freq_elapsed--;
+				}
+
+				if (emp2_curr_task.task_name == "Sell") {
+					if (emp2_make_freq_elapsed <= 0 && emp2_curr_task.task_name == "Sell") {
+						store.Make ();
+						emp2_make_freq_elapsed = emp2_make_freq;
+					}
+					emp2_make_freq_elapsed--;
+				}
+
+				yield return new WaitForSeconds(.75f);
 			}
 			else yield return null;
 		}
@@ -192,32 +230,22 @@ public class GameManager : MonoBehaviour {
 	public void Lunch() {
 	}
 
-	public IEnumerator NightShift() {
-
-		// Update energy bar (above employees' heads)
-		while (true) {
-			if (time_elapsed > 0) {
-				Debug.Log (time_elapsed);
-				currEnergy = time_elapsed;
-				emp1_energy.value = currEnergy / maxEnergy;
-				emp2_energy.value = currEnergy / maxEnergy;
-				yield return new WaitForSeconds(1);
-			}
-			else yield return null;
-		}
-	}
-
 	public void StartShift(State state){
 		start_time = Time.time;
 		shift_started = true;
 		curr_state = state;
+		emp1_make_freq = shift_length / ((Employee)employee_manager.myEmployees [0]).GetMorale ();
+		emp2_make_freq = shift_length / ((Employee)employee_manager.myEmployees [1]).GetMorale ();
+
+		emp1_make_freq_elapsed = emp1_make_freq;
+		emp2_make_freq_elapsed = emp2_make_freq;
 
 		//Shift logic
 		if (state == State.DAY_SHIFT) {
 			collectSound.Play ();
 			ShowSliders ();
 			time_elapsed = shift_length; //initialize time_elapsed every shift
-			StartCoroutine ("DayShift");
+			StartCoroutine ("Shift");
 			return;
 		}
 
@@ -231,7 +259,7 @@ public class GameManager : MonoBehaviour {
 			collectSound.Play ();
 			ShowSliders ();
 			time_elapsed = shift_length;
-			StartCoroutine ("NightShift");
+			StartCoroutine ("Shift");
 			return;
 		}
 	}
@@ -241,8 +269,16 @@ public class GameManager : MonoBehaviour {
 		HideSliders ();
 		shift_started = false;
 
+		Employee emp1 = (Employee)employee_manager.myEmployees [0];
+		Employee emp2 = (Employee)employee_manager.myEmployees [1];
+		Task emp1_curr_task = (Task) emp1.tasksNotCompleted [0];
+		Task emp2_curr_task = (Task) emp1.tasksNotCompleted [0];
+
 		if (curr_state == State.DAY_SHIFT) {
 			//start lunch
+			//remove tasks from arraylist for each employee
+			emp1.tasksNotCompleted.Remove(emp1_curr_task);
+			emp2.tasksNotCompleted.Remove(emp2_curr_task);
 
 			StartShift (State.LUNCH);
 			return;
@@ -257,6 +293,11 @@ public class GameManager : MonoBehaviour {
 
 		if (curr_state == State.NIGHT_SHIFT) {
 			//prompt to choose employees again
+		
+			//remove tasks from arraylist for each employee
+			emp1.tasksNotCompleted.Remove(emp1_curr_task);
+			emp2.tasksNotCompleted.Remove(emp2_curr_task);
+
 			days_since_start++;
 
 			if (days_since_start % 7 == 0) {
