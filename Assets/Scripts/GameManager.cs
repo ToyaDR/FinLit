@@ -40,6 +40,8 @@ public class GameManager : MonoBehaviour {
 	public Slider emp1_energy;
 	public Slider emp2_energy;
 	public GameObject Breads;
+	public GameObject feedback_text_1; // child feedback text for employee 1
+	public GameObject feedback_text_2; // child feedback text for employee 2
 
 	private EmployeeManager employee_manager;
 	private TaskAssign task_assign;
@@ -174,11 +176,25 @@ public class GameManager : MonoBehaviour {
 		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
 
+	public void HideFeedbackText() {
+		feedback_text_1.GetComponent<CanvasGroup> ().alpha = 0f;
+		feedback_text_1.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		feedback_text_2.GetComponent<CanvasGroup> ().alpha = 0f;
+		feedback_text_2.GetComponent<CanvasGroup>().blocksRaycasts = false;
+	}
+
 	public void ShowSliders() {
 		emp1_energy.GetComponent<CanvasGroup> ().alpha = 1f;
 		emp1_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
 		emp2_energy.GetComponent<CanvasGroup> ().alpha = 1f;
 		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
+	}
+		
+	public void ShowFeedbackText() {
+		feedback_text_1.GetComponent<CanvasGroup> ().alpha = 1f;
+		feedback_text_1.GetComponent<CanvasGroup>().blocksRaycasts = true;
+		feedback_text_2.GetComponent<CanvasGroup> ().alpha = 1f;
+		feedback_text_2.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 
 	public IEnumerator Shift() {
@@ -223,7 +239,7 @@ public class GameManager : MonoBehaviour {
 					if (emp1_sell_freq_elapsed <= 0) {
 						store.Sell ();
 						emp1_sell_freq_elapsed = emp1_sell_freq;
-						emp1_store.transform.Find ("Text").GetComponent<Text> ().text = "Selling";
+						// Display 'cent+1'
 					}
 					emp1_sell_freq_elapsed--;
 				}
@@ -232,6 +248,8 @@ public class GameManager : MonoBehaviour {
 					if (emp2_sell_freq_elapsed <= 0) {
 						store.Sell ();
 						emp2_sell_freq_elapsed = emp2_sell_freq;
+						// Display 'cent+1'
+
 					}
 					emp2_sell_freq_elapsed--;
 				}
@@ -241,6 +259,8 @@ public class GameManager : MonoBehaviour {
 					if (emp1_make_freq_elapsed <= 0) {
 						store.Make ();
 						emp1_make_freq_elapsed = emp1_make_freq;
+						// Display 'bread+1'
+
 					}
 					emp1_make_freq_elapsed--;
 				}
@@ -249,6 +269,8 @@ public class GameManager : MonoBehaviour {
 					if (emp2_make_freq_elapsed <= 0) {
 						store.Make ();
 						emp2_make_freq_elapsed = emp2_make_freq;
+						// Display 'bread+1'
+
 					}
 					emp2_make_freq_elapsed--;
 				}
