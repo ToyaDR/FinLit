@@ -223,6 +223,7 @@ public class GameManager : MonoBehaviour {
 					if (emp1_sell_freq_elapsed <= 0) {
 						store.Sell ();
 						emp1_sell_freq_elapsed = emp1_sell_freq;
+						emp1_store.transform.Find ("Text").GetComponent<Text> ().text = "Selling";
 					}
 					emp1_sell_freq_elapsed--;
 				}
