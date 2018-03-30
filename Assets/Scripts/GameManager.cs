@@ -12,9 +12,13 @@ public class GameManager : MonoBehaviour {
 	float start_time;
 	float time_elapsed;
 	float sell_freq;
+	float emp1_sell_freq;
+	float emp2_sell_freq;
 	float emp1_make_freq;
 	float emp2_make_freq;
 	float sell_freq_elapsed;
+	float emp1_sell_freq_elapsed;
+	float emp2_sell_freq_elapsed;
 	float emp1_make_freq_elapsed;
 	float emp2_make_freq_elapsed;
 
@@ -97,9 +101,17 @@ public class GameManager : MonoBehaviour {
 				bread.GetComponent<SpriteRenderer> ().color = col;
 			}
 		}
-			
+
+		// SELL
 		sell_freq = shift_length / (float)(store.GetReputation ());
 		sell_freq_elapsed = sell_freq;
+
+		emp1_sell_freq = sell_freq;
+		emp2_sell_freq = sell_freq;
+		emp1_sell_freq_elapsed = emp1_sell_freq;
+		emp2_sell_freq_elapsed = emp2_sell_freq;
+
+		// MAKE
 		emp1_make_freq = 10f; //default
 		emp2_make_freq = 10f; //default
 		emp1_make_freq_elapsed = emp1_make_freq;
@@ -189,10 +201,13 @@ public class GameManager : MonoBehaviour {
 				emp1_energy.value = currEnergy / maxEnergy;
 				emp2_energy.value = currEnergy / maxEnergy;
 
+				/*
+				// If at least one employee is selling,
 				if (num_employees_selling > 0) {
 					if (sell_freq_elapsed <= 0) {
 						Debug.Log ("Here");
 						store.Sell ();
+						// If both employees are selling, SELL one more time
 						if (num_employees_selling == 2) {
 							store.Sell ();
 						}
@@ -201,17 +216,36 @@ public class GameManager : MonoBehaviour {
 					}
 					sell_freq_elapsed--;
 				}
+				*/
 
+				// If emp 1 is supposed to sell,
 				if (emp1_curr_task.task_name == "Sell") {
-					if (emp1_make_freq_elapsed <= 0 && emp1_curr_task.task_name == "Sell") {
+					if (emp1_sell_freq_elapsed <= 0) {
+						store.Sell ();
+						emp1_sell_freq_elapsed = emp1_sell_freq;
+					}
+					emp1_sell_freq_elapsed--;
+				}
+				// If emp 2 is supposed to sell,
+				if (emp2_curr_task.task_name == "Sell") {
+					if (emp2_sell_freq_elapsed <= 0) {
+						store.Sell ();
+						emp2_sell_freq_elapsed = emp2_sell_freq;
+					}
+					emp2_sell_freq_elapsed--;
+				}
+
+				// If emp 1 is supposed to make,
+				if (emp1_curr_task.task_name == "Make") {
+					if (emp1_make_freq_elapsed <= 0) {
 						store.Make ();
 						emp1_make_freq_elapsed = emp1_make_freq;
 					}
 					emp1_make_freq_elapsed--;
 				}
-
-				if (emp2_curr_task.task_name == "Sell") {
-					if (emp2_make_freq_elapsed <= 0 && emp2_curr_task.task_name == "Sell") {
+				// If emp 2 is supposed to make,
+				if (emp2_curr_task.task_name == "Make") {
+					if (emp2_make_freq_elapsed <= 0) {
 						store.Make ();
 						emp2_make_freq_elapsed = emp2_make_freq;
 					}

@@ -21,7 +21,7 @@ public class Store : MonoBehaviour {
 
 	/*   Variables from other scripts   */
 
-	public GameObject closeButton;
+	//public GameObject closeButton;
 	public GameObject ingredientsPanel;
 	public GameObject employeeChoosePanel;
 
