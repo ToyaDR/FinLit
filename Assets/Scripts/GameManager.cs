@@ -317,7 +317,7 @@ public class GameManager : MonoBehaviour {
 
 			days_since_start++;
 
-			foreach (Employee e in employee_manager.allEmployees) {
+			foreach (Employee e in employee_manager.myEmployees) {
 				e.days_since_interaction++;
 
 				/* Add employees to the list of employees that worked
@@ -333,6 +333,9 @@ public class GameManager : MonoBehaviour {
 				// weekly tasks
 				ShowWeek();
 				WeekPanel.GetComponent<WeeklyTaskPanel>().ShowEmployees ();
+
+				/* Reset week employees list */
+				employee_manager.weekEmployees.Clear ();
 				return;
 			}
 
