@@ -78,17 +78,13 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 1.0f;
 
 		curr_state = State.DAY_SHIFT;
-		shift_length = 10f;//60f*2f; //2 minutes
+		shift_length = 60f*2f; //2 minutes
 		lunch_length = 60f*1f; //1 minute
 		time_elapsed = shift_length; // count down to end of shift
 		shift_started = false;
 
 		employee_manager = EmployeeManager.GetComponent<EmployeeManager> ();
 		task_assign = TaskAssign.GetComponent<TaskAssign> ();
-
-		// Sliders for 2 employees, and players can't change these
-		//emp1_energy.enabled = false;
-		//emp2_energy.enabled = false;
 
 		// Initialize energy for sliders
 		currEnergy = shift_length;
@@ -187,37 +183,17 @@ public class GameManager : MonoBehaviour {
 			num_employees_selling++;
 		if (emp2_curr_task.task_name == "Sell")
 			num_employees_selling++;
-		
-		//healthBar.UpdateBar( currEnergy, maxEnergy ); - using healthBar
 
 		// Update energy bar (above employees' heads)
 		while (shift_started) {
 			if (time_elapsed > 0) {
-				//Debug.Log (time_elapsed);
-				Debug.Log("sellfreq " + sell_freq + " sellfreqelapsed " + sell_freq_elapsed);
 				currEnergy = time_elapsed;
 				emp1_energy.value = currEnergy / maxEnergy;
 				emp2_energy.value = currEnergy / maxEnergy;
 
-				/*
-				// If at least one employee is selling,
-				if (num_employees_selling > 0) {
-					if (sell_freq_elapsed <= 0) {
-						Debug.Log ("Here");
-						store.Sell ();
-						// If both employees are selling, SELL one more time
-						if (num_employees_selling == 2) {
-							store.Sell ();
-						}
-						SwitchBread ();
-						sell_freq_elapsed = sell_freq;
-					}
-					sell_freq_elapsed--;
-				}
-				*/
 
-				// If emp 1 is supposed to sell,
 				if (emp1_curr_task.task_name == "Sell" || emp2_curr_task.task_name == "Sell") {
+					// If emp 1 is supposed to sell,
 					if (emp1_curr_task.task_name == "Sell") {
 						if (emp1_sell_freq_elapsed <= 0) {
 							store.Sell ();
@@ -263,9 +239,6 @@ public class GameManager : MonoBehaviour {
 			}
 			else yield return null;
 		}
-
-		//emp1_energy.transform.position = emp1_store.transform.position;
-		//emp2_energy.transform.position = emp2_store.transform.position;
 	}
 
 	public void Lunch() {
@@ -321,6 +294,7 @@ public class GameManager : MonoBehaviour {
 			emp1.tasksNotCompleted.Remove(emp1_curr_task);
 			emp2.tasksNotCompleted.Remove(emp2_curr_task);
 
+			StopCoroutine("Shift");
 			StartShift (State.LUNCH);
 			return;
 		}
@@ -334,7 +308,8 @@ public class GameManager : MonoBehaviour {
 
 		if (curr_state == State.NIGHT_SHIFT) {
 			//prompt to choose employees again
-		
+			StopCoroutine("Shift");
+
 			//remove tasks from arraylist for each employee
 			emp1.tasksNotCompleted.Remove(emp1_curr_task);
 			emp2.tasksNotCompleted.Remove(emp2_curr_task);
@@ -525,6 +500,7 @@ public class GameManager : MonoBehaviour {
 	public void ShowEmployeeChoose() {
 		EmployeeChoose.GetComponent<CanvasGroup>().alpha = 1f;
 		EmployeeChoose.GetComponent<CanvasGroup>().blocksRaycasts = true;
+		EmployeeChoose.GetComponent<EmployeeChoose> ().ResetToggles ();
 	}
 
 	// Hide ingredients

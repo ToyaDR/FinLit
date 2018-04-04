@@ -99,7 +99,7 @@ public class EmployeeChoose : MonoBehaviour {
 		img2.sprite = ((Employee)(my_employees [1])).GetImage ();
 	}
 
-	void ResetToggles(){
+	public void ResetToggles(){
 		toggle_1.isOn = false;
 		toggle_2.isOn = false;
 		toggle_3.isOn = false;

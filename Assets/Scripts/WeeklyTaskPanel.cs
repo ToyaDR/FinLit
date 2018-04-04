@@ -7,8 +7,7 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	public GameObject IncomeBar;
 	public GameObject SpendingBar;
 	public GameObject EmployeeManager;
-
-	private GameObject WeekEmployees;
+	public GameObject WeekEmployees;
 
 	public bool inc;
 
