@@ -533,13 +533,13 @@ public class GameManager : MonoBehaviour {
 
 	// Show ingredients
 	public void ShowIngredients() {
-		ingredientsPanel.GetComponent<CanvasGroup>().alpha = 1f;
-		ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+		IngredientsPanel.GetComponent<CanvasGroup>().alpha = 1f;
+		IngredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 
 	// Hide ingredients
 	public void HideIngredients() {
-		ingredientsPanel.GetComponent<CanvasGroup>().alpha = 0f;
-		ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		IngredientsPanel.GetComponent<CanvasGroup>().alpha = 0f;
+		IngredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
 }
