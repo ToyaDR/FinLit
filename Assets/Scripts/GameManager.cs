@@ -243,6 +243,9 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void StartShift(State state){
+		start.GetComponent<CanvasGroup> ().alpha = 0f;
+		start.GetComponent<CanvasGroup> ().blocksRaycasts = false;
+
 		start_time = Time.time;
 		shift_started = true;
 		curr_state = state;
