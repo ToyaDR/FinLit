@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour {
 	/* Panels */
 	public GameObject EmployeeManager;
 	public GameObject EmployeeChoose;
+	public GameObject EmployeePanel;
 	public GameObject TaskAssign;
 	public GameObject WeekPanel;
 	public GameObject IngredientsPanel;
@@ -78,8 +79,8 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 1.0f;
 
 		curr_state = State.DAY_SHIFT;
-		shift_length = 60f*2f; //2 minutes
-		lunch_length = 60f*1f; //1 minute
+		shift_length = 10f;//60f*2f; //2 minutes
+		lunch_length = 5f;//60f*1f; //1 minute
 		time_elapsed = shift_length; // count down to end of shift
 		shift_started = false;
 
@@ -96,6 +97,7 @@ public class GameManager : MonoBehaviour {
 		HideIngredients ();
 		HideEmployeeChoose();
 		HideTaskAssign ();
+		HideEmployeePanel ();
 	
 		bread_list = new Dictionary<string, GameObject>();
 		foreach (Transform bread in Breads.transform) {
@@ -161,13 +163,9 @@ public class GameManager : MonoBehaviour {
 			//TODO: Check if player wants to pause
 
 			HideDoor ();
-			HideEmployee (task_assign.emp1_store);
 			UpdateFlowchart(emp1_flowchart,(Employee)employee_manager.myEmployees [0]);
-			ShowEmployee (task_assign.emp1_store);
-
-			HideEmployee (task_assign.emp2_store);
 			UpdateFlowchart(emp2_flowchart,(Employee)employee_manager.myEmployees [1]);
-			ShowEmployee (task_assign.emp2_store);
+
 
 			ShowDoor ();
 		}
@@ -438,11 +436,19 @@ public class GameManager : MonoBehaviour {
 		bread_list [curr_bread].GetComponent<SpriteRenderer> ().color = old_col;
 	}
 
-	public void ShowEmployee(GameObject emp){
-		emp.GetComponent<Fungus.Clickable2D> ().ClickEnabled = true;
+	public void ShowEmployeePanel(){
+		EmployeePanel.GetComponent<CanvasGroup>().alpha = 1f;
+		EmployeePanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+
+		emp1_store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = true;
+		emp2_store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = true;
 	}
-	public void HideEmployee(GameObject emp){
-		emp.GetComponent<Fungus.Clickable2D> ().ClickEnabled = false;
+	public void HideEmployeePanel(){
+		EmployeePanel.GetComponent<CanvasGroup>().alpha = 0f;
+		EmployeePanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+
+		emp1_store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = false;
+		emp2_store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = false;
 	}
 
 	public void ShowDoor(){
@@ -500,6 +506,9 @@ public class GameManager : MonoBehaviour {
 	public void ShowEmployeeChoose() {
 		EmployeeChoose.GetComponent<CanvasGroup>().alpha = 1f;
 		EmployeeChoose.GetComponent<CanvasGroup>().blocksRaycasts = true;
+
+		HideEmployeePanel ();
+
 		EmployeeChoose.GetComponent<EmployeeChoose> ().ResetToggles ();
 	}
 
