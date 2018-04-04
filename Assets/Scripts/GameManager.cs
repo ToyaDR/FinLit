@@ -5,36 +5,20 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
-	public int days_since_start;
-	float shift_length;
-	float lunch_length;
-
-	float start_time;
-	float time_elapsed;
-	float sell_freq;
-	float emp1_sell_freq;
-	float emp2_sell_freq;
-	float emp1_make_freq;
-	float emp2_make_freq;
-	float sell_freq_elapsed;
-	float emp1_sell_freq_elapsed;
-	float emp2_sell_freq_elapsed;
-	float emp1_make_freq_elapsed;
-	float emp2_make_freq_elapsed;
-
-	bool shift_started;
-	bool lunch;
+	/* Public and need to be assigned in scene */
+	/* Panels */
+	public GameObject EmployeeManager;
+	public GameObject EmployeeChoose;
+	public GameObject TaskAssign;
+	public GameObject WeekPanel;
+	public GameObject IngredientsPanel;
 
 	public Store store;
 	public GameObject door;
 	public GameObject BreakRoom;
-	public GameObject EmployeeManager;
-	public GameObject TaskAssign;
-	public GameObject WeekPanel;
 	public Fungus.Flowchart emp1_flowchart;
 	public Fungus.Flowchart emp2_flowchart;
 	public GameObject start;
-	// public SimpleHealthBar healthBar; //using SimpleHealthBar plugin
 	public GameObject emp1_store;
 	public GameObject emp2_store;
 	public Slider emp1_energy;
@@ -43,6 +27,30 @@ public class GameManager : MonoBehaviour {
 	public GameObject feedback_text_1; // child feedback text for employee 1
 	public GameObject feedback_text_2; // child feedback text for employee 2
 
+	/* Public for debugging purposes */
+	public int days_since_start;
+	public State curr_state;
+
+	/* Private */
+	private float shift_length;
+	private float lunch_length;
+
+	private float start_time;
+	private float time_elapsed;
+	private float sell_freq;
+	private float emp1_sell_freq;
+	private float emp2_sell_freq;
+	private float emp1_make_freq;
+	private float emp2_make_freq;
+	private float sell_freq_elapsed;
+	private float emp1_sell_freq_elapsed;
+	private float emp2_sell_freq_elapsed;
+	private float emp1_make_freq_elapsed;
+	private float emp2_make_freq_elapsed;
+
+	private bool shift_started;
+	private bool lunch;
+
 	private EmployeeManager employee_manager;
 	private TaskAssign task_assign;
 	private float currEnergy;
@@ -50,18 +58,18 @@ public class GameManager : MonoBehaviour {
 
 	private Dictionary <string, GameObject> bread_list;
 	private string curr_bread = "100";
-	// Sound effects
-	AudioSource collectSound;
 
-	Vector3 touchPosWorld;
+	/* Sound effects */
+	private AudioSource collectSound;
+
+	private Vector3 touchPosWorld;
 
 	public enum State{
 		DAY_SHIFT,
 		LUNCH,
 		NIGHT_SHIFT
 	}
-
-	public State curr_state;
+		
 	private int MAX_PRODUCT = 10;
 
 	// Use this for initialization
@@ -88,8 +96,10 @@ public class GameManager : MonoBehaviour {
 
 		// Hide sliders before shift starts
 		HideSliders();
-
 		HideWeek();
+		HideIngredients ();
+		HideEmployeeChoose();
+		HideTaskAssign ();
 	
 		bread_list = new Dictionary<string, GameObject>();
 		foreach (Transform bread in Breads.transform) {
@@ -123,8 +133,7 @@ public class GameManager : MonoBehaviour {
 		collectSound = store.GetComponent<AudioSource>();
 
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 		
 		/* Check for touch input */
@@ -168,35 +177,8 @@ public class GameManager : MonoBehaviour {
 		}
 
 	}
-
-	public void HideSliders() {
-		emp1_energy.GetComponent<CanvasGroup> ().alpha = 0f;
-		emp1_energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
-		emp2_energy.GetComponent<CanvasGroup> ().alpha = 0f;
-		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
-	}
-
-	public void HideFeedbackText() {
-		feedback_text_1.GetComponent<CanvasGroup> ().alpha = 0f;
-		feedback_text_1.GetComponent<CanvasGroup>().blocksRaycasts = false;
-		feedback_text_2.GetComponent<CanvasGroup> ().alpha = 0f;
-		feedback_text_2.GetComponent<CanvasGroup>().blocksRaycasts = false;
-	}
-
-	public void ShowSliders() {
-		emp1_energy.GetComponent<CanvasGroup> ().alpha = 1f;
-		emp1_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
-		emp2_energy.GetComponent<CanvasGroup> ().alpha = 1f;
-		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
-	}
 		
-	public void ShowFeedbackText() {
-		feedback_text_1.GetComponent<CanvasGroup> ().alpha = 1f;
-		feedback_text_1.GetComponent<CanvasGroup>().blocksRaycasts = true;
-		feedback_text_2.GetComponent<CanvasGroup> ().alpha = 1f;
-		feedback_text_2.GetComponent<CanvasGroup>().blocksRaycasts = true;
-	}
-
+	/* Shift functions */
 	public IEnumerator Shift() {
 		Task emp1_curr_task = (Task) ((Employee)employee_manager.myEmployees [0]).tasksNotCompleted[0];
 		Task emp2_curr_task = (Task) ((Employee)employee_manager.myEmployees [1]).tasksNotCompleted[0];
@@ -359,11 +341,20 @@ public class GameManager : MonoBehaviour {
 
 			foreach (Employee e in employee_manager.allEmployees) {
 				e.days_since_interaction++;
+
+				/* Add employees to the list of employees that worked
+				 * during this week and update how often they worked */
+				if (!employee_manager.weekEmployees.ContainsKey (e)) {
+					employee_manager.weekEmployees.Add (e, 1);
+				} else {
+					employee_manager.weekEmployees [e]++;
+				}
 			}
 
-			if (days_since_start % 7 == 0) {
+			if (days_since_start % 4 == 0) {
 				// weekly tasks
 				ShowWeek();
+				WeekPanel.GetComponent<WeeklyTaskPanel>().ShowEmployees ();
 				return;
 			}
 
@@ -375,6 +366,7 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	/* Flowchart function */
 	public void UpdateFlowchart(Fungus.Flowchart flowchart, Employee emp){
 		Fungus.StringVariable option = (Fungus.StringVariable) flowchart.GetVariable ("option");
 		Fungus.BooleanVariable done = (Fungus.BooleanVariable) flowchart.GetVariable ("done");
@@ -401,29 +393,7 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	public void ShowEmployee(GameObject emp){
-		emp.GetComponent<Fungus.Clickable2D> ().ClickEnabled = true;
-	}
-	public void HideEmployee(GameObject emp){
-		emp.GetComponent<Fungus.Clickable2D> ().ClickEnabled = false;
-	}
 
-	public void ShowDoor(){
-		door.GetComponent<BoxCollider2D> ().enabled = true;
-	}
-	public void HideDoor(){
-		door.GetComponent<BoxCollider2D> ().enabled = false;
-	}
-		
-	public void ShowWeek() {
-		WeekPanel.GetComponent<CanvasGroup>().alpha = 1f;
-		WeekPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
-	}
-	public void HideWeek() {
-		WeekPanel.GetComponent<CanvasGroup>().alpha = 0f;
-		WeekPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
-		store.ShowEmployeeChoose ();
-	}
 
 	private void SwitchBread(){
 		float percent = ((float)store.GetProductAmount ()) * 100f / ((float) MAX_PRODUCT);
@@ -459,7 +429,7 @@ public class GameManager : MonoBehaviour {
 
 		if (percent < 100f && percent >= 75 && curr_bread != "75") {
 			//Hide old bread
-			HideBread();
+			HideBread ();
 
 			//Show new bread and set curr_bread
 			curr_bread = "75";
@@ -478,6 +448,7 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	/* Show and Hide functions */
 	private void ShowBread(){
 		Color new_col = bread_list[curr_bread].GetComponent<SpriteRenderer>().color;
 		new_col.a = 100f;
@@ -488,5 +459,87 @@ public class GameManager : MonoBehaviour {
 		Color old_col = bread_list[curr_bread].GetComponent<SpriteRenderer>().color;
 		old_col.a = 0f;
 		bread_list [curr_bread].GetComponent<SpriteRenderer> ().color = old_col;
+	}
+
+	public void ShowEmployee(GameObject emp){
+		emp.GetComponent<Fungus.Clickable2D> ().ClickEnabled = true;
+	}
+	public void HideEmployee(GameObject emp){
+		emp.GetComponent<Fungus.Clickable2D> ().ClickEnabled = false;
+	}
+
+	public void ShowDoor(){
+		door.GetComponent<BoxCollider2D> ().enabled = true;
+	}
+	public void HideDoor(){
+		door.GetComponent<BoxCollider2D> ().enabled = false;
+	}
+
+	public void ShowWeek() {
+		WeekPanel.GetComponent<CanvasGroup>().alpha = 1f;
+		WeekPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+	}
+	public void HideWeek() {
+		WeekPanel.GetComponent<CanvasGroup>().alpha = 0f;
+		WeekPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		ShowEmployeeChoose ();
+	}
+
+	public void HideSliders() {
+		emp1_energy.GetComponent<CanvasGroup> ().alpha = 0f;
+		emp1_energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		emp2_energy.GetComponent<CanvasGroup> ().alpha = 0f;
+		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
+	}
+
+	public void HideFeedbackText() {
+		feedback_text_1.GetComponent<CanvasGroup> ().alpha = 0f;
+		feedback_text_1.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		feedback_text_2.GetComponent<CanvasGroup> ().alpha = 0f;
+		feedback_text_2.GetComponent<CanvasGroup>().blocksRaycasts = false;
+	}
+
+	public void ShowSliders() {
+		emp1_energy.GetComponent<CanvasGroup> ().alpha = 1f;
+		emp1_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
+		emp2_energy.GetComponent<CanvasGroup> ().alpha = 1f;
+		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
+	}
+
+	public void ShowFeedbackText() {
+		feedback_text_1.GetComponent<CanvasGroup> ().alpha = 1f;
+		feedback_text_1.GetComponent<CanvasGroup>().blocksRaycasts = true;
+		feedback_text_2.GetComponent<CanvasGroup> ().alpha = 1f;
+		feedback_text_2.GetComponent<CanvasGroup>().blocksRaycasts = true;
+	}
+
+	// Hide task assign panel
+	public void HideTaskAssign() {
+		TaskAssign.GetComponent<CanvasGroup>().alpha = 0f;
+		TaskAssign.GetComponent<CanvasGroup>().blocksRaycasts = false;
+	}
+
+	// Show employee choose panel
+	public void ShowEmployeeChoose() {
+		EmployeeChoose.GetComponent<CanvasGroup>().alpha = 1f;
+		EmployeeChoose.GetComponent<CanvasGroup>().blocksRaycasts = true;
+	}
+
+	// Hide ingredients
+	public void HideEmployeeChoose() {
+		EmployeeChoose.GetComponent<CanvasGroup>().alpha = 0f;
+		EmployeeChoose.GetComponent<CanvasGroup>().blocksRaycasts = false;
+	}
+
+	// Show ingredients
+	public void ShowIngredients() {
+		ingredientsPanel.GetComponent<CanvasGroup>().alpha = 1f;
+		ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+	}
+
+	// Hide ingredients
+	public void HideIngredients() {
+		ingredientsPanel.GetComponent<CanvasGroup>().alpha = 0f;
+		ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
 }
