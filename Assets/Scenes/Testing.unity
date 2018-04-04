@@ -603,6 +603,16 @@ Prefab:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 212236995958189958, guid: b860f99ddbbce0b4a8aa98978fb9f666,
+        type: 2}
+      propertyPath: m_SortingLayerID
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212236995958189958, guid: b860f99ddbbce0b4a8aa98978fb9f666,
+        type: 2}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b860f99ddbbce0b4a8aa98978fb9f666, type: 2}
   m_IsPrefabParent: 0
@@ -10516,6 +10526,16 @@ Prefab:
         type: 2}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 212236995958189958, guid: b860f99ddbbce0b4a8aa98978fb9f666,
+        type: 2}
+      propertyPath: m_SortingLayerID
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 212236995958189958, guid: b860f99ddbbce0b4a8aa98978fb9f666,
+        type: 2}
+      propertyPath: m_SortingLayer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b860f99ddbbce0b4a8aa98978fb9f666, type: 2}
