@@ -217,23 +217,25 @@ public class GameManager : MonoBehaviour {
 				*/
 
 				// If emp 1 is supposed to sell,
-				if (emp1_curr_task.task_name == "Sell") {
-					if (emp1_sell_freq_elapsed <= 0) {
-						store.Sell ();
-						emp1_sell_freq_elapsed = emp1_sell_freq;
-						// Display 'cent+1'
+				if (emp1_curr_task.task_name == "Sell" || emp2_curr_task.task_name == "Sell") {
+					if (emp1_curr_task.task_name == "Sell") {
+						if (emp1_sell_freq_elapsed <= 0) {
+							store.Sell ();
+							emp1_sell_freq_elapsed = emp1_sell_freq;
+							// Display 'cent+1'
+						}
 					}
-					emp1_sell_freq_elapsed--;
-				}
-				// If emp 2 is supposed to sell,
-				if (emp2_curr_task.task_name == "Sell") {
-					if (emp2_sell_freq_elapsed <= 0) {
-						store.Sell ();
-						emp2_sell_freq_elapsed = emp2_sell_freq;
-						// Display 'cent+1'
+					// If emp 2 is supposed to sell,
+					if (emp2_curr_task.task_name == "Sell") {
+						if (emp2_sell_freq_elapsed <= 0) {
+							store.Sell ();
+							emp2_sell_freq_elapsed = emp2_sell_freq;
+							// Display 'cent+1'
 
+						}
 					}
-					emp2_sell_freq_elapsed--;
+					SwitchBread ();
+					emp1_sell_freq_elapsed--;
 				}
 
 				// If emp 1 is supposed to make,
