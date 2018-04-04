@@ -110,7 +110,7 @@ public class TaskAssign : MonoBehaviour {
 
 		GameManager gm = game_manager.GetComponent<GameManager> ();
 		gm.StartShift (GameManager.State.DAY_SHIFT);
-		store.GetComponent<Store> ().HideTaskAssign ();
+		game_manager.GetComponent<GameManager>().HideTaskAssign ();
 
 		// Render the 2 chosen employees
 

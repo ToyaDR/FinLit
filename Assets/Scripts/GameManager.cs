@@ -151,7 +151,7 @@ public class GameManager : MonoBehaviour {
 				GameObject touchedObject = hitInfo.transform.gameObject;
 
 				if (touchedObject == door) {
-					store.ShowIngredients ();
+					ShowIngredients ();
 				}
 			}
 		}
@@ -361,7 +361,7 @@ public class GameManager : MonoBehaviour {
 			// update days since interaction for all employees
 
 			Debug.Log("Please assign 2 employees");
-			store.ShowEmployeeChoose ();
+			ShowEmployeeChoose ();
 			return;
 		}
 	}

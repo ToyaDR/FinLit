@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class EmployeeChoose : MonoBehaviour {
 
 	public GameObject employeeManager;
+	public GameObject gameManager;
 	private ArrayList allEmployeesList;
 	public Button nextButton;
 	public GameObject emp1;
@@ -87,7 +88,7 @@ public class EmployeeChoose : MonoBehaviour {
 		// Render next screen - Task Assignment
 		taskAssignPanel.GetComponent<CanvasGroup>().alpha = 1f;
 		taskAssignPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
-		store.GetComponent<Store>().HideEmployeeChoose (); // close current panel (employee choose panel)
+		gameManager.GetComponent<GameManager>().HideEmployeeChoose (); // close current panel (employee choose panel)
 
 		// Retrieve myEmployees ArrayList from EmployeeManager.cs - assign profile sprite of chosen employees
 		// to TaskAssignPanel
