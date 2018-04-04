@@ -159,4 +159,13 @@ public class TaskAssign : MonoBehaviour {
 			toggle.isOn = false;
 		}
 	}
+
+	public void ResetToggles(){
+		emp1_toggle_1.isOn = false;
+		emp1_toggle_2.isOn = false;
+		emp1_toggle_3.isOn = false;
+		emp2_toggle_1.isOn = false;
+		emp2_toggle_2.isOn = false;
+		emp2_toggle_3.isOn = false;
+	}
 }

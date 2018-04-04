@@ -496,6 +496,13 @@ public class GameManager : MonoBehaviour {
 		feedback_text_2.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 
+	public void ShowTaskAssign() {
+		TaskAssign.GetComponent<CanvasGroup>().alpha = 1f;
+		TaskAssign.GetComponent<CanvasGroup>().blocksRaycasts = true;
+
+		TaskAssign.GetComponent<TaskAssign> ().ResetToggles ();
+	}
+
 	// Hide task assign panel
 	public void HideTaskAssign() {
 		TaskAssign.GetComponent<CanvasGroup>().alpha = 0f;

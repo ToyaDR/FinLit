@@ -86,8 +86,7 @@ public class EmployeeChoose : MonoBehaviour {
 		}
 
 		// Render next screen - Task Assignment
-		taskAssignPanel.GetComponent<CanvasGroup>().alpha = 1f;
-		taskAssignPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
+		gameManager.GetComponent<GameManager>().ShowTaskAssign (); // close current panel (employee choose panel)
 		gameManager.GetComponent<GameManager>().HideEmployeeChoose (); // close current panel (employee choose panel)
 
 		// Retrieve myEmployees ArrayList from EmployeeManager.cs - assign profile sprite of chosen employees
