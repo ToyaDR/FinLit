@@ -41,6 +41,7 @@ public class IngredientsPanel : MonoBehaviour {
 		foreach(Ingredient i in ingredients){
 			GameObject ingTextGO = Instantiate (Resources.Load ("Ingredients", typeof(GameObject))) as GameObject;
 			ingTextGO.transform.SetParent (transform);
+			ingTextGO.transform.localScale = new Vector3(1f,1f,1f);
 			ingTextGO.GetComponent<Text>().text = i.getName() + " $" + i.getPrice();
 
 			Vector2 anchorPoint = new Vector2 (canvasRight, canvasTop - offset);

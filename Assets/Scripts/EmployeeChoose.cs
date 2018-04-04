@@ -40,6 +40,9 @@ public class EmployeeChoose : MonoBehaviour {
 			employeeNum += 1;
 		}
 
+		/* Don't allow next to be clicked until 2 employees are chosen */
+		nextButton.interactable = false;
+
 		// Add next button listener
 		nextButton.onClick.AddListener(OnClickNext);
 
@@ -65,9 +68,21 @@ public class EmployeeChoose : MonoBehaviour {
 
 	void ToggleChanged(Toggle toggle) {
 		// Count the number of chosen employees - if it's 3, turn the toggle back off
-		if (toggle_1.isOn && toggle_2.isOn && toggle_3.isOn) {
+		int count = 0;
+		if (toggle_1.isOn)
+			count++;
+		if (toggle_2.isOn)
+			count++;
+		if (toggle_3.isOn)
+			count++;
+
+		if (count == 2) {
+			nextButton.interactable = true;
+		}
+		if (count == 3) {
 			toggle.isOn = false;
 		}
+			
 	}
 
 	void OnClickNext() {
@@ -102,5 +117,7 @@ public class EmployeeChoose : MonoBehaviour {
 		toggle_1.isOn = false;
 		toggle_2.isOn = false;
 		toggle_3.isOn = false;
+
+		employeeManager.GetComponent<EmployeeManager>().myEmployees.Clear ();
 	}
 }

@@ -465,7 +465,6 @@ public class GameManager : MonoBehaviour {
 	public void HideWeek() {
 		WeekPanel.GetComponent<CanvasGroup>().alpha = 0f;
 		WeekPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
-		ShowEmployeeChoose ();
 	}
 
 	public void HideSliders() {
@@ -535,5 +534,6 @@ public class GameManager : MonoBehaviour {
 	public void HideIngredients() {
 		IngredientsPanel.GetComponent<CanvasGroup>().alpha = 0f;
 		IngredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		ShowEmployeeChoose ();
 	}
 }
