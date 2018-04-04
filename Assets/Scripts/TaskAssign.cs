@@ -110,7 +110,8 @@ public class TaskAssign : MonoBehaviour {
 
 		GameManager gm = game_manager.GetComponent<GameManager> ();
 		gm.StartShift (GameManager.State.DAY_SHIFT);
-		store.GetComponent<Store> ().HideTaskAssign ();
+		game_manager.GetComponent<GameManager>().HideTaskAssign ();
+		game_manager.GetComponent<GameManager> ().ShowEmployeePanel();
 
 		// Render the 2 chosen employees
 
@@ -157,5 +158,14 @@ public class TaskAssign : MonoBehaviour {
 		if (emp2_toggle_1.isOn && emp2_toggle_2.isOn && emp2_toggle_3.isOn) {
 			toggle.isOn = false;
 		}
+	}
+
+	public void ResetToggles(){
+		emp1_toggle_1.isOn = false;
+		emp1_toggle_2.isOn = false;
+		emp1_toggle_3.isOn = false;
+		emp2_toggle_1.isOn = false;
+		emp2_toggle_2.isOn = false;
+		emp2_toggle_3.isOn = false;
 	}
 }

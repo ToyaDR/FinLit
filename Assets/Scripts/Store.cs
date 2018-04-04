@@ -23,9 +23,7 @@ public class Store : MonoBehaviour {
 
 	//public GameObject closeButton;
 	public GameObject ingredientsPanel;
-	public GameObject employeeChoosePanel;
 
-	public GameObject taskAssignPanel;
 	public GameObject score;
 	public GameObject product_in_stock;
 
@@ -47,10 +45,6 @@ public class Store : MonoBehaviour {
 		// Money
 		score.GetComponent<Text>().text = money.ToString();
 
-		HideIngredients ();
-		HideEmployeeChoose();
-		HideTaskAssign ();
-
 		ArrayList ingredients = ingredientsPanel.GetComponent<IngredientsPanel>().getIngredientsList ();
 
 		foreach(Ingredient i in ingredients){
@@ -67,36 +61,6 @@ public class Store : MonoBehaviour {
 	void Update () {
 		score.GetComponent<Text>().text = money.ToString();
 		product_in_stock.GetComponent<Text> ().text = Stock[product].ToString ();
-	}
-
-	// Hide task assign panel
-	public void HideTaskAssign() {
-		taskAssignPanel.GetComponent<CanvasGroup>().alpha = 0f;
-		taskAssignPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
-	}
-
-	// Show employee choose panel
-	public void ShowEmployeeChoose() {
-		employeeChoosePanel.GetComponent<CanvasGroup>().alpha = 1f;
-		employeeChoosePanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
-	}
-
-	// Hide ingredients
-	public void HideEmployeeChoose() {
-		employeeChoosePanel.GetComponent<CanvasGroup>().alpha = 0f;
-		employeeChoosePanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
-	}
-
-	// Show ingredients
-	public void ShowIngredients() {
-		ingredientsPanel.GetComponent<CanvasGroup>().alpha = 1f;
-		ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
-	}
-
-	// Hide ingredients
-	public void HideIngredients() {
-		ingredientsPanel.GetComponent<CanvasGroup>().alpha = 0f;
-		ingredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
 
 	public void DecMoney(int price) {
