@@ -17,6 +17,7 @@ public class Store : MonoBehaviour {
 
 	private int productivity;
 	private int reputation;
+	private int loan;
 	private Dictionary<string, int> Stock;
 
 	/*   Variables from other scripts   */
@@ -28,7 +29,8 @@ public class Store : MonoBehaviour {
 	public GameObject product_in_stock;
 
 	void Awake() {
-		money = 10000;
+		loan = 1000;
+		money = 100;
 		insurance = false;
 		savings_account = 0;
 		checkings_account = 0;
@@ -107,5 +109,13 @@ public class Store : MonoBehaviour {
 			RemoveStock (product, 1);
 			IncMoney (product_price);
 		}
+	}
+
+	public void DecLoan(int amount){
+		loan -= amount;
+	}
+
+	public int GetLoan(){
+		return loan;
 	}
 }

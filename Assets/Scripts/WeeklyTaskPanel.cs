@@ -7,13 +7,27 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	public GameObject IncomeBar;
 	public GameObject SalaryBar;
 	public GameObject IngredientsBar;
+	public GameObject LoanBar;
+	public GameObject TaxBar;
+
 	public GameObject EmployeeManager;
 	public GameObject WeekEmployees;
 	public GameObject Store;
 	public GameObject GameManager;
 	public GameObject IngredientsPanel;
 
+	public GameObject LoanPanel;
+	public GameObject LoanPay;
+	public GameObject LoanOwed;
+
+	public GameObject TaxPanel;
+	public GameObject TaxPay;
+	public GameObject TaxOwed;
+
 	public GameObject IngFeatured;
+
+	private bool tax_paid = false;
+	private bool loan_paid = false;
 
 	private Dictionary<Employee, int> week_employees;
 	private ArrayList week_employees_list;
@@ -33,9 +47,14 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	private ArrayList week_ingredients_list;
 
 	private int curr_emp_feat = 0;
+	private bool loan_hidden = true;
+	private bool tax_hidden = true;
 
+	private int bar_unit = 5;
 	// Use this for initialization
 	void Start () {
+		LoanOwed.GetComponent<Text> ().text = Store.GetComponent<Store> ().GetLoan ().ToString();
+
 		week_employees = EmployeeManager.GetComponent<EmployeeManager>().weekEmployees;
 
 		week_employees_list = new ArrayList ();
@@ -81,9 +100,9 @@ public class WeeklyTaskPanel : MonoBehaviour {
 			emp_featured.transform.Find ("Salary").GetChild(0).GetComponent<Text>().text = curr_emp.GetSalary().ToString();
 
 			/* Add employee salary to spending */
-			int curr_add = 0; /* total added so far */
+			int incr = 0; /* total added so far */
 
-			yield return AddSalarytoSpending(curr_add, curr_emp.GetSalary()*week_employees[curr_emp]);
+			yield return AddSalarytoSpending(incr, curr_emp.GetSalary()*week_employees[curr_emp]);
 			curr_emp_feat++;
 		}
 		curr_emp_feat = 0;
@@ -92,46 +111,65 @@ public class WeeklyTaskPanel : MonoBehaviour {
 		ShowEmployeesList ();
 	}		
 
-	public IEnumerator AddSoldtoIncome(int curr_add, int sold){
+	public IEnumerator AddSoldtoIncome(int incr, int sold){
 		/* TODO: change this to total sold rather than per employee */
-		while (curr_add < sold) {
-			IncreaseBar (IncomeBar, curr_add*Store.GetComponent<Store>().GetPrice());
-			curr_add++;
+		while (incr < sold) {
+			IncreaseBar (IncomeBar, bar_unit*Store.GetComponent<Store>().GetPrice());
+			incr++;
 			yield return new WaitForSeconds (0.2f);
 		}
 		yield return ShowEmployees();
 		GameManager.GetComponent<GameManager>().ResetSold ();
 	}
 
-	public IEnumerator AddSalarytoSpending(int curr_add, int salary){
-		while (curr_add < salary) {
-			IncreaseBar (SalaryBar, curr_add);
-			float new_x = IngredientsBar.transform.localPosition.x + curr_add;
-			float old_y = IngredientsBar.transform.localPosition.y;
-			IngredientsBar.transform.localPosition = new Vector3(new_x, old_y, 1f);
-			curr_add++;
+	public IEnumerator AddSalarytoSpending(int incr, int salary){
+		while (incr < salary) {
+			IncreaseBar (SalaryBar, bar_unit);
+
+			float ing_new_x = IngredientsBar.transform.localPosition.x + bar_unit;
+			float ing_old_y = IngredientsBar.transform.localPosition.y;
+			IngredientsBar.transform.localPosition = new Vector3(ing_new_x, ing_old_y, 1f);
+
+			float loan_new_x = LoanBar.transform.localPosition.x + bar_unit;
+			float loan_old_y = LoanBar.transform.localPosition.y;
+			LoanBar.transform.localPosition = new Vector3(loan_new_x, loan_old_y, 1f);
+
+			float tax_new_x = TaxBar.transform.localPosition.x + bar_unit;
+			float tax_old_y = TaxBar.transform.localPosition.y;
+			TaxBar.transform.localPosition = new Vector3(tax_new_x, tax_old_y, 1f);
+
+			incr++;
 			yield return new WaitForSeconds (0.2f);
 		}
 		yield return null;
 	}
 
 	public IEnumerator ShowIngredientsSpending(){
-		int curr_add = 0;
+		int incr = 0;
 
 		int total_spent = 0;
 		foreach(KeyValuePair<Ingredient, int> i in week_ingredients){
 			total_spent += i.Value * i.Key.getPrice();
 		}
-		yield return AddIngredientstoSpending (curr_add, total_spent);
+		yield return AddIngredientstoSpending (incr, total_spent);
 		IngredientsPanel.GetComponent<IngredientsPanel> ().resetBought ();
 		IngFeatured.GetComponent<CanvasGroup> ().alpha = 0f;
 	}
 
-	public IEnumerator AddIngredientstoSpending(int curr_add, int total_spent){
+	public IEnumerator AddIngredientstoSpending(int incr, int total_spent){
 		IngFeatured.GetComponent<CanvasGroup> ().alpha = 1f;
-		while (curr_add < total_spent) {
-			IncreaseBar (IngredientsBar, curr_add);
-			curr_add++;
+		while (incr < total_spent) {
+			IncreaseBar (IngredientsBar, bar_unit);
+
+			float loan_new_x = LoanBar.transform.localPosition.x + bar_unit;
+			float loan_old_y = LoanBar.transform.localPosition.y;
+			LoanBar.transform.localPosition = new Vector3(loan_new_x, loan_old_y, 1f);
+
+			float tax_new_x = TaxBar.transform.localPosition.x + bar_unit;
+			float tax_old_y = TaxBar.transform.localPosition.y;
+			TaxBar.transform.localPosition = new Vector3(tax_new_x, tax_old_y, 1f);
+
+			incr++;
 			yield return new WaitForSeconds (0.2f);
 		}
 		yield return null;
@@ -140,7 +178,7 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	public IEnumerator ShowEmployees(){
 		foreach (KeyValuePair<Employee, int> e in week_employees) {
 			week_employees_list.Add (e.Key);
-		}
+		}	
 		yield return StartCoroutine ("ShowFeaturedEmployee");
 
 		week_employees.Clear ();
@@ -185,5 +223,58 @@ public class WeeklyTaskPanel : MonoBehaviour {
 			}
 			i++;
 		}
+	}
+
+	public void HideShowLoanPanel(){
+		if (loan_hidden) {
+			LoanPanel.GetComponent<CanvasGroup> ().alpha = 1f;
+			LoanPanel.GetComponent<CanvasGroup> ().blocksRaycasts = true;
+		} else {
+			LoanPanel.GetComponent<CanvasGroup> ().alpha = 0f;
+			LoanPanel.GetComponent<CanvasGroup> ().blocksRaycasts = false;
+		}
+	}
+
+	public void PayLoanWrapper(){
+		StartCoroutine (PayLoan ());
+	}
+
+	public void HideShowTaxPanel(){
+		if (tax_hidden) {
+			TaxPanel.GetComponent<CanvasGroup> ().alpha = 1f;
+			TaxPanel.GetComponent<CanvasGroup> ().blocksRaycasts = true;
+		} else {
+			TaxPanel.GetComponent<CanvasGroup> ().alpha = 0f;
+			TaxPanel.GetComponent<CanvasGroup> ().blocksRaycasts = false;
+		}
+	}
+
+	private IEnumerator PayLoan(){
+		int pay;
+		int.TryParse((LoanPay.GetComponent<Text> ().text).ToString(), out pay);
+
+		int loan_total = Store.GetComponent<Store> ().GetLoan ();
+		if (pay > loan_total) { //TODO: maybe change this???
+			pay = loan_total;
+		}
+		Store.GetComponent<Store> ().DecLoan (pay);
+		Store.GetComponent<Store> ().DecMoney (pay);
+
+		int incr = 0;
+		yield return AddLoantoSpending(incr, pay);
+	}
+
+	private IEnumerator AddLoantoSpending(int incr, int pay){
+		while (incr < pay) {
+			IncreaseBar (LoanBar, bar_unit);
+			if (!tax_paid) {
+				float tax_new_x = TaxBar.transform.localPosition.x + bar_unit;
+				float tax_old_y = TaxBar.transform.localPosition.y;
+				TaxBar.transform.localPosition = new Vector3(tax_new_x, tax_old_y, 1f);
+			}
+			incr++;
+			yield return new WaitForSeconds (0.2f);
+		}
+		yield return null;
 	}
 }
