@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour {
 
 	private Dictionary <string, GameObject> bread_list;
 	private string curr_bread = "100";
+	private int sold = 0;
 
 	/* Sound effects */
 	private AudioSource collectSound;
@@ -196,7 +197,7 @@ public class GameManager : MonoBehaviour {
 						if (emp1_sell_freq_elapsed <= 0) {
 							store.Sell ();
 							emp1_sell_freq_elapsed = emp1_sell_freq;
-							((Employee)employee_manager.myEmployees [0]).AddSold (1);
+							sold++;
 							// Display 'cent+1'
 						}
 					}
@@ -205,7 +206,7 @@ public class GameManager : MonoBehaviour {
 						if (emp2_sell_freq_elapsed <= 0) {
 							store.Sell ();
 							emp2_sell_freq_elapsed = emp2_sell_freq;
-							((Employee)employee_manager.myEmployees [1]).AddSold (1);
+							sold++;
 							// Display 'cent+1'
 
 						}
@@ -336,10 +337,9 @@ public class GameManager : MonoBehaviour {
 			if (days_since_start % 4 == 0) {
 				// weekly tasks
 				ShowWeek();
-				StartCoroutine (WeekPanel.GetComponent<WeeklyTaskPanel> ().ShowEmployees ());
-			
-				/* Reset week employees list */
-
+				/* TODO Call sold first */
+				int curr_add = 0;
+				StartCoroutine (WeekPanel.GetComponent<WeeklyTaskPanel>().AddSoldtoIncome(curr_add, sold));
 				return;
 			}
 
@@ -377,9 +377,7 @@ public class GameManager : MonoBehaviour {
 			emp.days_since_interaction = 0;
 		}
 	}
-
-
-
+		
 	private void SwitchBread(){
 		float percent = ((float)store.GetProductAmount ()) * 100f / ((float) MAX_PRODUCT);
 		if (percent < 25f && curr_bread != "0") {
@@ -545,5 +543,9 @@ public class GameManager : MonoBehaviour {
 		IngredientsPanel.GetComponent<CanvasGroup>().alpha = 0f;
 		IngredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
 		ShowEmployeeChoose ();
+	}
+
+	public void ResetSold(){
+		sold = 0;
 	}
 }

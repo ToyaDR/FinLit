@@ -9,6 +9,7 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	public GameObject EmployeeManager;
 	public GameObject WeekEmployees;
 	public GameObject Store;
+	public GameObject GameManager;
 
 	private Dictionary<Employee, int> week_employees;
 	private ArrayList week_employees_list;
@@ -68,34 +69,30 @@ public class WeeklyTaskPanel : MonoBehaviour {
 
 			emp_featured.GetComponent<Image>().sprite = curr_emp.GetImage();
 			emp_featured.transform.Find ("Salary").GetChild(0).GetComponent<Text>().text = curr_emp.GetSalary().ToString();
-			emp_featured.transform.Find ("Shifts Worked").GetChild (0).GetComponent<Text> ().text = week_employees [curr_emp].ToString();
-			emp_featured.transform.Find ("Sold").GetChild(0).GetComponent<Text>().text = curr_emp.GetSold().ToString();
 
 			Debug.Log (curr_emp.GetName());
 			/* Add employee salary to spending */
 			int curr_add = 0; /* total added so far */
 
 			yield return AddSalarytoSpending(curr_add, curr_emp.GetSalary()*week_employees[curr_emp]);
-
-			curr_add = 0;
-			yield return AddSoldtoIncome (curr_add, curr_emp.GetSold());
-			/* Increment curr_emp_feat */
 			curr_emp_feat++;
 		}
 		curr_emp_feat = 0;
-		emp_featured.GetComponent<CanvasGroup> ().alpha = 0f;
 
 		yield return null;
+		emp_featured.GetComponent<CanvasGroup> ().alpha = 0f;
 		ShowEmployeesList ();
 	}		
 
 	public IEnumerator AddSoldtoIncome(int curr_add, int sold){
+		/* TODO: change this to total sold rather than per employee */
 		while (curr_add < sold) {
 			IncreaseBar (IncomeBar, curr_add*Store.GetComponent<Store>().GetPrice());
 			curr_add++;
 			yield return new WaitForSeconds (0.2f);
 		}
-		yield return null;
+		yield return ShowEmployees();
+		GameManager.GetComponent<GameManager>().ResetSold ();
 	}
 
 	public IEnumerator AddSalarytoSpending(int curr_add, int salary){
@@ -112,11 +109,6 @@ public class WeeklyTaskPanel : MonoBehaviour {
 			week_employees_list.Add (e.Key);
 		}
 		yield return StartCoroutine ("ShowFeatured");
-
-
-		foreach (KeyValuePair<Employee, int> e in week_employees) {
-			e.Key.ResetSold ();
-		}
 
 		week_employees.Clear ();
 	}

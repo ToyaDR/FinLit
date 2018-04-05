@@ -18,7 +18,6 @@ public class Employee {
 	private int emp_salary;
 	public ArrayList tasksNotCompleted; // Tasks that are assigned but not completed. Immediately delete tasks that are completed.
 	private int DaysBetweenInteraction;
-	private int sold = 0;
 
 	//Dialogue Tree
 	public DTreeNode start_question;
@@ -51,18 +50,6 @@ public class Employee {
         emp_morale = morale;
 		productivity = morale;
     }
-
-	public void ResetSold(){
-		sold = 0;
-	}
-
-	public void AddSold(int i) {
-		sold += i;
-	}
-
-	public int GetSold(){
-		return sold;
-	}
 
 	public void SetImage(string imageName) {
 		emp_image = Resources.Load<Sprite>(imageName);
