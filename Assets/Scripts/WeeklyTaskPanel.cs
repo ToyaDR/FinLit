@@ -5,11 +5,15 @@ using UnityEngine;
 
 public class WeeklyTaskPanel : MonoBehaviour {
 	public GameObject IncomeBar;
-	public GameObject SpendingBar;
+	public GameObject SalaryBar;
+	public GameObject IngredientsBar;
 	public GameObject EmployeeManager;
 	public GameObject WeekEmployees;
 	public GameObject Store;
 	public GameObject GameManager;
+	public GameObject IngredientsPanel;
+
+	public GameObject IngFeatured;
 
 	private Dictionary<Employee, int> week_employees;
 	private ArrayList week_employees_list;
@@ -24,6 +28,9 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	private GameObject emp6;
 	private GameObject emp7;
 	private GameObject emp8;
+
+	private Dictionary<Ingredient, int> week_ingredients;
+	private ArrayList week_ingredients_list;
 
 	private int curr_emp_feat = 0;
 
@@ -42,6 +49,9 @@ public class WeeklyTaskPanel : MonoBehaviour {
 		emp7 = WeekEmployees.transform.GetChild (6).gameObject;
 		emp8 = WeekEmployees.transform.GetChild (7).gameObject;
 		emp_featured = WeekEmployees.transform.GetChild (8).gameObject;
+
+		week_ingredients = IngredientsPanel.GetComponent<IngredientsPanel> ().bought ();
+		week_ingredients_list = IngredientsPanel.GetComponent<IngredientsPanel> ().getIngredientsList ();
 	}
 	
 	// Update is called once per frame
@@ -60,7 +70,7 @@ public class WeeklyTaskPanel : MonoBehaviour {
 		bar.GetComponent<RectTransform> ().sizeDelta = new Vector2(orig_width-inc_width, orig_height);
 	}
 
-	public IEnumerator ShowFeatured(){
+	public IEnumerator ShowFeaturedEmployee(){
 		emp_featured.GetComponent<CanvasGroup> ().alpha = 1f;
 
 		while (curr_emp_feat < week_employees_list.Count) {
@@ -70,7 +80,6 @@ public class WeeklyTaskPanel : MonoBehaviour {
 			emp_featured.GetComponent<Image>().sprite = curr_emp.GetImage();
 			emp_featured.transform.Find ("Salary").GetChild(0).GetComponent<Text>().text = curr_emp.GetSalary().ToString();
 
-			Debug.Log (curr_emp.GetName());
 			/* Add employee salary to spending */
 			int curr_add = 0; /* total added so far */
 
@@ -78,9 +87,8 @@ public class WeeklyTaskPanel : MonoBehaviour {
 			curr_emp_feat++;
 		}
 		curr_emp_feat = 0;
-
-		yield return null;
 		emp_featured.GetComponent<CanvasGroup> ().alpha = 0f;
+		yield return ShowIngredientsSpending();
 		ShowEmployeesList ();
 	}		
 
@@ -97,7 +105,32 @@ public class WeeklyTaskPanel : MonoBehaviour {
 
 	public IEnumerator AddSalarytoSpending(int curr_add, int salary){
 		while (curr_add < salary) {
-			IncreaseBar (SpendingBar, curr_add);
+			IncreaseBar (SalaryBar, curr_add);
+			float new_x = IngredientsBar.transform.localPosition.x + curr_add;
+			float old_y = IngredientsBar.transform.localPosition.y;
+			IngredientsBar.transform.localPosition = new Vector3(new_x, old_y, 1f);
+			curr_add++;
+			yield return new WaitForSeconds (0.2f);
+		}
+		yield return null;
+	}
+
+	public IEnumerator ShowIngredientsSpending(){
+		int curr_add = 0;
+
+		int total_spent = 0;
+		foreach(KeyValuePair<Ingredient, int> i in week_ingredients){
+			total_spent += i.Value * i.Key.getPrice();
+		}
+		yield return AddIngredientstoSpending (curr_add, total_spent);
+		IngredientsPanel.GetComponent<IngredientsPanel> ().resetBought ();
+		IngFeatured.GetComponent<CanvasGroup> ().alpha = 0f;
+	}
+
+	public IEnumerator AddIngredientstoSpending(int curr_add, int total_spent){
+		IngFeatured.GetComponent<CanvasGroup> ().alpha = 1f;
+		while (curr_add < total_spent) {
+			IncreaseBar (IngredientsBar, curr_add);
 			curr_add++;
 			yield return new WaitForSeconds (0.2f);
 		}
@@ -108,7 +141,7 @@ public class WeeklyTaskPanel : MonoBehaviour {
 		foreach (KeyValuePair<Employee, int> e in week_employees) {
 			week_employees_list.Add (e.Key);
 		}
-		yield return StartCoroutine ("ShowFeatured");
+		yield return StartCoroutine ("ShowFeaturedEmployee");
 
 		week_employees.Clear ();
 	}

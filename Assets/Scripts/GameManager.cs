@@ -177,11 +177,6 @@ public class GameManager : MonoBehaviour {
 	public IEnumerator Shift() {
 		Task emp1_curr_task = (Task) ((Employee)employee_manager.myEmployees [0]).tasksNotCompleted[0];
 		Task emp2_curr_task = (Task) ((Employee)employee_manager.myEmployees [1]).tasksNotCompleted[0];
-		int num_employees_selling = 0;
-		if (emp1_curr_task.task_name == "Sell")
-			num_employees_selling++;
-		if (emp2_curr_task.task_name == "Sell")
-			num_employees_selling++;
 
 		// Update energy bar (above employees' heads)
 		while (shift_started) {
@@ -246,8 +241,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void StartShift(State state){
-		start.GetComponent<CanvasGroup> ().alpha = 0f;
-		start.GetComponent<CanvasGroup> ().blocksRaycasts = false;
 
 		start_time = Time.time;
 		shift_started = true;
@@ -534,6 +527,8 @@ public class GameManager : MonoBehaviour {
 
 	// Show ingredients
 	public void ShowIngredients() {
+		start.GetComponent<CanvasGroup> ().alpha = 0f;
+		start.GetComponent<CanvasGroup> ().blocksRaycasts = false;
 		IngredientsPanel.GetComponent<CanvasGroup>().alpha = 1f;
 		IngredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
