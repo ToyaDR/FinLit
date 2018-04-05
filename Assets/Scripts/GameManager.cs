@@ -47,9 +47,12 @@ public class GameManager : MonoBehaviour {
 	private TaskAssign task_assign;
 	private float currEnergy;
 	private float maxEnergy;
+	private Task emp1_curr_task;
+	private Task emp2_curr_task;
 
 	private Dictionary <string, GameObject> bread_list;
 	private string curr_bread = "100";
+	private bool show = true;
 	// Sound effects
 	AudioSource collectSound;
 
@@ -88,6 +91,7 @@ public class GameManager : MonoBehaviour {
 
 		// Hide sliders before shift starts
 		HideSliders();
+		HideFeedbackText ();
 
 		HideWeek();
 	
@@ -198,8 +202,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public IEnumerator Shift() {
-		Task emp1_curr_task = (Task) ((Employee)employee_manager.myEmployees [0]).tasksNotCompleted[0];
-		Task emp2_curr_task = (Task) ((Employee)employee_manager.myEmployees [1]).tasksNotCompleted[0];
 		int num_employees_selling = 0;
 		if (emp1_curr_task.task_name == "Sell")
 			num_employees_selling++;
@@ -208,15 +210,24 @@ public class GameManager : MonoBehaviour {
 		
 		//healthBar.UpdateBar( currEnergy, maxEnergy ); - using healthBar
 
-		// Update energy bar (above employees' heads)
 		while (shift_started) {
 			if (time_elapsed > 0) {
 				//Debug.Log (time_elapsed);
 				Debug.Log("sellfreq " + sell_freq + " sellfreqelapsed " + sell_freq_elapsed);
+
+				// Update energy bar (above employees' heads)
 				currEnergy = time_elapsed;
 				emp1_energy.value = currEnergy / maxEnergy;
 				emp2_energy.value = currEnergy / maxEnergy;
 
+				// Make feedback texts blink
+				if (show) {
+					HideFeedbackText ();
+					show = false;
+				} else {
+					ShowFeedbackText ();
+					show = true;
+				}
 				/*
 				// If at least one employee is selling,
 				if (num_employees_selling > 0) {
@@ -239,7 +250,6 @@ public class GameManager : MonoBehaviour {
 					if (emp1_sell_freq_elapsed <= 0) {
 						store.Sell ();
 						emp1_sell_freq_elapsed = emp1_sell_freq;
-						// Display 'cent+1'
 					}
 					emp1_sell_freq_elapsed--;
 				}
@@ -248,8 +258,6 @@ public class GameManager : MonoBehaviour {
 					if (emp2_sell_freq_elapsed <= 0) {
 						store.Sell ();
 						emp2_sell_freq_elapsed = emp2_sell_freq;
-						// Display 'cent+1'
-
 					}
 					emp2_sell_freq_elapsed--;
 				}
@@ -259,8 +267,6 @@ public class GameManager : MonoBehaviour {
 					if (emp1_make_freq_elapsed <= 0) {
 						store.Make ();
 						emp1_make_freq_elapsed = emp1_make_freq;
-						// Display 'bread+1'
-
 					}
 					emp1_make_freq_elapsed--;
 				}
@@ -269,8 +275,6 @@ public class GameManager : MonoBehaviour {
 					if (emp2_make_freq_elapsed <= 0) {
 						store.Make ();
 						emp2_make_freq_elapsed = emp2_make_freq;
-						// Display 'bread+1'
-
 					}
 					emp2_make_freq_elapsed--;
 				}
@@ -287,6 +291,50 @@ public class GameManager : MonoBehaviour {
 	public void Lunch() {
 	}
 
+	// What should happen before each shift starts - position and render everything
+	public void PrepareShift() {
+		// Retrieve the task each employee has to complete
+		emp1_curr_task = (Task) ((Employee)employee_manager.myEmployees [0]).tasksNotCompleted[0];
+		emp2_curr_task = (Task) ((Employee)employee_manager.myEmployees [1]).tasksNotCompleted[0];
+		// If emp1 has to SELL
+		if (emp1_curr_task.task_name == "Sell") {
+			// Position emp1 at Cash Register
+			emp1_store.transform.localPosition = new Vector3(107.7f, 25.7f, 0.0f);
+			// Display 'money+1'
+			Image money_1 = emp1_store.transform.Find("PlusOne").GetComponent<Image>();
+			money_1.sprite = Resources.Load<Sprite> ("UI_1Dollar");
+		}
+		// If emp1 has to MAKE
+		if (emp1_curr_task.task_name == "Make") {
+			// Position emp1 at Bread Table
+			emp1_store.transform.localPosition = new Vector3(-182.71f, -87.7f, 0.0f);
+			// Display 'bread+1'
+			Image bread_1 = emp1_store.transform.Find("PlusOne").GetComponent<Image>();
+			bread_1.sprite = Resources.Load<Sprite> ("UI_BakedGood");
+		}
+		// If emp2 has to SELL
+		if (emp2_curr_task.task_name == "Sell") {
+			// Position emp2 at Cash Register
+			emp2_store.transform.localPosition = new Vector3(107.7f, 25.7f, 0.0f);
+			// Display 'money+1'
+			Image money_2 = emp2_store.transform.Find("PlusOne").GetComponent<Image>();
+			money_2.sprite = Resources.Load<Sprite> ("UI_1Dollar");
+		}
+		// If emp1 has to MAKE
+		if (emp2_curr_task.task_name == "Make") {
+			// Position emp2 at Bread Table
+			emp2_store.transform.localPosition = new Vector3(-182.71f, -87.7f, 0.0f);
+			// Display 'bread+1'
+			Image bread_2 = emp2_store.transform.Find("PlusOne").GetComponent<Image>();
+			bread_2.sprite = Resources.Load<Sprite> ("UI_BakedGood");
+		}
+
+		collectSound.Play ();
+		ShowSliders ();
+		ShowFeedbackText ();
+		time_elapsed = shift_length; //initialize time_elapsed every shift
+	}
+
 	public void StartShift(State state){
 		start_time = Time.time;
 		shift_started = true;
@@ -299,9 +347,7 @@ public class GameManager : MonoBehaviour {
 
 		//Shift logic
 		if (state == State.DAY_SHIFT) {
-			collectSound.Play ();
-			ShowSliders ();
-			time_elapsed = shift_length; //initialize time_elapsed every shift
+			PrepareShift ();
 			StartCoroutine ("Shift");
 			return;
 		}
@@ -313,9 +359,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 		if (state == State.NIGHT_SHIFT) {
-			collectSound.Play ();
-			ShowSliders ();
-			time_elapsed = shift_length;
+			PrepareShift ();
 			StartCoroutine ("Shift");
 			return;
 		}
@@ -324,6 +368,7 @@ public class GameManager : MonoBehaviour {
 	public void StopShift(){
 		collectSound.Stop ();
 		HideSliders ();
+		HideFeedbackText ();
 		shift_started = false;
 
 		Employee emp1 = (Employee)employee_manager.myEmployees [0];
