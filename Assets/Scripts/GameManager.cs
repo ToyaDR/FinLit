@@ -196,6 +196,7 @@ public class GameManager : MonoBehaviour {
 						if (emp1_sell_freq_elapsed <= 0) {
 							store.Sell ();
 							emp1_sell_freq_elapsed = emp1_sell_freq;
+							((Employee)employee_manager.myEmployees [0]).AddSold (1);
 							// Display 'cent+1'
 						}
 					}
@@ -204,6 +205,7 @@ public class GameManager : MonoBehaviour {
 						if (emp2_sell_freq_elapsed <= 0) {
 							store.Sell ();
 							emp2_sell_freq_elapsed = emp2_sell_freq;
+							((Employee)employee_manager.myEmployees [1]).AddSold (1);
 							// Display 'cent+1'
 
 						}
@@ -329,13 +331,15 @@ public class GameManager : MonoBehaviour {
 				}
 			}
 
+			Debug.Log (employee_manager.weekEmployees.Count);
+
 			if (days_since_start % 4 == 0) {
 				// weekly tasks
 				ShowWeek();
-				WeekPanel.GetComponent<WeeklyTaskPanel>().ShowEmployees ();
-
+				StartCoroutine (WeekPanel.GetComponent<WeeklyTaskPanel> ().ShowEmployees ());
+			
 				/* Reset week employees list */
-				employee_manager.weekEmployees.Clear ();
+
 				return;
 			}
 

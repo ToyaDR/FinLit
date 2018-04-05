@@ -71,6 +71,10 @@ public class Store : MonoBehaviour {
 		money += price;
 	}
 
+	public int GetPrice(){
+		return product_price;
+	}
+
 	public void AddStock(string ing, int amount){
 		Stock[ing] += amount;
 	}
