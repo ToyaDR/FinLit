@@ -5,10 +5,13 @@ using UnityEngine;
 
 public class WeeklyTaskPanel : MonoBehaviour {
 	public GameObject IncomeBar;
+	public GameObject IncomeTotal;
+
 	public GameObject SalaryBar;
 	public GameObject IngredientsBar;
 	public GameObject LoanBar;
 	public GameObject TaxBar;
+	public GameObject SpendingTotal;
 
 	public GameObject EmployeeManager;
 	public GameObject WeekEmployees;
@@ -19,12 +22,28 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	public GameObject LoanPanel;
 	public GameObject LoanPay;
 	public GameObject LoanOwed;
+	public GameObject LoanPayButton;
 
 	public GameObject TaxPanel;
 	public GameObject TaxPay;
 	public GameObject TaxOwed;
+	public GameObject TaxPayButton;
+
+	public GameObject DoneButton;
+	public GameObject InsuranceButton;
 
 	public GameObject IngFeatured;
+
+	private Button loan_pay_button;
+	private Button tax_pay_button;
+	private Button insurance_button;
+	private Button done_button;
+
+	private Text income_total;
+	private Text spending_total;
+
+	private int inc_tot = 0;
+	private int spend_tot = 0;
 
 	private bool tax_paid = false;
 	private bool loan_paid = false;
@@ -53,6 +72,14 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	private int bar_unit = 5;
 	// Use this for initialization
 	void Start () {
+		loan_pay_button = LoanPayButton.GetComponent<Button> ();
+		tax_pay_button = TaxPayButton.GetComponent<Button> ();
+		insurance_button = InsuranceButton.GetComponent<Button>();
+		done_button = DoneButton.GetComponent<Button>();
+
+		spending_total = SpendingTotal.GetComponent<Text> ();
+		income_total = IncomeTotal.GetComponent<Text> ();
+
 		LoanOwed.GetComponent<Text> ().text = Store.GetComponent<Store> ().GetLoan ().ToString();
 
 		week_employees = EmployeeManager.GetComponent<EmployeeManager>().weekEmployees;
@@ -112,9 +139,15 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	}		
 
 	public IEnumerator AddSoldtoIncome(int incr, int sold){
-		/* TODO: change this to total sold rather than per employee */
+		loan_pay_button.interactable = false;
+		tax_pay_button.interactable = false;
+		insurance_button.interactable = false;
+		done_button.interactable = false;
 		while (incr < sold) {
 			IncreaseBar (IncomeBar, bar_unit*Store.GetComponent<Store>().GetPrice());
+			inc_tot += Store.GetComponent<Store>().GetPrice();
+			income_total.text = inc_tot.ToString ();
+
 			incr++;
 			yield return new WaitForSeconds (0.2f);
 		}
@@ -137,6 +170,9 @@ public class WeeklyTaskPanel : MonoBehaviour {
 			float tax_new_x = TaxBar.transform.localPosition.x + bar_unit;
 			float tax_old_y = TaxBar.transform.localPosition.y;
 			TaxBar.transform.localPosition = new Vector3(tax_new_x, tax_old_y, 1f);
+
+			spend_tot++;
+			spending_total.text = spend_tot.ToString ();
 
 			incr++;
 			yield return new WaitForSeconds (0.2f);
@@ -169,9 +205,16 @@ public class WeeklyTaskPanel : MonoBehaviour {
 			float tax_old_y = TaxBar.transform.localPosition.y;
 			TaxBar.transform.localPosition = new Vector3(tax_new_x, tax_old_y, 1f);
 
+			spend_tot++;
+			spending_total.text = spend_tot.ToString ();
+
 			incr++;
 			yield return new WaitForSeconds (0.2f);
 		}
+		loan_pay_button.interactable = true;
+		tax_pay_button.interactable = true;
+		insurance_button.interactable = true;
+		done_button.interactable = true;
 		yield return null;
 	}
 
@@ -233,22 +276,14 @@ public class WeeklyTaskPanel : MonoBehaviour {
 			LoanPanel.GetComponent<CanvasGroup> ().alpha = 0f;
 			LoanPanel.GetComponent<CanvasGroup> ().blocksRaycasts = false;
 		}
+
+		loan_hidden = !loan_hidden;
 	}
 
 	public void PayLoanWrapper(){
 		StartCoroutine (PayLoan ());
 	}
-
-	public void HideShowTaxPanel(){
-		if (tax_hidden) {
-			TaxPanel.GetComponent<CanvasGroup> ().alpha = 1f;
-			TaxPanel.GetComponent<CanvasGroup> ().blocksRaycasts = true;
-		} else {
-			TaxPanel.GetComponent<CanvasGroup> ().alpha = 0f;
-			TaxPanel.GetComponent<CanvasGroup> ().blocksRaycasts = false;
-		}
-	}
-
+		
 	private IEnumerator PayLoan(){
 		int pay;
 		int.TryParse((LoanPay.GetComponent<Text> ().text).ToString(), out pay);
@@ -272,9 +307,28 @@ public class WeeklyTaskPanel : MonoBehaviour {
 				float tax_old_y = TaxBar.transform.localPosition.y;
 				TaxBar.transform.localPosition = new Vector3(tax_new_x, tax_old_y, 1f);
 			}
+
+			spend_tot++;
+			spending_total.text = spend_tot.ToString ();
+
 			incr++;
 			yield return new WaitForSeconds (0.2f);
 		}
 		yield return null;
+
+		loan_hidden = false;
+		HideShowLoanPanel ();
+		loan_pay_button.interactable = false;
+	}
+
+	public void HideShowTaxPanel(){
+		if (tax_hidden) {
+			TaxPanel.GetComponent<CanvasGroup> ().alpha = 1f;
+			TaxPanel.GetComponent<CanvasGroup> ().blocksRaycasts = true;
+		} else {
+			TaxPanel.GetComponent<CanvasGroup> ().alpha = 0f;
+			TaxPanel.GetComponent<CanvasGroup> ().blocksRaycasts = false;
+		}
+		tax_hidden = !tax_hidden;
 	}
 }
