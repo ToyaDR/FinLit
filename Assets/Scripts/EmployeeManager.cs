@@ -6,6 +6,7 @@ public class EmployeeManager : MonoBehaviour {
 
     public ArrayList allEmployees;
 	public ArrayList myEmployees;
+	public Dictionary<Employee, int> weekEmployees; /* employees that worked that week and how many times they've worked */
 
 	void Awake() {
         allEmployees = new ArrayList();
@@ -42,6 +43,7 @@ public class EmployeeManager : MonoBehaviour {
 
 		// Initialize my employees list
         myEmployees = new ArrayList();
+		weekEmployees = new Dictionary<Employee, int>();
     }
 
 	// Use this for initialization

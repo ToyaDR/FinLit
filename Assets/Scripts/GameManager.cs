@@ -29,7 +29,10 @@ public class GameManager : MonoBehaviour {
 	public GameObject door;
 	public GameObject BreakRoom;
 	public GameObject EmployeeManager;
+	public GameObject EmployeeChoose;
 	public GameObject TaskAssign;
+	public GameObject EmployeePanel;
+	public GameObject IngredientsPanel;
 	public GameObject WeekPanel;
 	public Fungus.Flowchart emp1_flowchart;
 	public Fungus.Flowchart emp2_flowchart;
@@ -161,13 +164,10 @@ public class GameManager : MonoBehaviour {
 			//TODO: Check if player wants to pause
 
 			HideDoor ();
-			HideEmployee (task_assign.emp1_store);
-			UpdateFlowchart(emp1_flowchart,(Employee)employee_manager.myEmployees [0]);
-			ShowEmployee (task_assign.emp1_store);
 
-			HideEmployee (task_assign.emp2_store);
+			UpdateFlowchart(emp1_flowchart,(Employee)employee_manager.myEmployees [0]);
+
 			UpdateFlowchart(emp2_flowchart,(Employee)employee_manager.myEmployees [1]);
-			ShowEmployee (task_assign.emp2_store);
 
 			ShowDoor ();
 		}
@@ -521,34 +521,6 @@ public class GameManager : MonoBehaviour {
 	public void HideWeek() {
 		WeekPanel.GetComponent<CanvasGroup>().alpha = 0f;
 		WeekPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
-	}
-
-	public void HideSliders() {
-		emp1_energy.GetComponent<CanvasGroup> ().alpha = 0f;
-		emp1_energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
-		emp2_energy.GetComponent<CanvasGroup> ().alpha = 0f;
-		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
-	}
-
-	public void HideFeedbackText() {
-		feedback_text_1.GetComponent<CanvasGroup> ().alpha = 0f;
-		feedback_text_1.GetComponent<CanvasGroup>().blocksRaycasts = false;
-		feedback_text_2.GetComponent<CanvasGroup> ().alpha = 0f;
-		feedback_text_2.GetComponent<CanvasGroup>().blocksRaycasts = false;
-	}
-
-	public void ShowSliders() {
-		emp1_energy.GetComponent<CanvasGroup> ().alpha = 1f;
-		emp1_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
-		emp2_energy.GetComponent<CanvasGroup> ().alpha = 1f;
-		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
-	}
-
-	public void ShowFeedbackText() {
-		feedback_text_1.GetComponent<CanvasGroup> ().alpha = 1f;
-		feedback_text_1.GetComponent<CanvasGroup>().blocksRaycasts = true;
-		feedback_text_2.GetComponent<CanvasGroup> ().alpha = 1f;
-		feedback_text_2.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 
 	public void ShowTaskAssign() {
