@@ -77,8 +77,8 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 1.0f;
 
 		curr_state = State.DAY_SHIFT;
-		shift_length = 10f;//60f*2f; //2 minutes
-		lunch_length = 60f*1f; //1 minute
+		shift_length = 5f;//60f*2f; //2 minutes
+		lunch_length = 5f;//60f*1f; //1 minute
 		time_elapsed = shift_length; // count down to end of shift
 		shift_started = false;
 
@@ -96,7 +96,10 @@ public class GameManager : MonoBehaviour {
 		// Hide sliders before shift starts
 		HideSliders();
 		HideFeedbackText ();
-
+		HideEmployeePanel ();
+		HideTaskAssign ();
+		HideIngredients ();
+		HideEmployeeChoose ();
 		HideWeek();
 	
 		bread_list = new Dictionary<string, GameObject>();
@@ -150,7 +153,7 @@ public class GameManager : MonoBehaviour {
 				GameObject touchedObject = hitInfo.transform.gameObject;
 
 				if (touchedObject == door) {
-					store.ShowIngredients ();
+					ShowIngredients ();
 				}
 			}
 		}
@@ -203,10 +206,13 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public IEnumerator Shift() {
+		Task emp1_curr_task = (Task) ((Employee)employee_manager.myEmployees [0]).tasksNotCompleted[0];
+		Task emp2_curr_task = (Task) ((Employee)employee_manager.myEmployees [1]).tasksNotCompleted[0];
 		while (shift_started) {
 			if (time_elapsed > 0) {
 				//Debug.Log (time_elapsed);
-				Debug.Log("sellfreq " + sell_freq + " sellfreqelapsed " + sell_freq_elapsed);
+				Debug.Log("sellfreq " + emp1_sell_freq + " sellfreqelapsed " + emp1_sell_freq_elapsed);
+				Debug.Log("sellfreq " + emp2_sell_freq + " sellfreqelapsed " + emp2_sell_freq_elapsed + "\n");
 
 				// Update energy bar (above employees' heads)
 				currEnergy = time_elapsed;
@@ -222,21 +228,26 @@ public class GameManager : MonoBehaviour {
 					show = true;
 				}
 
-				// If emp 1 is supposed to sell,
-				if (emp1_curr_task.task_name == "Sell") {
-					if (emp1_sell_freq_elapsed <= 0) {
-						store.Sell ();
-						emp1_sell_freq_elapsed = emp1_sell_freq;
+				if (emp1_curr_task.task_name == "Sell" || emp2_curr_task.task_name == "Sell") {
+					// If emp 1 is supposed to sell,
+					if (emp1_curr_task.task_name == "Sell") {
+						if (emp1_sell_freq_elapsed <= 0) {
+							store.Sell ();
+							emp1_sell_freq_elapsed = emp1_sell_freq;
+							sold++;
+						}
+						emp1_sell_freq_elapsed--;
 					}
-					emp1_sell_freq_elapsed--;
-				}
-				// If emp 2 is supposed to sell,
-				if (emp2_curr_task.task_name == "Sell") {
-					if (emp2_sell_freq_elapsed <= 0) {
-						store.Sell ();
-						emp2_sell_freq_elapsed = emp2_sell_freq;
+					// If emp 2 is supposed to sell,
+					if (emp2_curr_task.task_name == "Sell") {
+						if (emp2_sell_freq_elapsed <= 0) {
+							store.Sell ();
+							emp2_sell_freq_elapsed = emp2_sell_freq;
+							sold++;
+						}
+						emp2_sell_freq_elapsed--;
 					}
-					emp2_sell_freq_elapsed--;
+					SwitchBread ();
 				}
 
 				// If emp 1 is supposed to make,
@@ -371,6 +382,7 @@ public class GameManager : MonoBehaviour {
 		} 
 
 		if (curr_state == State.NIGHT_SHIFT) {
+			StopCoroutine ("Shift");
 			//prompt to choose employees again
 		
 			//remove tasks from arraylist for each employee
@@ -383,6 +395,14 @@ public class GameManager : MonoBehaviour {
 				e.days_since_interaction++;
 			}
 
+			foreach (Employee e in employee_manager.myEmployees) {
+				if (!employee_manager.weekEmployees.ContainsKey (e)) {
+					employee_manager.weekEmployees.Add (e, 1);
+				} else {
+					employee_manager.weekEmployees [e]++;
+				}
+			}
+
 
 			if (days_since_start % 4 == 0) {
 				// weekly tasks
@@ -390,13 +410,14 @@ public class GameManager : MonoBehaviour {
 				/* TODO Call sold first */
 				int curr_add = 0;
 				StartCoroutine (WeekPanel.GetComponent<WeeklyTaskPanel>().AddSoldtoIncome(curr_add, sold));
+				sold = 0;
 				return;
 			}
 
 			// update days since interaction for all employees
 
 			Debug.Log("Please assign 2 employees");
-			store.ShowEmployeeChoose ();
+			ShowEmployeeChoose ();
 			return;
 		}
 	}
@@ -534,6 +555,7 @@ public class GameManager : MonoBehaviour {
 	public void HideTaskAssign() {
 		TaskAssign.GetComponent<CanvasGroup>().alpha = 0f;
 		TaskAssign.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		ShowEmployeePanel ();
 	}
 
 	// Show employee choose panel

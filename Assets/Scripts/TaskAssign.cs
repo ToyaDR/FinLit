@@ -59,7 +59,7 @@ public class TaskAssign : MonoBehaviour {
 
 		// Retrieve all the objects that are needed
 		my_employees = employeeManager.GetComponent<EmployeeManager>().myEmployees;
-
+		doneButton.interactable = false;
 		// Add toggle change listeners - whenever toggle is changed, call ToggleChanged()
 
 		// Employee_1
@@ -110,12 +110,12 @@ public class TaskAssign : MonoBehaviour {
 
 		GameManager gm = game_manager.GetComponent<GameManager> ();
 		gm.StartShift (GameManager.State.DAY_SHIFT);
-		store.GetComponent<Store> ().HideTaskAssign ();
+		game_manager.GetComponent<GameManager>().HideTaskAssign ();
 
 		// Render the 2 chosen employees
 
 		/* Render employee 1 and set initial flowchart information */
-		SpriteRenderer img1 = emp1_store.GetComponent<SpriteRenderer>();
+		Image img1 = emp1_store.GetComponent<Image>();
 		img1.sprite = ((Employee)(my_employees[0])).GetImage ();
 		//Image emp1_img = emp1_store.GetComponent<Image>();
 		//emp1_img.sprite = ((Employee)(my_employees[0])).GetImage ();
@@ -130,7 +130,7 @@ public class TaskAssign : MonoBehaviour {
 		employeeManager.GetComponent<EmployeeManager>().SetFlowchart(currq_emp1, qCommands_emp1);
 
 		/* Render employee 2 */
-		SpriteRenderer img2 = emp2_store.GetComponent<SpriteRenderer>();
+		Image img2 = emp2_store.GetComponent<Image>();
 		img2.sprite = ((Employee)(my_employees[1])).GetImage ();
 		/*
 		SpriteRenderer img2_dialogue = emp2_store.transform.Find ("DialogueSprite").GetComponent<SpriteRenderer>();
@@ -147,15 +147,56 @@ public class TaskAssign : MonoBehaviour {
 
 	void ToggleChanged_1(Toggle toggle) {
 		// Count the number of chosen employees - if it's 3, turn the toggle back off
-		if (emp1_toggle_1.isOn && emp1_toggle_2.isOn && emp1_toggle_3.isOn) {
+		int emp1_count = 0;
+		if (emp1_toggle_1.isOn)
+			emp1_count++;
+		if (emp1_toggle_2.isOn)
+			emp1_count++;
+		if (emp1_toggle_3.isOn)
+			emp1_count++;
+
+		if (emp1_count == 3) {
 			toggle.isOn = false;
 		}
+
+		int emp2_count = 0;
+		if (emp2_toggle_1.isOn)
+			emp2_count++;
+		if (emp2_toggle_2.isOn)
+			emp2_count++;
+		if (emp2_toggle_3.isOn)
+			emp2_count++;
+
+		if (emp1_count == 2 & emp2_count == 2) {
+			doneButton.interactable = true;
+		}
+		
 	}
 
 	void ToggleChanged_2(Toggle toggle) {
 		// Count the number of chosen employees - if it's 3, turn the toggle back off
-		if (emp2_toggle_1.isOn && emp2_toggle_2.isOn && emp2_toggle_3.isOn) {
+		int emp2_count = 0;
+		if (emp2_toggle_1.isOn)
+			emp2_count++;
+		if (emp2_toggle_2.isOn)
+			emp2_count++;
+		if (emp2_toggle_3.isOn)
+			emp2_count++;
+
+		if (emp2_count == 3) {
 			toggle.isOn = false;
+		}
+
+		int emp1_count = 0;
+		if (emp1_toggle_1.isOn)
+			emp1_count++;
+		if (emp1_toggle_2.isOn)
+			emp1_count++;
+		if (emp1_toggle_3.isOn)
+			emp1_count++;
+
+		if (emp1_count == 2 & emp2_count == 2) {
+			doneButton.interactable = true;
 		}
 	}
 

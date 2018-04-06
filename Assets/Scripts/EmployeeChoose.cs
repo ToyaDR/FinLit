@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class EmployeeChoose : MonoBehaviour {
 
 	public GameObject employeeManager;
+	public GameObject GameManager;
 	private ArrayList allEmployeesList;
 	public Button nextButton;
 	public GameObject emp1;
@@ -23,7 +24,7 @@ public class EmployeeChoose : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		nextButton.interactable = false;
 		allEmployeesList = employeeManager.GetComponent<EmployeeManager>().allEmployees;
 		int employeeNum = 1;
 
@@ -64,8 +65,20 @@ public class EmployeeChoose : MonoBehaviour {
 
 	void ToggleChanged(Toggle toggle) {
 		// Count the number of chosen employees - if it's 3, turn the toggle back off
-		if (toggle_1.isOn && toggle_2.isOn && toggle_3.isOn) {
+		int count = 0;
+		if (toggle_1.isOn)
+			count++;
+		if (toggle_2.isOn)
+			count++;
+		if (toggle_3.isOn)
+			count++;
+
+		if (count == 3) {
 			toggle.isOn = false;
+		}
+
+		if (count == 2) {
+			nextButton.interactable = true;
 		}
 	}
 
@@ -85,9 +98,8 @@ public class EmployeeChoose : MonoBehaviour {
 		}
 
 		// Render next screen - Task Assignment
-		taskAssignPanel.GetComponent<CanvasGroup>().alpha = 1f;
-		taskAssignPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
-		store.GetComponent<Store>().HideEmployeeChoose (); // close current panel (employee choose panel)
+		GameManager.GetComponent<GameManager> ().HideEmployeeChoose (); // close current panel (employee choose panel)
+		GameManager.GetComponent<GameManager>().ShowTaskAssign();
 
 		// Retrieve myEmployees ArrayList from EmployeeManager.cs - assign profile sprite of chosen employees
 		// to TaskAssignPanel

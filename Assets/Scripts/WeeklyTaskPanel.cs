@@ -53,15 +53,6 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	/* There won't be more than 8 employees working per week */
 	private GameObject emp_featured;
 
-	private GameObject emp1;
-	private GameObject emp2;
-	private GameObject emp3;
-	private GameObject emp4;
-	private GameObject emp5;
-	private GameObject emp6;
-	private GameObject emp7;
-	private GameObject emp8;
-
 	private Dictionary<Ingredient, int> week_ingredients;
 	private ArrayList week_ingredients_list;
 
@@ -85,16 +76,10 @@ public class WeeklyTaskPanel : MonoBehaviour {
 		week_employees = EmployeeManager.GetComponent<EmployeeManager>().weekEmployees;
 
 		week_employees_list = new ArrayList ();
-
-		emp1 = WeekEmployees.transform.GetChild (0).gameObject;
-		emp2 = WeekEmployees.transform.GetChild (1).gameObject;
-		emp3 = WeekEmployees.transform.GetChild (2).gameObject;
-		emp4 = WeekEmployees.transform.GetChild (3).gameObject;
-		emp5 = WeekEmployees.transform.GetChild (4).gameObject;
-		emp6 = WeekEmployees.transform.GetChild (5).gameObject;
-		emp7 = WeekEmployees.transform.GetChild (6).gameObject;
-		emp8 = WeekEmployees.transform.GetChild (7).gameObject;
-		emp_featured = WeekEmployees.transform.GetChild (8).gameObject;
+		foreach (KeyValuePair<Employee, int> e in week_employees) {
+			week_employees_list.Add (e.Key);
+		}
+		emp_featured = WeekEmployees.transform.GetChild (0).gameObject;
 
 		week_ingredients = IngredientsPanel.GetComponent<IngredientsPanel> ().bought ();
 		week_ingredients_list = IngredientsPanel.GetComponent<IngredientsPanel> ().getIngredientsList ();
@@ -134,8 +119,8 @@ public class WeeklyTaskPanel : MonoBehaviour {
 		}
 		curr_emp_feat = 0;
 		emp_featured.GetComponent<CanvasGroup> ().alpha = 0f;
+		IngFeatured.GetComponent<CanvasGroup> ().alpha = 1f;
 		yield return ShowIngredientsSpending();
-		ShowEmployeesList ();
 	}		
 
 	public IEnumerator AddSoldtoIncome(int incr, int sold){
@@ -182,7 +167,6 @@ public class WeeklyTaskPanel : MonoBehaviour {
 
 	public IEnumerator ShowIngredientsSpending(){
 		int incr = 0;
-
 		int total_spent = 0;
 		foreach(KeyValuePair<Ingredient, int> i in week_ingredients){
 			total_spent += i.Value * i.Key.getPrice();
@@ -193,7 +177,6 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	}
 
 	public IEnumerator AddIngredientstoSpending(int incr, int total_spent){
-		IngFeatured.GetComponent<CanvasGroup> ().alpha = 1f;
 		while (incr < total_spent) {
 			IncreaseBar (IngredientsBar, bar_unit);
 
@@ -227,47 +210,6 @@ public class WeeklyTaskPanel : MonoBehaviour {
 		week_employees.Clear ();
 	}
 
-	public void ShowEmployeesList(){
-		int i = 0;
-		foreach (Employee e in week_employees_list) {
-			switch (i) {
-			case 0:
-				emp1.GetComponent<Image> ().sprite = e.GetImage ();
-				emp1.GetComponent<Image> ().color = Color.white;
-				break;
-				case 1:
-				emp2.GetComponent<Image> ().sprite = e.GetImage ();
-				emp2.GetComponent<Image> ().color = Color.white;
-				break;
-				case 2:
-				emp3.GetComponent<Image> ().sprite = e.GetImage ();
-				emp3.GetComponent<Image> ().color = Color.white;
-				break;
-				case 3:
-				emp4.GetComponent<Image> ().sprite = e.GetImage ();
-				emp4.GetComponent<Image> ().color = Color.white;
-				break;
-				case 4:
-				emp5.GetComponent<Image> ().sprite = e.GetImage ();
-				emp5.GetComponent<Image> ().color = Color.white;
-				break;
-				case 5:
-				emp6.GetComponent<Image> ().sprite = e.GetImage ();
-				emp6.GetComponent<Image> ().color = Color.white;
-				break;
-				case 6:
-				emp7.GetComponent<Image> ().sprite = e.GetImage ();
-				emp7.GetComponent<Image> ().color = Color.white;
-				break;	
-				case 7:
-				emp8.GetComponent<Image> ().sprite = e.GetImage ();
-				emp8.GetComponent<Image> ().color = Color.white;
-				break;
-			}
-			i++;
-		}
-	}
-
 	public void HideShowLoanPanel(){
 		if (loan_hidden) {
 			LoanPanel.GetComponent<CanvasGroup> ().alpha = 1f;
@@ -287,7 +229,6 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	private IEnumerator PayLoan(){
 		int pay;
 		int.TryParse((LoanPay.GetComponent<Text> ().text).ToString(), out pay);
-
 		int loan_total = Store.GetComponent<Store> ().GetLoan ();
 		if (pay > loan_total) { //TODO: maybe change this???
 			pay = loan_total;
@@ -307,7 +248,9 @@ public class WeeklyTaskPanel : MonoBehaviour {
 				float tax_old_y = TaxBar.transform.localPosition.y;
 				TaxBar.transform.localPosition = new Vector3(tax_new_x, tax_old_y, 1f);
 			}
-
+			int orig;
+			int.TryParse((LoanOwed.GetComponent<Text> ().text).ToString(), out orig);
+			LoanOwed.GetComponent<Text> ().text = (orig-1).ToString ();
 			spend_tot++;
 			spending_total.text = spend_tot.ToString ();
 
