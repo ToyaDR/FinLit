@@ -365,6 +365,7 @@ public class GameManager : MonoBehaviour {
 		Task emp2_curr_task = (Task) emp1.tasksNotCompleted [0];
 
 		if (curr_state == State.DAY_SHIFT) {
+			StopCoroutine ("Shift");
 			//start lunch
 			//remove tasks from arraylist for each employee
 			emp1.tasksNotCompleted.Remove(emp1_curr_task);
