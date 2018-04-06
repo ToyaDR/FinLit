@@ -92,7 +92,6 @@ public class TaskAssign : MonoBehaviour {
 
 		// Add next button listener
 		doneButton.onClick.AddListener(OnClickDone);
-		doneButton.interactable = false;
 	}
 
 	// Update is called once per frame
@@ -111,8 +110,7 @@ public class TaskAssign : MonoBehaviour {
 
 		GameManager gm = game_manager.GetComponent<GameManager> ();
 		gm.StartShift (GameManager.State.DAY_SHIFT);
-		game_manager.GetComponent<GameManager>().HideTaskAssign ();
-		game_manager.GetComponent<GameManager> ().ShowEmployeePanel();
+		store.GetComponent<Store> ().HideTaskAssign ();
 
 		// Render the 2 chosen employees
 
@@ -143,33 +141,14 @@ public class TaskAssign : MonoBehaviour {
 		List<Fungus.Command> qCommands_emp2 = gm.emp2_flowchart.FindBlock("Question").CommandList;
 		employeeManager.GetComponent<EmployeeManager>().SetFlowchart(currq_emp2, qCommands_emp2);
 
+
 		taskAssignClosed = true;
 	}
 
 	void ToggleChanged_1(Toggle toggle) {
 		// Count the number of chosen employees - if it's 3, turn the toggle back off
-		int emp1_count = 0;
-		if (emp1_toggle_1.isOn)
-			emp1_count++;
-		if (emp1_toggle_2.isOn)
-			emp1_count++;
-		if (emp1_toggle_3.isOn)
-			emp1_count++;
-
 		if (emp1_toggle_1.isOn && emp1_toggle_2.isOn && emp1_toggle_3.isOn) {
 			toggle.isOn = false;
-		}
-
-		int emp2_count = 0;
-		if (emp2_toggle_1.isOn)
-			emp2_count++;
-		if (emp2_toggle_2.isOn)
-			emp2_count++;
-		if (emp2_toggle_3.isOn)
-			emp2_count++;
-
-		if (emp1_count == 2 && emp2_count == 2) {
-			doneButton.interactable = true;
 		}
 	}
 
@@ -178,17 +157,5 @@ public class TaskAssign : MonoBehaviour {
 		if (emp2_toggle_1.isOn && emp2_toggle_2.isOn && emp2_toggle_3.isOn) {
 			toggle.isOn = false;
 		}
-	}
-
-	public void ResetToggles(){
-		emp1_toggle_1.isOn = false;
-		emp1_toggle_2.isOn = false;
-		emp1_toggle_3.isOn = false;
-		emp2_toggle_1.isOn = false;
-		emp2_toggle_2.isOn = false;
-		emp2_toggle_3.isOn = false;
-
-		((Employee)(my_employees[0])).tasksNotCompleted.Clear();
-		((Employee)(my_employees[1])).tasksNotCompleted.Clear();
 	}
 }
