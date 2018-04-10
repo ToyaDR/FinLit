@@ -8,12 +8,12 @@ public class IngredientsPanel : MonoBehaviour {
 	private ArrayList ingredients;
 	public Canvas canvas;
 	public Store store;
-	private Dictionary<Ingredient, int> boughtIngredients;
+	public Dictionary<Ingredient, int> boughtIngredients;
 
 	// Use this for initialization
 	void Start () {
 		float canvasRight = -350;
-		float canvasTop = -120;
+		float canvasTop = -200;
 
 		ingredients = new ArrayList ();
 		boughtIngredients = new Dictionary<Ingredient, int>();
@@ -43,9 +43,10 @@ public class IngredientsPanel : MonoBehaviour {
 		foreach(Ingredient i in ingredients){
 			GameObject ingTextGO = Instantiate (Resources.Load ("Ingredients", typeof(GameObject))) as GameObject;
 			ingTextGO.transform.SetParent (transform);
-			ingTextGO.transform.localScale = new Vector3(0.88f,0.88f,0.88f);
+			ingTextGO.transform.localScale = new Vector3(1f,1f,1f);
 			ingTextGO.GetComponent<Text>().text = i.getName() + " $" + i.getPrice();
 
+			boughtIngredients.Add(i,0);
 			Vector2 anchorPoint = new Vector2 (canvasRight, canvasTop - offset);
 
 			ingTextGO.GetComponent<Text>().rectTransform.anchoredPosition = anchorPoint;
@@ -61,7 +62,6 @@ public class IngredientsPanel : MonoBehaviour {
 			});
 
 			offset += ingTextGO.GetComponent<RectTransform>().rect.height*1.2f;
-			boughtIngredients [i] = 0;
 		}
 	}
 
@@ -77,10 +77,6 @@ public class IngredientsPanel : MonoBehaviour {
 
 	public ArrayList getIngredientsList(){
 		return ingredients;
-	}
-
-	public Dictionary<Ingredient, int> bought(){
-		return boughtIngredients;
 	}
 
 	public void resetBought(){

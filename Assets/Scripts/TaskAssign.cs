@@ -115,10 +115,22 @@ public class TaskAssign : MonoBehaviour {
 		// Render the 2 chosen employees
 
 		/* Render employee 1 and set initial flowchart information */
+
+		/* Render Icon
 		Image img1 = emp1_store.GetComponent<Image>();
 		img1.sprite = ((Employee)(my_employees[0])).GetImage ();
-		//Image emp1_img = emp1_store.GetComponent<Image>();
-		//emp1_img.sprite = ((Employee)(my_employees[0])).GetImage ();
+		*/
+		// Render full sprite
+		Image img1 = emp1_store.GetComponent<Image> ();
+		if (((Employee)(my_employees [0])).GetName () == "Lila") {
+			img1.sprite = Resources.Load<Sprite> ("Sprite_Front_Lila");
+		}
+		else if (((Employee)(my_employees [0])).GetName () == "Bruno") {
+			img1.sprite = Resources.Load<Sprite> ("Sprite_Front_Bruno");
+		}
+		else if (((Employee)(my_employees [0])).GetName () == "Sue") {
+			img1.sprite = Resources.Load<Sprite> ("Sprite_Front_Sue");
+		}
 
 		/* TODO: uncomment this once dialogue bugs are fixed
 		SpriteRenderer img1_dialogue = emp1_store.transform.Find ("DialogueSprite").GetComponent<SpriteRenderer>();
@@ -126,19 +138,29 @@ public class TaskAssign : MonoBehaviour {
 		*/
 
 		DTreeNode currq_emp1 = ((Employee) my_employees[0]).curr_question;
-		List<Fungus.Command> qCommands_emp1 = gm.emp1_flowchart.FindBlock("Question").CommandList;
+		List<Fungus.Command> qCommands_emp1 = gm.Emp1Flowchart.FindBlock("Question").CommandList;
 		employeeManager.GetComponent<EmployeeManager>().SetFlowchart(currq_emp1, qCommands_emp1);
 
 		/* Render employee 2 */
+
+		/* Render Icon
 		Image img2 = emp2_store.GetComponent<Image>();
 		img2.sprite = ((Employee)(my_employees[1])).GetImage ();
-		/*
-		SpriteRenderer img2_dialogue = emp2_store.transform.Find ("DialogueSprite").GetComponent<SpriteRenderer>();
-		img2_dialogue.sprite = ((Employee)(my_employees[1])).GetDialogueImage ();
 		*/
+		// Render full sprite
+		Image img2 = emp2_store.GetComponent<Image> ();
+		if (((Employee)(my_employees [1])).GetName () == "Lila") {
+			img2.sprite = Resources.Load<Sprite> ("Sprite_Front_Lila");
+		}
+		else if (((Employee)(my_employees [1])).GetName () == "Bruno") {
+			img2.sprite = Resources.Load<Sprite> ("Sprite_Front_Bruno");
+		}
+		else if (((Employee)(my_employees [1])).GetName () == "Sue") {
+			img2.sprite = Resources.Load<Sprite> ("Sprite_Front_Sue");
+		}
 
 		DTreeNode currq_emp2 = ((Employee) my_employees[1]).curr_question;
-		List<Fungus.Command> qCommands_emp2 = gm.emp2_flowchart.FindBlock("Question").CommandList;
+		List<Fungus.Command> qCommands_emp2 = gm.Emp2Flowchart.FindBlock("Question").CommandList;
 		employeeManager.GetComponent<EmployeeManager>().SetFlowchart(currq_emp2, qCommands_emp2);
 
 

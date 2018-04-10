@@ -10,6 +10,7 @@ public class Employee {
     private int emp_morale;
     private Sprite emp_image;
 	private Sprite emp_dialogue_image;
+	private Sprite emp_deselect_image;
 
 	// Not yet dealt with
 	public int productivity;
@@ -59,6 +60,10 @@ public class Employee {
 		emp_dialogue_image = Resources.Load<Sprite>(imageName);
 	}
 
+	public void SetDeselectImage(string imageName) {
+		emp_deselect_image = Resources.Load<Sprite>(imageName);
+	}
+
 	public void SetDaysBetweenInteraction(int days){
 		DaysBetweenInteraction = days;
 	}
@@ -81,6 +86,10 @@ public class Employee {
 
 	public Sprite GetDialogueImage() {
 		return emp_dialogue_image;
+	}
+
+	public Sprite GetDeselectImage() {
+		return emp_deselect_image;
 	}
 
 	public bool SetCurrQuestion(string option){

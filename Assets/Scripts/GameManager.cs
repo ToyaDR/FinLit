@@ -25,8 +25,10 @@ public class GameManager : MonoBehaviour {
 	bool shift_started;
 	bool lunch;
 
-	public Store store;
-	public GameObject door;
+	public GameObject CashRegister;
+	public GameObject WorkTable;
+	public Store Store;
+	public GameObject Door;
 	public GameObject BreakRoom;
 	public GameObject EmployeeManager;
 	public GameObject EmployeeChoose;
@@ -34,22 +36,24 @@ public class GameManager : MonoBehaviour {
 	public GameObject EmployeePanel;
 	public GameObject IngredientsPanel;
 	public GameObject WeekPanel;
-	public Fungus.Flowchart emp1_flowchart;
-	public Fungus.Flowchart emp2_flowchart;
-	public GameObject start;
+	public Fungus.Flowchart Emp1Flowchart;
+	public Fungus.Flowchart Emp2Flowchart;
+	public GameObject StartButton;
 	// public SimpleHealthBar healthBar; //using SimpleHealthBar plugin
-	public GameObject emp1_store;
-	public GameObject emp2_store;
-	public Slider emp1_energy;
-	public Slider emp2_energy;
+	public GameObject Emp1Store;
+	public GameObject Emp2Store;
+	public Slider Emp1Energy;
+	public Slider Emp2Energy;
 	public GameObject Breads;
-	public GameObject feedback_text_1; // child feedback text for employee 1
-	public GameObject feedback_text_2; // child feedback text for employee 2
+	public GameObject FeedbackText1; // child feedback text for employee 1
+	public GameObject FeedbackText2; // child feedback text for employee 2
+	public GameObject CurrStateText;
+	public Camera MainCamera;
 
 	private EmployeeManager employee_manager;
 	private TaskAssign task_assign;
-	private float currEnergy;
-	private float maxEnergy;
+	private float curr_energy;
+	private float max_energy;
 	private Task emp1_curr_task;
 	private Task emp2_curr_task;
 
@@ -58,9 +62,9 @@ public class GameManager : MonoBehaviour {
 	private int sold = 0;
 	private bool show = true;
 	// Sound effects
-	AudioSource collectSound;
+	private AudioSource collect_sound;
 
-	Vector3 touchPosWorld;
+	private Vector3 touch_pos_world;
 
 	public enum State{
 		DAY_SHIFT,
@@ -72,13 +76,13 @@ public class GameManager : MonoBehaviour {
 	private int MAX_PRODUCT = 10;
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
 		days_since_start = 0;
 		Time.timeScale = 1.0f;
 
 		curr_state = State.DAY_SHIFT;
-		shift_length = 5f;//60f*2f; //2 minutes
-		lunch_length = 5f;//60f*1f; //1 minute
+		shift_length = 30f;//60f*2f; //2 minutes
+		lunch_length = 20f;//60f*1f; //1 minute
 		time_elapsed = shift_length; // count down to end of shift
 		shift_started = false;
 
@@ -90,8 +94,8 @@ public class GameManager : MonoBehaviour {
 		//emp2_energy.enabled = false;
 
 		// Initialize energy for sliders
-		currEnergy = shift_length;
-		maxEnergy = shift_length;
+		curr_energy = shift_length;
+		max_energy = shift_length;
 
 		// Hide sliders before shift starts
 		HideSliders();
@@ -116,7 +120,7 @@ public class GameManager : MonoBehaviour {
 		}
 
 		// SELL
-		sell_freq = shift_length / (float)(store.GetReputation ());
+		sell_freq = shift_length / (float)(Store.GetReputation ());
 		sell_freq_elapsed = sell_freq;
 
 		emp1_sell_freq = sell_freq;
@@ -131,8 +135,7 @@ public class GameManager : MonoBehaviour {
 		emp2_make_freq_elapsed = emp2_make_freq;
 
 		// Get audio source component
-		collectSound = store.GetComponent<AudioSource>();
-
+		collect_sound = Store.GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -143,8 +146,8 @@ public class GameManager : MonoBehaviour {
 			&& Input.GetTouch (0).phase == TouchPhase.Stationary) {
 
 			// transform touch position to world space
-			touchPosWorld = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
-			Vector2 touchPosWorld2D = new Vector2 (touchPosWorld.x, touchPosWorld.y);
+			touch_pos_world = Camera.main.ScreenToWorldPoint (Input.GetTouch (0).position);
+			Vector2 touchPosWorld2D = new Vector2 (touch_pos_world.x, touch_pos_world.y);
 
 			//raycast
 			RaycastHit2D hitInfo = Physics2D.Raycast(touchPosWorld2D, Camera.main.transform.forward);
@@ -152,7 +155,7 @@ public class GameManager : MonoBehaviour {
 			if (hitInfo.collider != null) {
 				GameObject touchedObject = hitInfo.transform.gameObject;
 
-				if (touchedObject == door) {
+				if (touchedObject == Door) {
 					ShowIngredients ();
 				}
 			}
@@ -168,9 +171,9 @@ public class GameManager : MonoBehaviour {
 
 			HideDoor ();
 
-			UpdateFlowchart(emp1_flowchart,(Employee)employee_manager.myEmployees [0]);
+			UpdateFlowchart(Emp1Flowchart,(Employee)employee_manager.myEmployees [0]);
 
-			UpdateFlowchart(emp2_flowchart,(Employee)employee_manager.myEmployees [1]);
+			UpdateFlowchart(Emp2Flowchart,(Employee)employee_manager.myEmployees [1]);
 
 			ShowDoor ();
 		}
@@ -178,46 +181,44 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void HideSliders() {
-		emp1_energy.GetComponent<CanvasGroup> ().alpha = 0f;
-		emp1_energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
-		emp2_energy.GetComponent<CanvasGroup> ().alpha = 0f;
-		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		Emp1Energy.GetComponent<CanvasGroup> ().alpha = 0f;
+		Emp1Energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		Emp2Energy.GetComponent<CanvasGroup> ().alpha = 0f;
+		Emp2Energy.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
 
 	public void HideFeedbackText() {
-		feedback_text_1.GetComponent<CanvasGroup> ().alpha = 0f;
-		feedback_text_1.GetComponent<CanvasGroup>().blocksRaycasts = false;
-		feedback_text_2.GetComponent<CanvasGroup> ().alpha = 0f;
-		feedback_text_2.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		FeedbackText1.GetComponent<CanvasGroup> ().alpha = 0f;
+		FeedbackText1.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		FeedbackText2.GetComponent<CanvasGroup> ().alpha = 0f;
+		FeedbackText2.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
 
 	public void ShowSliders() {
-		emp1_energy.GetComponent<CanvasGroup> ().alpha = 1f;
-		emp1_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
-		emp2_energy.GetComponent<CanvasGroup> ().alpha = 1f;
-		emp2_energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
+		Emp1Energy.GetComponent<CanvasGroup> ().alpha = 1f;
+		Emp1Energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
+		Emp2Energy.GetComponent<CanvasGroup> ().alpha = 1f;
+		Emp2Energy.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 		
 	public void ShowFeedbackText() {
-		feedback_text_1.GetComponent<CanvasGroup> ().alpha = 1f;
-		feedback_text_1.GetComponent<CanvasGroup>().blocksRaycasts = true;
-		feedback_text_2.GetComponent<CanvasGroup> ().alpha = 1f;
-		feedback_text_2.GetComponent<CanvasGroup>().blocksRaycasts = true;
+		FeedbackText1.GetComponent<CanvasGroup> ().alpha = 1f;
+		FeedbackText1.GetComponent<CanvasGroup>().blocksRaycasts = true;
+		FeedbackText2.GetComponent<CanvasGroup> ().alpha = 1f;
+		FeedbackText2.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 
 	public IEnumerator Shift() {
 		Task emp1_curr_task = (Task) ((Employee)employee_manager.myEmployees [0]).tasksNotCompleted[0];
 		Task emp2_curr_task = (Task) ((Employee)employee_manager.myEmployees [1]).tasksNotCompleted[0];
 		while (shift_started) {
+			CurrStateText.transform.GetChild(0).gameObject.GetComponent<Text>().text = ((int) time_elapsed).ToString();
 			if (time_elapsed > 0) {
-				//Debug.Log (time_elapsed);
-				Debug.Log("sellfreq " + emp1_sell_freq + " sellfreqelapsed " + emp1_sell_freq_elapsed);
-				Debug.Log("sellfreq " + emp2_sell_freq + " sellfreqelapsed " + emp2_sell_freq_elapsed + "\n");
 
 				// Update energy bar (above employees' heads)
-				currEnergy = time_elapsed;
-				emp1_energy.value = currEnergy / maxEnergy;
-				emp2_energy.value = currEnergy / maxEnergy;
+				curr_energy = time_elapsed;
+				Emp1Energy.value = curr_energy / max_energy;
+				Emp2Energy.value = curr_energy / max_energy;
 
 				// Make feedback texts blink
 				if (show) {
@@ -232,7 +233,7 @@ public class GameManager : MonoBehaviour {
 					// If emp 1 is supposed to sell,
 					if (emp1_curr_task.task_name == "Sell") {
 						if (emp1_sell_freq_elapsed <= 0) {
-							store.Sell ();
+							Store.Sell ();
 							emp1_sell_freq_elapsed = emp1_sell_freq;
 							sold++;
 						}
@@ -241,7 +242,7 @@ public class GameManager : MonoBehaviour {
 					// If emp 2 is supposed to sell,
 					if (emp2_curr_task.task_name == "Sell") {
 						if (emp2_sell_freq_elapsed <= 0) {
-							store.Sell ();
+							Store.Sell ();
 							emp2_sell_freq_elapsed = emp2_sell_freq;
 							sold++;
 						}
@@ -253,7 +254,7 @@ public class GameManager : MonoBehaviour {
 				// If emp 1 is supposed to make,
 				if (emp1_curr_task.task_name == "Make") {
 					if (emp1_make_freq_elapsed <= 0) {
-						store.Make ();
+						Store.Make ();
 						emp1_make_freq_elapsed = emp1_make_freq;
 					}
 					emp1_make_freq_elapsed--;
@@ -261,7 +262,7 @@ public class GameManager : MonoBehaviour {
 				// If emp 2 is supposed to make,
 				if (emp2_curr_task.task_name == "Make") {
 					if (emp2_make_freq_elapsed <= 0) {
-						store.Make ();
+						Store.Make ();
 						emp2_make_freq_elapsed = emp2_make_freq;
 					}
 					emp2_make_freq_elapsed--;
@@ -276,7 +277,56 @@ public class GameManager : MonoBehaviour {
 		//emp2_energy.transform.position = emp2_store.transform.position;
 	}
 
-	public void Lunch() {
+	public IEnumerator Lunch() {
+		while (shift_started) {
+			CurrStateText.transform.GetChild (0).gameObject.GetComponent<Text> ().text = ((int) time_elapsed).ToString ();
+			yield return new WaitForSeconds (0.75f);
+		}
+		yield return null;
+	}
+
+	public IEnumerator PanCameraToLunch() {
+		while (MainCamera.transform.position.y < 11.85f) {
+			Vector3 oldPos = MainCamera.transform.position;
+			MainCamera.transform.position = new Vector3 (oldPos.x, oldPos.y + 0.2f, oldPos.z);
+
+			Vector3 oldPos_emp1 = Emp1Store.transform.position;
+			Emp1Store.transform.position = new Vector3 (oldPos_emp1.x, oldPos_emp1.y - 0.2f, oldPos_emp1.z);
+
+			Vector3 oldPos_emp2 = Emp2Store.transform.position;
+			Emp2Store.transform.position = new Vector3 (oldPos_emp2.x, oldPos_emp2.y - 0.2f, oldPos_emp2.z);
+
+			Vector3 oldPos_cashregister = CashRegister.transform.position;
+			CashRegister.transform.position = new Vector3 (oldPos_cashregister.x, oldPos_cashregister.y - 0.2f, oldPos_cashregister.z);
+
+			Vector3 oldPos_worktable = WorkTable.transform.position;
+			WorkTable.transform.position = new Vector3 (oldPos_worktable.x, oldPos_worktable.y - 0.2f, oldPos_worktable.z);
+			yield return new WaitForSeconds(0.05f);
+		}
+		Emp1Store.transform.localPosition = new Vector3 (260f, -172f, 1f);
+		Emp2Store.transform.localPosition = new Vector3 (-177f, -236f, 1f);
+		yield return null;
+	}
+
+	public IEnumerator PanCameraToWork() {
+		while (MainCamera.transform.position.y > 0) {
+			Vector3 oldPos = MainCamera.transform.position;
+			MainCamera.transform.position = new Vector3 (oldPos.x, oldPos.y - 0.2f, oldPos.z);
+
+			Vector3 oldPos_emp1 = Emp1Store.transform.position;
+			Emp1Store.transform.position = new Vector3 (oldPos_emp1.x, oldPos_emp1.y + 0.2f, oldPos_emp1.z);
+
+			Vector3 oldPos_emp2 = Emp2Store.transform.position;
+			Emp2Store.transform.position = new Vector3 (oldPos_emp2.x, oldPos_emp2.y + 0.2f, oldPos_emp2.z);
+
+			Vector3 oldPos_cashregister = CashRegister.transform.position;
+			CashRegister.transform.position = new Vector3 (oldPos_cashregister.x, oldPos_cashregister.y + 0.2f, oldPos_cashregister.z);
+
+			Vector3 oldPos_worktable = WorkTable.transform.position;
+			WorkTable.transform.position = new Vector3 (oldPos_worktable.x, oldPos_worktable.y + 0.2f, oldPos_worktable.z);
+			yield return new WaitForSeconds(0.05f);
+		}
+		yield return null;
 	}
 
 	// What should happen before each shift starts - position and render everything
@@ -284,40 +334,44 @@ public class GameManager : MonoBehaviour {
 		// Retrieve the task each employee has to complete
 		emp1_curr_task = (Task) ((Employee)employee_manager.myEmployees [0]).tasksNotCompleted[0];
 		emp2_curr_task = (Task) ((Employee)employee_manager.myEmployees [1]).tasksNotCompleted[0];
+
+		Vector3 sell_pos = CashRegister.transform.localPosition;
+		Vector3 make_pos = WorkTable.transform.localPosition;
+
 		// If emp1 has to SELL
 		if (emp1_curr_task.task_name == "Sell") {
 			// Position emp1 at Cash Register
-			emp1_store.transform.localPosition = new Vector3(107.7f, 25.7f, 0.0f);
+			Emp1Store.transform.localPosition = new Vector3(sell_pos.x+10f, sell_pos.y+30f, sell_pos.z);
 			// Display 'money+1'
-			Image money_1 = emp1_store.transform.Find("PlusOne").GetComponent<Image>();
+			Image money_1 = Emp1Store.transform.Find("PlusOne").GetComponent<Image>();
 			money_1.sprite = Resources.Load<Sprite> ("UI_1Dollar");
 		}
 		// If emp1 has to MAKE
 		if (emp1_curr_task.task_name == "Make") {
 			// Position emp1 at Bread Table
-			emp1_store.transform.localPosition = new Vector3(-182.71f, -87.7f, 0.0f);
+			Emp1Store.transform.localPosition = new Vector3(make_pos.x-20f, make_pos.y, make_pos.z);
 			// Display 'bread+1'
-			Image bread_1 = emp1_store.transform.Find("PlusOne").GetComponent<Image>();
+			Image bread_1 = Emp1Store.transform.Find("PlusOne").GetComponent<Image>();
 			bread_1.sprite = Resources.Load<Sprite> ("UI_BakedGood");
 		}
 		// If emp2 has to SELL
 		if (emp2_curr_task.task_name == "Sell") {
 			// Position emp2 at Cash Register
-			emp2_store.transform.localPosition = new Vector3(107.7f, 25.7f, 0.0f);
+			Emp2Store.transform.localPosition = new Vector3(sell_pos.x+40f, sell_pos.y+30f, sell_pos.z);
 			// Display 'money+1'
-			Image money_2 = emp2_store.transform.Find("PlusOne").GetComponent<Image>();
+			Image money_2 = Emp2Store.transform.Find("PlusOne").GetComponent<Image>();
 			money_2.sprite = Resources.Load<Sprite> ("UI_1Dollar");
 		}
 		// If emp1 has to MAKE
 		if (emp2_curr_task.task_name == "Make") {
 			// Position emp2 at Bread Table
-			emp2_store.transform.localPosition = new Vector3(-182.71f, -87.7f, 0.0f);
+			Emp2Store.transform.localPosition = new Vector3(make_pos.x-60f, make_pos.y, make_pos.z);
 			// Display 'bread+1'
-			Image bread_2 = emp2_store.transform.Find("PlusOne").GetComponent<Image>();
+			Image bread_2 = Emp2Store.transform.Find("PlusOne").GetComponent<Image>();
 			bread_2.sprite = Resources.Load<Sprite> ("UI_BakedGood");
 		}
 
-		collectSound.Play ();
+		collect_sound.Play ();
 		ShowSliders ();
 		ShowFeedbackText ();
 		time_elapsed = shift_length; //initialize time_elapsed every shift
@@ -335,18 +389,25 @@ public class GameManager : MonoBehaviour {
 
 		//Shift logic
 		if (state == State.DAY_SHIFT) {
+			StartCoroutine ("PanCameraToWork");
+			CurrStateText.GetComponent<Text> ().text = "It's Morning Shift time!";
 			PrepareShift ();
 			StartCoroutine ("Shift");
 			return;
 		}
 
 		if (state == State.LUNCH) {
+			// Camera pan
+			StartCoroutine("PanCameraToLunch");
+			CurrStateText.GetComponent<Text> ().text = "It's Lunch Break time!";
 			time_elapsed = lunch_length;
-			Lunch ();
+			StartCoroutine ("Lunch");
 			return;
 		}
 
 		if (state == State.NIGHT_SHIFT) {
+			StartCoroutine ("PanCameraToWork");
+			CurrStateText.GetComponent<Text> ().text = "It's Afternoon Shift time!";
 			PrepareShift ();
 			StartCoroutine ("Shift");
 			return;
@@ -354,7 +415,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void StopShift(){
-		collectSound.Stop ();
+		collect_sound.Stop ();
 		HideSliders ();
 		HideFeedbackText ();
 		shift_started = false;
@@ -376,7 +437,7 @@ public class GameManager : MonoBehaviour {
 
 		if (curr_state == State.LUNCH) {
 			//start night shift
-
+			StopCoroutine("Lunch");
 			StartShift(State.NIGHT_SHIFT);
 			return;
 		} 
@@ -406,6 +467,7 @@ public class GameManager : MonoBehaviour {
 
 			if (days_since_start % 4 == 0) {
 				// weekly tasks
+				HideEmployeePanel();
 				ShowWeek();
 				/* TODO Call sold first */
 				int curr_add = 0;
@@ -449,7 +511,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void SwitchBread(){
-		float percent = ((float)store.GetProductAmount ()) * 100f / ((float) MAX_PRODUCT);
+		float percent = ((float)Store.GetProductAmount ()) * 100f / ((float) MAX_PRODUCT);
 		if (percent < 25f && curr_bread != "0") {
 			//Hide old bread
 			HideBread();
@@ -517,22 +579,22 @@ public class GameManager : MonoBehaviour {
 		EmployeePanel.GetComponent<CanvasGroup>().alpha = 1f;
 		EmployeePanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
-		emp1_store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = true;
-		emp2_store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = true;
+		Emp1Store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = true;
+		Emp2Store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = true;
 	}
 	public void HideEmployeePanel(){
 		EmployeePanel.GetComponent<CanvasGroup>().alpha = 0f;
 		EmployeePanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
 
-		emp1_store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = false;
-		emp2_store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = false;
+		Emp1Store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = false;
+		Emp2Store.GetComponent<Fungus.Clickable2D> ().ClickEnabled = false;
 	}
 
 	public void ShowDoor(){
-		door.GetComponent<BoxCollider2D> ().enabled = true;
+		Door.GetComponent<BoxCollider2D> ().enabled = true;
 	}
 	public void HideDoor(){
-		door.GetComponent<BoxCollider2D> ().enabled = false;
+		Door.GetComponent<BoxCollider2D> ().enabled = false;
 	}
 
 	public void ShowWeek() {
@@ -576,8 +638,8 @@ public class GameManager : MonoBehaviour {
 
 	// Show ingredients
 	public void ShowIngredients() {
-		start.GetComponent<CanvasGroup> ().alpha = 0f;
-		start.GetComponent<CanvasGroup> ().blocksRaycasts = false;
+		StartButton.GetComponent<CanvasGroup> ().alpha = 0f;
+		StartButton.GetComponent<CanvasGroup> ().blocksRaycasts = false;
 		IngredientsPanel.GetComponent<CanvasGroup>().alpha = 1f;
 		IngredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}

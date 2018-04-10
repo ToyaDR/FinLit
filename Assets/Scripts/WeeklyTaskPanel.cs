@@ -60,7 +60,7 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	private bool loan_hidden = true;
 	private bool tax_hidden = true;
 
-	private int bar_unit = 5;
+	private int bar_unit = 2;
 	// Use this for initialization
 	void Start () {
 		loan_pay_button = LoanPayButton.GetComponent<Button> ();
@@ -81,8 +81,6 @@ public class WeeklyTaskPanel : MonoBehaviour {
 		}
 		emp_featured = WeekEmployees.transform.GetChild (0).gameObject;
 
-		week_ingredients = IngredientsPanel.GetComponent<IngredientsPanel> ().bought ();
-		week_ingredients_list = IngredientsPanel.GetComponent<IngredientsPanel> ().getIngredientsList ();
 	}
 	
 	// Update is called once per frame
@@ -119,7 +117,6 @@ public class WeeklyTaskPanel : MonoBehaviour {
 		}
 		curr_emp_feat = 0;
 		emp_featured.GetComponent<CanvasGroup> ().alpha = 0f;
-		IngFeatured.GetComponent<CanvasGroup> ().alpha = 1f;
 		yield return ShowIngredientsSpending();
 	}		
 
@@ -166,11 +163,18 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	}
 
 	public IEnumerator ShowIngredientsSpending(){
+		IngFeatured.GetComponent<CanvasGroup> ().alpha = 1f;
 		int incr = 0;
 		int total_spent = 0;
+		week_ingredients = IngredientsPanel.GetComponent<IngredientsPanel> ().boughtIngredients;
+		week_ingredients_list = IngredientsPanel.GetComponent<IngredientsPanel> ().getIngredientsList ();
+
 		foreach(KeyValuePair<Ingredient, int> i in week_ingredients){
 			total_spent += i.Value * i.Key.getPrice();
 		}
+
+		Debug.Log (week_ingredients.Count);
+		total_spent = 4;
 		yield return AddIngredientstoSpending (incr, total_spent);
 		IngredientsPanel.GetComponent<IngredientsPanel> ().resetBought ();
 		IngFeatured.GetComponent<CanvasGroup> ().alpha = 0f;

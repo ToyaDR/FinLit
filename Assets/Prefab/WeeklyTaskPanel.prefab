@@ -2060,11 +2060,11 @@ MonoBehaviour:
   IngredientsPanel: {fileID: 0}
   LoanPanel: {fileID: 1038349103131778}
   LoanPay: {fileID: 1082539382249606}
-  LoanOwed: {fileID: 1423876875874636}
+  LoanOwed: {fileID: 1913994223975436}
   LoanPayButton: {fileID: 1450956147150020}
   TaxPanel: {fileID: 1133429242681630}
   TaxPay: {fileID: 1714292952573104}
-  TaxOwed: {fileID: 1768199337097002}
+  TaxOwed: {fileID: 1790621832887638}
   TaxPayButton: {fileID: 1851016167775082}
   DoneButton: {fileID: 1275296365572684}
   InsuranceButton: {fileID: 1498601485629480}

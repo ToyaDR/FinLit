@@ -32,9 +32,16 @@ public class EmployeeChoose : MonoBehaviour {
 		foreach (Employee e in allEmployeesList) {
 			
 			GameObject currEmployee = GameObject.Find ("Employee" + employeeNum.ToString ());
+
 			Text description = currEmployee.transform.Find ("Description").GetComponent<Text> ();
-			description.text = "Name: " + e.GetName () + "  Morale: " + e.GetMorale().ToString();
-			Image img = currEmployee.GetComponent<Image> ();
+			description.text = e.GetName () + "\n Salary: " + e.GetSalary().ToString() 
+								+ "\n  Morale: " + e.GetMorale().ToString();
+
+			Image toggle_img = currEmployee.transform.Find ("Toggle").Find ("Background").GetComponent<Image>();
+			toggle_img.sprite = e.GetDeselectImage ();
+
+			//Image img = currEmployee.GetComponent<Image> ();
+			Image img = currEmployee.transform.Find("Toggle").Find("Background").GetChild(0).GetComponent<Image>();
 			img.sprite = e.GetImage ();
 
 			employeeNum += 1;
