@@ -30,6 +30,9 @@ public class TaskAssign : MonoBehaviour {
 	public GameObject emp1_store;
 	public GameObject emp2_store;
 
+	public GameObject emp1_dialogue;
+	public GameObject emp2_dialogue;
+
 	// Create different tasks
 	void Awake() {
 		// Initialize the entire task list
@@ -136,6 +139,8 @@ public class TaskAssign : MonoBehaviour {
 		SpriteRenderer img1_dialogue = emp1_store.transform.Find ("DialogueSprite").GetComponent<SpriteRenderer>();
 		img1_dialogue.sprite = ((Employee)(my_employees[0])).GetDialogueImage ();
 		*/
+		SpriteRenderer img1_dialogue = emp1_dialogue.GetComponent<SpriteRenderer> ();
+		img1_dialogue.sprite = ((Employee)(my_employees [0])).GetDialogueImage ();
 
 		DTreeNode currq_emp1 = ((Employee) my_employees[0]).curr_question;
 		List<Fungus.Command> qCommands_emp1 = gm.Emp1Flowchart.FindBlock("Question").CommandList;
@@ -158,6 +163,9 @@ public class TaskAssign : MonoBehaviour {
 		else if (((Employee)(my_employees [1])).GetName () == "Sue") {
 			img2.sprite = Resources.Load<Sprite> ("Sprite_Front_Sue");
 		}
+
+		SpriteRenderer img2_dialogue = emp2_dialogue.GetComponent<SpriteRenderer> ();
+		img2_dialogue.sprite = ((Employee)(my_employees [1])).GetDialogueImage ();
 
 		DTreeNode currq_emp2 = ((Employee) my_employees[1]).curr_question;
 		List<Fungus.Command> qCommands_emp2 = gm.Emp2Flowchart.FindBlock("Question").CommandList;

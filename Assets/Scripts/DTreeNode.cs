@@ -8,18 +8,27 @@ public class DTreeNode {
 	private string bad_option;
 	private Dictionary<string, DTreeNode> branches;
 
-	public DTreeNode (string question, string good_option, string bad_option){
+	private const string good_option_default = "good";
+	private const string bad_option_default = "bad";
+
+	public DTreeNode (string question, string good_option = good_option_default, 
+		string bad_option = bad_option_default){
+
 		this.question = question;
 		this.good_option = good_option;
 		this.bad_option = bad_option;
 		this.branches = new Dictionary<string, DTreeNode>();
 	}
 
-	public void AddGoodOption(string question, string good_option, string bad_option){
+	public void AddGoodOption(string question, string good_option = good_option_default, 
+		string bad_option = bad_option_default){
+
 		branches.Add("good", new DTreeNode (question, good_option, bad_option));
 	}
 
-	public void AddBadOption(string question, string good_option, string bad_option){
+	public void AddBadOption(string question, string good_option = good_option_default, 
+		string bad_option = bad_option_default){
+
 		branches.Add("bad", new DTreeNode (question, good_option, bad_option));
 	}
 
@@ -44,6 +53,7 @@ public class DTreeNode {
 	}
 
 	public bool IsLeaf(){
-		return (branches.Count == 0);
+		return ((branches.Count == 0) && (bad_option == bad_option_default)
+			&& (good_option == good_option_default));
 	}
 }

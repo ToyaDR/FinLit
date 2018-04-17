@@ -12,36 +12,43 @@ public class EmployeeManager : MonoBehaviour {
         allEmployees = new ArrayList();
 
         // At the start of the game, create all possible instances of employees
-        Employee employee_one = new Employee("Lila", 3, "Icon_Lila", "Employee_Lila", 3, 5);
+        Employee employee_one = new Employee("Lila", 3, "Icon_Lila", "Closeup_Lila", 3, 5);
 		employee_one.days_since_interaction = employee_one.GetMinDaysBetweenInteraction();
 		/* Populate Dialogue Tree for Lila */
 		employee_one.start_question = new DTreeNode ("I'm a film major and I need funding for a project. I need to ask to borrow money but I've been " +
 														"using my credit card too much lately and that's been taking a toll on my credit score. What should I do?", 
 														"Hm. It's a bit discouraging but you should give up on the project. What if you can't get the money to pay it back?", 
 														"I'd go for the money! It's a once in a lifetime opportunity after all. Just be sure to pay it back.");
+		employee_one.start_question.AddBadOption ("Oh...hey. I didn't manage to get enough money...");
+		employee_one.start_question.AddGoodOption ("I kind of regret not borrowing the money but my credit score has gotten a lot better!");
 		employee_one.curr_question = employee_one.start_question;
 		employee_one.SetDeselectImage ("Icon_Lila_bw");
 
 		allEmployees.Add (employee_one);
 
 
-		Employee employee_two = new Employee("Bruno", 3, "Icon_Bruno", "char2", 3, 5);
+		Employee employee_two = new Employee("Bruno", 3, "Icon_Bruno", "Closeup_Bruno", 3, 5);
 		employee_two.days_since_interaction = employee_two.GetMinDaysBetweenInteraction();
 		/* Populate Dialogue Tree for Mateo */
 		employee_two.start_question = new DTreeNode ("Should I confront my roommate?", "Yes.", "No.");
+		employee_two.start_question.AddBadOption ("The situation with my roommate hasn't really changed.");
+		employee_two.start_question.AddGoodOption ("My roommate isn't happy with me but at least the rent is getting paid.");
+
 		employee_two.curr_question = employee_two.start_question;
 
 		allEmployees.Add (employee_two);
 		employee_two.SetDeselectImage ("Icon_Bruno_bw");
 
 
-		Employee employee_three = new Employee("Sue", 3, "Icon_Sue", "char1", 3, 5);
+		Employee employee_three = new Employee("Sue", 3, "Icon_Sue", "Closeup_Sue", 3, 5);
 		employee_three.days_since_interaction = employee_three.GetMinDaysBetweenInteraction();
 		/* Populate Dialogue Tree for employee_three */
 		employee_three.start_question = new DTreeNode ("I'm not sure what to major in. My family wants me to do nursing but I'm not sure that's what" +
 													   " I want. I always just liked javelin. I assumed I'd figure it out once I got in. Maybe I should just settle now?", 
 														"You should settle on a major before you go in.", 
 														"You should discover your inclination in college.");
+		employee_three.start_question.AddBadOption ("I'm kind of anxious about my future and college in general.");
+		employee_three.start_question.AddGoodOption ("I think I'm ready to go to college!");
 		employee_three.curr_question = employee_three.start_question;
 
 		allEmployees.Add (employee_three);

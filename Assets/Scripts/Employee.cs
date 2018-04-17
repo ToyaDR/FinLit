@@ -92,17 +92,12 @@ public class Employee {
 		return emp_deselect_image;
 	}
 
-	public bool SetCurrQuestion(string option){
-		if (curr_question.IsLeaf ()) {
-			return false;
-		}
-
+	public void SetCurrQuestion(string option){
 		if (option == "bad") {
 			curr_question = curr_question.GetBadOptionNode ();
 		} else if (option == "good") {
 			curr_question = curr_question.GetGoodOptionNode ();
 		}
-		return true;
 	}
 
 	public void PrintDTree(DTreeNode curr){

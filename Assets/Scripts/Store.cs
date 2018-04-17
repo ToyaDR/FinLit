@@ -11,18 +11,22 @@ public class Store : MonoBehaviour {
 	private bool insurance;
 	public int savings_account;
 	public int checkings_account;
+	public int tax_percent;
 
 	private string product;
 	private int product_price;
 
 	private int productivity;
 	private int reputation;
-	private int loan;
+	private int fee;
+	private int curr_month;
+	private int total_loan = 1200;
+	private int[] loan_due;
+	private int penalty;
 	private Dictionary<string, int> Stock;
 
 	/*   Variables from other scripts   */
 
-	//public GameObject closeButton;
 	public GameObject ingredientsPanel;
 	public GameObject employeeChoosePanel;
 
@@ -31,8 +35,11 @@ public class Store : MonoBehaviour {
 	public GameObject product_in_stock;
 
 	void Awake() {
-		loan = 1000;
+		loan_due = new int[12];
+		fee = 10;
+		penalty = 0;
 		money = 100;
+		curr_month = 0;
 		insurance = false;
 		savings_account = 0;
 		checkings_account = 0;
@@ -57,8 +64,10 @@ public class Store : MonoBehaviour {
 
 		Stock.Add (product, 4);
 		product_in_stock.GetComponent<Text> ().text = Stock[product].ToString();
-	
 
+		foreach (int i in loan_due) {
+			loan_due[i] = total_loan/12;
+		}
 	}
 	
 	// Update is called once per frame
@@ -95,29 +104,74 @@ public class Store : MonoBehaviour {
 		return Stock [product];
 	}
 
-	public void Make(){
-		AddStock (product, 1);
+	public bool Make(){
+		//first check there's enough in stock to make something
+		bool enough = true;
 		foreach (Ingredient ing in ingredientsPanel.GetComponent<IngredientsPanel>().getIngredientsList ()) {
-			RemoveStock (ing.getName(), 1); //TODO: change this to different values
+			if(ing.getAmountInRecipe() > GetStockAmount(ing.getName())){
+				enough = false;
+			}
 		}
+
+		if (enough) {
+			foreach (Ingredient ing in ingredientsPanel.GetComponent<IngredientsPanel>().getIngredientsList ()) {
+				RemoveStock (ing.getName(), ing.getAmountInRecipe()); //TODO: change this to different values
+			}
+			AddStock (product, 1);
+		}
+		return enough;
 	}
 
 	public int GetReputation(){
 		return reputation;
 	}
 
-	public void Sell(){
+	public bool Sell(){
 		if (GetProductAmount () > 0) {
 			RemoveStock (product, 1);
 			IncMoney (product_price);
+			return true;
 		}
+		return false;
 	}
 
-	public void DecLoan(int amount){
-		loan -= amount;
+	public int DecLoan(int amount){
+		total_loan -= amount;
+
+		int remaining = loan_due [curr_month];
+		if (amount >= remaining) {
+			/* Player has (over)paid loan due */
+			loan_due [curr_month] = 0;
+			curr_month++;
+			loan_due [curr_month] -= (amount - remaining);
+		} else {
+			/* Player has not met minimum loan due */
+			penalty++;
+			if (penalty >= 3 || (curr_month == 11)) {
+				// TODO: Loss condition
+			} else {
+				/* Current months loan payment overflows into next month */
+				curr_month++;
+				loan_due [curr_month] += (remaining + fee);
+			}
+		}
+		PrintLoanDue ();
+		return penalty;
 	}
 
 	public int GetLoan(){
-		return loan;
+		return loan_due[curr_month];
+	}
+
+	public void PrintLoanDue(){
+		foreach (int i in loan_due) {
+			Debug.Log (loan_due [i] + " ");
+		}
+	}
+
+	public void DecTax(){
+		/* Player should always be able to pay tax */
+		int tax_pay = money / tax_percent; // this rounds, we're ok with that
+		money -= tax_pay;
 	}
 }

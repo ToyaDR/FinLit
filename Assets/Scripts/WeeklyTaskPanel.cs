@@ -71,8 +71,6 @@ public class WeeklyTaskPanel : MonoBehaviour {
 		spending_total = SpendingTotal.GetComponent<Text> ();
 		income_total = IncomeTotal.GetComponent<Text> ();
 
-		LoanOwed.GetComponent<Text> ().text = Store.GetComponent<Store> ().GetLoan ().ToString();
-
 		week_employees = EmployeeManager.GetComponent<EmployeeManager>().weekEmployees;
 
 		week_employees_list = new ArrayList ();
@@ -80,7 +78,6 @@ public class WeeklyTaskPanel : MonoBehaviour {
 			week_employees_list.Add (e.Key);
 		}
 		emp_featured = WeekEmployees.transform.GetChild (0).gameObject;
-
 	}
 	
 	// Update is called once per frame
@@ -215,6 +212,7 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	}
 
 	public void HideShowLoanPanel(){
+		LoanOwed.GetComponent<Text> ().text = Store.GetComponent<Store> ().GetLoan ().ToString();
 		if (loan_hidden) {
 			LoanPanel.GetComponent<CanvasGroup> ().alpha = 1f;
 			LoanPanel.GetComponent<CanvasGroup> ().blocksRaycasts = true;
@@ -233,10 +231,7 @@ public class WeeklyTaskPanel : MonoBehaviour {
 	private IEnumerator PayLoan(){
 		int pay;
 		int.TryParse((LoanPay.GetComponent<Text> ().text).ToString(), out pay);
-		int loan_total = Store.GetComponent<Store> ().GetLoan ();
-		if (pay > loan_total) { //TODO: maybe change this???
-			pay = loan_total;
-		}
+		/* TODO: force loan payment */
 		Store.GetComponent<Store> ().DecLoan (pay);
 		Store.GetComponent<Store> ().DecMoney (pay);
 

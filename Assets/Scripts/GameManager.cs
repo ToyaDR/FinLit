@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour {
 	public int days_since_start;
 	float shift_length;
-	float lunch_length;
 
 	float start_time;
 	float time_elapsed;
@@ -27,6 +26,8 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject CashRegister;
 	public GameObject WorkTable;
+	public GameObject LunchTable;
+
 	public Store Store;
 	public GameObject Door;
 	public GameObject BreakRoom;
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour {
 	public Fungus.Flowchart Emp1Flowchart;
 	public Fungus.Flowchart Emp2Flowchart;
 	public GameObject StartButton;
+	public Button FinishLunchButton;
 	// public SimpleHealthBar healthBar; //using SimpleHealthBar plugin
 	public GameObject Emp1Store;
 	public GameObject Emp2Store;
@@ -61,8 +63,9 @@ public class GameManager : MonoBehaviour {
 	private string curr_bread = "100";
 	private int sold = 0;
 	private bool show = true;
+
 	// Sound effects
-	private AudioSource collect_sound;
+	//private AudioSource collect_sound;
 
 	private Vector3 touch_pos_world;
 
@@ -81,8 +84,7 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 1.0f;
 
 		curr_state = State.DAY_SHIFT;
-		shift_length = 30f;//60f*2f; //2 minutes
-		lunch_length = 20f;//60f*1f; //1 minute
+		shift_length = 5f;//30f;//60f*2f; //2 minutes
 		time_elapsed = shift_length; // count down to end of shift
 		shift_started = false;
 
@@ -135,7 +137,7 @@ public class GameManager : MonoBehaviour {
 		emp2_make_freq_elapsed = emp2_make_freq;
 
 		// Get audio source component
-		collect_sound = Store.GetComponent<AudioSource>();
+		//collect_sound = Store.GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -164,18 +166,15 @@ public class GameManager : MonoBehaviour {
 		// Check if shift has ended
 		if (shift_started) {
 			time_elapsed -= Time.deltaTime;
-			if (time_elapsed <= 0) {
+			if (time_elapsed <= 0 && (curr_state != State.LUNCH)) {
 				StopShift ();
 			}
 			//TODO: Check if player wants to pause
 
-			HideDoor ();
-
-			UpdateFlowchart(Emp1Flowchart,(Employee)employee_manager.myEmployees [0]);
-
-			UpdateFlowchart(Emp2Flowchart,(Employee)employee_manager.myEmployees [1]);
-
-			ShowDoor ();
+			if(employee_manager.myEmployees.Count > 0)
+				UpdateFlowchart(Emp1Flowchart,(Employee)employee_manager.myEmployees [0]);
+			if(employee_manager.myEmployees.Count > 1)
+				UpdateFlowchart(Emp2Flowchart,(Employee)employee_manager.myEmployees [1]);
 		}
 
 	}
@@ -211,7 +210,9 @@ public class GameManager : MonoBehaviour {
 	public IEnumerator Shift() {
 		Task emp1_curr_task = (Task) ((Employee)employee_manager.myEmployees [0]).tasksNotCompleted[0];
 		Task emp2_curr_task = (Task) ((Employee)employee_manager.myEmployees [1]).tasksNotCompleted[0];
+
 		while (shift_started) {
+
 			CurrStateText.transform.GetChild(0).gameObject.GetComponent<Text>().text = ((int) time_elapsed).ToString();
 			if (time_elapsed > 0) {
 
@@ -221,6 +222,8 @@ public class GameManager : MonoBehaviour {
 				Emp2Energy.value = curr_energy / max_energy;
 
 				// Make feedback texts blink
+				// TODO: only blink when items are actually sold or made
+				/*
 				if (show) {
 					HideFeedbackText ();
 					show = false;
@@ -228,23 +231,30 @@ public class GameManager : MonoBehaviour {
 					ShowFeedbackText ();
 					show = true;
 				}
+				*/
 
 				if (emp1_curr_task.task_name == "Sell" || emp2_curr_task.task_name == "Sell") {
 					// If emp 1 is supposed to sell,
 					if (emp1_curr_task.task_name == "Sell") {
 						if (emp1_sell_freq_elapsed <= 0) {
-							Store.Sell ();
-							emp1_sell_freq_elapsed = emp1_sell_freq;
-							sold++;
+							bool enough = Store.Sell ();
+							if (enough) {
+								emp1_sell_freq_elapsed = emp1_sell_freq;
+								sold++;
+								StartCoroutine ("Blink");
+							}
 						}
 						emp1_sell_freq_elapsed--;
 					}
 					// If emp 2 is supposed to sell,
 					if (emp2_curr_task.task_name == "Sell") {
 						if (emp2_sell_freq_elapsed <= 0) {
-							Store.Sell ();
-							emp2_sell_freq_elapsed = emp2_sell_freq;
-							sold++;
+							bool enough = Store.Sell ();
+							if (enough) {
+								emp2_sell_freq_elapsed = emp2_sell_freq;
+								sold++;
+								StartCoroutine ("Blink");
+							}
 						}
 						emp2_sell_freq_elapsed--;
 					}
@@ -254,16 +264,22 @@ public class GameManager : MonoBehaviour {
 				// If emp 1 is supposed to make,
 				if (emp1_curr_task.task_name == "Make") {
 					if (emp1_make_freq_elapsed <= 0) {
-						Store.Make ();
-						emp1_make_freq_elapsed = emp1_make_freq;
+						bool enough = Store.Make ();
+						if (enough) {
+							emp1_make_freq_elapsed = emp1_make_freq;
+							StartCoroutine ("Blink");
+						}
 					}
 					emp1_make_freq_elapsed--;
 				}
 				// If emp 2 is supposed to make,
 				if (emp2_curr_task.task_name == "Make") {
 					if (emp2_make_freq_elapsed <= 0) {
-						Store.Make ();
-						emp2_make_freq_elapsed = emp2_make_freq;
+						bool enough = Store.Make ();
+						if (enough) {
+							emp2_make_freq_elapsed = emp2_make_freq;
+							StartCoroutine ("Blink");
+						}
 					}
 					emp2_make_freq_elapsed--;
 				}
@@ -272,19 +288,18 @@ public class GameManager : MonoBehaviour {
 			}
 			else yield return null;
 		}
-
-		//emp1_energy.transform.position = emp1_store.transform.position;
-		//emp2_energy.transform.position = emp2_store.transform.position;
 	}
 
-	public IEnumerator Lunch() {
-		while (shift_started) {
-			CurrStateText.transform.GetChild (0).gameObject.GetComponent<Text> ().text = ((int) time_elapsed).ToString ();
-			yield return new WaitForSeconds (0.75f);
-		}
-		yield return null;
+	public IEnumerator Blink(){
+		ShowFeedbackText ();
+		yield return new WaitForSeconds (0.50f);
+		HideFeedbackText ();
 	}
 
+	public void Lunch() {
+		//CurrStateText.transform.GetChild (0).gameObject.GetComponent<Text> ().text = ((int) time_elapsed).ToString ();
+	}
+		
 	public IEnumerator PanCameraToLunch() {
 		while (MainCamera.transform.position.y < 11.85f) {
 			Vector3 oldPos = MainCamera.transform.position;
@@ -301,10 +316,17 @@ public class GameManager : MonoBehaviour {
 
 			Vector3 oldPos_worktable = WorkTable.transform.position;
 			WorkTable.transform.position = new Vector3 (oldPos_worktable.x, oldPos_worktable.y - 0.2f, oldPos_worktable.z);
+
+			FinishLunchButton.interactable = true;
+			Vector3 oldPos_lunchbutton = FinishLunchButton.transform.position;
+			FinishLunchButton.transform.position = new Vector3 (oldPos_lunchbutton.x, oldPos_lunchbutton.y - 0.2f, oldPos_lunchbutton.z);
+
+			Vector3 oldPos_lunchtable = LunchTable.transform.position;
+			LunchTable.transform.position = new Vector3 (oldPos_lunchtable.x, oldPos_lunchtable.y - 0.2f, oldPos_lunchtable.z);
 			yield return new WaitForSeconds(0.05f);
 		}
-		Emp1Store.transform.localPosition = new Vector3 (260f, -172f, 1f);
-		Emp2Store.transform.localPosition = new Vector3 (-177f, -236f, 1f);
+		Emp1Store.transform.position = LunchTable.transform.position;
+		Emp2Store.transform.position = new Vector3 (LunchTable.transform.position.x + 5f, LunchTable.transform.position.y + 5f, 1f);;
 		yield return null;
 	}
 
@@ -324,6 +346,13 @@ public class GameManager : MonoBehaviour {
 
 			Vector3 oldPos_worktable = WorkTable.transform.position;
 			WorkTable.transform.position = new Vector3 (oldPos_worktable.x, oldPos_worktable.y + 0.2f, oldPos_worktable.z);
+
+			FinishLunchButton.interactable = false;
+			Vector3 oldPos_lunchbutton = FinishLunchButton.transform.position;
+			FinishLunchButton.transform.position = new Vector3 (oldPos_lunchbutton.x, oldPos_lunchbutton.y + 0.2f, oldPos_lunchbutton.z);
+
+			Vector3 oldPos_lunchtable = LunchTable.transform.position;
+			LunchTable.transform.position = new Vector3 (oldPos_lunchtable.x, oldPos_lunchtable.y + 0.2f, oldPos_lunchtable.z);
 			yield return new WaitForSeconds(0.05f);
 		}
 		yield return null;
@@ -371,9 +400,8 @@ public class GameManager : MonoBehaviour {
 			bread_2.sprite = Resources.Load<Sprite> ("UI_BakedGood");
 		}
 
-		collect_sound.Play ();
+		//collect_sound.Play ();
 		ShowSliders ();
-		ShowFeedbackText ();
 		time_elapsed = shift_length; //initialize time_elapsed every shift
 	}
 
@@ -400,8 +428,7 @@ public class GameManager : MonoBehaviour {
 			// Camera pan
 			StartCoroutine("PanCameraToLunch");
 			CurrStateText.GetComponent<Text> ().text = "It's Lunch Break time!";
-			time_elapsed = lunch_length;
-			StartCoroutine ("Lunch");
+			Lunch ();
 			return;
 		}
 
@@ -415,7 +442,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void StopShift(){
-		collect_sound.Stop ();
+		//collect_sound.Stop ();
 		HideSliders ();
 		HideFeedbackText ();
 		shift_started = false;
@@ -437,7 +464,7 @@ public class GameManager : MonoBehaviour {
 
 		if (curr_state == State.LUNCH) {
 			//start night shift
-			StopCoroutine("Lunch");
+			//StopCoroutine("Lunch");
 			StartShift(State.NIGHT_SHIFT);
 			return;
 		} 
@@ -483,29 +510,36 @@ public class GameManager : MonoBehaviour {
 			return;
 		}
 	}
-
+		
 	public void UpdateFlowchart(Fungus.Flowchart flowchart, Employee emp){
 		Fungus.StringVariable option = (Fungus.StringVariable) flowchart.GetVariable ("option");
 		Fungus.BooleanVariable done = (Fungus.BooleanVariable) flowchart.GetVariable ("done");
 		Fungus.BooleanVariable lunch = (Fungus.BooleanVariable) flowchart.GetVariable ("lunch");
 
+		lunch.Value = false;
 		if (curr_state == State.LUNCH) {
 			lunch.Value = true;
 		}
-		bool can_interact = (emp.GetMinDaysBetweenInteraction () >= emp.days_since_interaction);
 
-		if(option.Evaluate(Fungus.CompareOperator.NotEquals, "default") && can_interact){
-			bool not_done = true;
+		done.Value = false;
+		if (emp.curr_question.IsLeaf ()) {
+			done.Value = true;
+		}
+			
+		bool can_interact = (emp.GetMinDaysBetweenInteraction () <= emp.days_since_interaction);
+
+		if(option.Evaluate(Fungus.CompareOperator.NotEquals, "default") && can_interact 
+			&& !emp.curr_question.IsLeaf()){
 			if (option.Evaluate (Fungus.CompareOperator.Equals, "bad")) {
-				not_done = emp.SetCurrQuestion ("bad");
+				emp.SetCurrQuestion ("bad");
 			} else if (option.Evaluate (Fungus.CompareOperator.Equals, "good")) {
-				not_done = emp.SetCurrQuestion ("good");
-			}
-			if (not_done) {
-				employee_manager.SetFlowchart (emp.curr_question, flowchart.FindBlock ("Question").CommandList);
-			}
+				emp.SetCurrQuestion ("good");
+			} 
+
+			employee_manager.SetFlowchart (emp.curr_question, flowchart.FindBlock ("Question").CommandList);
+
 			option.Value = "default";
-			done.Value = !not_done;
+			done.Value = emp.curr_question.IsLeaf ();
 			emp.days_since_interaction = 0;
 		}
 	}

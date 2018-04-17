@@ -12,8 +12,8 @@ public class IngredientsPanel : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		float canvasRight = -350;
-		float canvasTop = -200;
+		float canvasRight = -340;
+		float canvasTop = -130;
 
 		ingredients = new ArrayList ();
 		boughtIngredients = new Dictionary<Ingredient, int>();
@@ -22,6 +22,7 @@ public class IngredientsPanel : MonoBehaviour {
 		flour.addName("Flour");
 		flour.addPrice(2);
 		flour.addSprite ("Flour"); 
+		flour.setAmountInRecipe (1);
 
 		ingredients.Add(flour);
 
@@ -29,6 +30,7 @@ public class IngredientsPanel : MonoBehaviour {
 		eggs.addName("Eggs");
 		eggs.addPrice(1);
 		eggs.addSprite ("Eggs");
+		eggs.setAmountInRecipe (2);
 
 		ingredients.Add(eggs);
 
@@ -36,6 +38,7 @@ public class IngredientsPanel : MonoBehaviour {
 		sugar.addName("Sugar");
 		sugar.addPrice(1);
 		sugar.addSprite ("Sugar");
+		sugar.setAmountInRecipe (3);
 
 		ingredients.Add(sugar);
 
