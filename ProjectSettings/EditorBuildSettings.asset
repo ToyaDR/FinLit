@@ -11,3 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Bizworks.unity
     guid: 5d6424f1c65fd544c8680cdf9d0c61aa
+  - enabled: 1
+    path: Assets/Scenes/Credits.unity
+    guid: dae10a68963263d4ba113e02099e423d
