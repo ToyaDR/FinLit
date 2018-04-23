@@ -682,6 +682,7 @@ public class GameManager : MonoBehaviour {
 	public void HideIngredients() {
 		IngredientsPanel.GetComponent<CanvasGroup>().alpha = 0f;
 		IngredientsPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
+		IngredientsPanel.GetComponent<IngredientsPanel> ().HideWarning ();
 		ShowEmployeeChoose ();
 	}
 

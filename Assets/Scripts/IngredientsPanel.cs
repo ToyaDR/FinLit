@@ -9,10 +9,11 @@ public class IngredientsPanel : MonoBehaviour {
 	public Canvas canvas;
 	public Store store;
 	public Dictionary<Ingredient, int> boughtIngredients;
+	public GameObject WarningPanel;
 
 	// Use this for initialization
 	void Start () {
-		float canvasRight = -340;
+		float canvasRight = -440;
 		float canvasTop = -130;
 
 		ingredients = new ArrayList ();
@@ -47,7 +48,7 @@ public class IngredientsPanel : MonoBehaviour {
 			GameObject ingTextGO = Instantiate (Resources.Load ("Ingredients", typeof(GameObject))) as GameObject;
 			ingTextGO.transform.SetParent (transform);
 			ingTextGO.transform.localScale = new Vector3(1f,1f,1f);
-			ingTextGO.GetComponent<Text>().text = i.getName() + " $" + i.getPrice();
+			ingTextGO.GetComponent<Text>().text = "$" + i.getPrice();
 
 			boughtIngredients.Add(i,0);
 			Vector2 anchorPoint = new Vector2 (canvasRight, canvasTop - offset);
@@ -58,10 +59,26 @@ public class IngredientsPanel : MonoBehaviour {
 
 			ingTextGO.transform.GetChild (1).gameObject.GetComponent<Text> ().text = "x0";
 
-			ingTextGO.GetComponent<Button>().onClick.AddListener(delegate {
-				Decrement(i.getName(), i.getPrice());
+			Button ingButton = ingTextGO.transform.GetChild (2).GetComponent<Button> ();
+			ingButton.onClick.AddListener(delegate {
+				HideWarning();
+
+				int amount = 0;
+				Text input = ingButton.transform.GetChild(1).Find("Text").GetComponent<Text>();
+				int.TryParse((input.text).ToString(), out amount);
+				if(amount*i.getPrice() > store.GetComponent<Store>().money){
+					ShowWarning();
+
+					/* Reset TextInput box */
+					ingButton.transform.GetChild(1).gameObject.GetComponent<InputField>().text = "";
+					return;
+				}
+
+				Decrement(i.getName(), i.getPrice(), amount);
 				ingTextGO.transform.GetChild (1).gameObject.GetComponent<Text> ().text = "x" + store.GetStockAmount(i.getName()).ToString();
-				boughtIngredients[i]++;
+				boughtIngredients[i]+=amount;
+				/* Reset TextInput box */
+				ingButton.transform.GetChild(1).gameObject.GetComponent<InputField>().text = "";
 			});
 
 			offset += ingTextGO.GetComponent<RectTransform>().rect.height*1.2f;
@@ -73,9 +90,9 @@ public class IngredientsPanel : MonoBehaviour {
 		
 	}
 
-	void Decrement(string ing, int price){
-		store.DecMoney (price);
-		store.AddStock (ing, 1);
+	void Decrement(string ing, int price, int amount){
+		store.DecMoney (price*amount);
+		store.AddStock (ing, amount);
 	}
 
 	public ArrayList getIngredientsList(){
@@ -86,5 +103,15 @@ public class IngredientsPanel : MonoBehaviour {
 		foreach (Ingredient i in ingredients) {
 			boughtIngredients [i] = 0;
 		}
+	}
+
+	private void ShowWarning(){
+		WarningPanel.GetComponent<CanvasGroup>().alpha = 1f;
+		WarningPanel.GetComponent<CanvasGroup> ().blocksRaycasts = true;
+	}
+
+	public void HideWarning(){
+		WarningPanel.GetComponent<CanvasGroup>().alpha = 0f;
+		WarningPanel.GetComponent<CanvasGroup>().blocksRaycasts = false;
 	}
 }

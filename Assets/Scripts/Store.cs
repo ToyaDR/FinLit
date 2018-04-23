@@ -165,7 +165,7 @@ public class Store : MonoBehaviour {
 
 	public void PrintLoanDue(){
 		foreach (int i in loan_due) {
-			Debug.Log (loan_due [i] + " ");
+			Debug.Log (i + " ");
 		}
 	}
 
